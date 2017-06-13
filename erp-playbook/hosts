@@ -1,0 +1,3 @@
+[erp]
+10.101.1.31 ansible_ssh_pass='linaro' ansible_become_pass='root' # CB-R1-CRB1S-02 Cavium ThunderX
+

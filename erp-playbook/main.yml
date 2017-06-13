@@ -1,0 +1,36 @@
+---
+- hosts: erp
+  remote_user: linaro
+  become: yes
+  become_method: su
+  tasks:
+  - name: Package Prerequisites
+    apt:
+      update_cache: yes
+      cache_valid_time: 86400
+      pkg: "{{item}}"
+    with_items:
+      - git
+      - python-pip
+      - daemon
+
+  - name: Clone test-definitions repository
+    git:
+      repo: 'https://git.linaro.org/people/dan.rue/qa/test-definitions.git'
+      dest: /root/test-definitions
+      version: master
+
+  - name: Install python prerequisites
+    pip:
+      requirements: /root/test-definitions/automated/utils/requirements.txt
+
+  - name: Copy test harness
+    copy:
+      src: run_erp_suite.sh
+      dest: /root/run_erp_suite.sh
+      mode: 0755
+
+  - name: Run ERP test suite
+    # daemon --name ensures only one runs at a time
+    command: daemon --name=erp_suite -- /root/run_erp_suite.sh
+
