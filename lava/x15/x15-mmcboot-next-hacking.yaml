@@ -1,0 +1,93 @@
+device_type: x15
+
+job_name: x15 - mmcboot - hacking session
+timeouts:
+  job:
+    minutes: 60
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+metadata:
+  source: https://git.linaro.org/lava-team/refactoring.git
+  path: x15-emmc-oe.yaml
+  rootfs: busybox
+  series: x15-reliability
+
+protocols:
+  lava-lxc:
+    name: lxc-x15-test
+    template: debian
+    distribution: debian
+    release: jessie
+    mirror: http://mirror.bytemark.co.uk/debian
+
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 5
+    to: lxc
+    packages:
+    - android-tools-adb
+    - android-tools-fastboot
+    - systemd
+    - systemd-sysv
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - 'root@(.*):/#'
+    - 'shell@am57xevm:/'
+    timeout:
+      minutes: 5
+    method: lxc
+
+- deploy:
+    timeout:
+      minutes: 15
+    to: fastboot
+    namespace: droid
+    images:
+      userdata:
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-next/118/rpb-console-image-am57xx-evm-20170926052439-118.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+
+- boot:
+    namespace: droid
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands:
+    - run findfdt
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - "setenv bootpart 1:e"
+    - run mmcboot
+    timeout:
+      minutes: 15
+    method: u-boot
+
+- test:
+    namespace: droid
+    failure_retry: 3
+    name: kvm-basic-hacking-session
+    timeout:
+      minutes: 60
+    definitions:
+     - repository: https://git.linaro.org/lava-team/hacking-session.git
+       from: git
+       path: hacking-session-oe.yaml
+       name: hacking
+       parameters:
+          "IRC_USER": "drue"
+          "PUB_KEY": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORl4HnMm6j9OsjXENsmJM73OFqBsNCWGmQ0Lucir7Wh+AxCRxDxXmtpnSmW1ZO3Foo0xVC0ie0BYCg3HkwFqst/0Ho7q0yK5zqnZ+oFIgyYdCpnsdNCOgdMTns9NRkW8PG7QfCsLH46h5JbxYp+MRysklPSO4l1sKXf8bTYxowTctC9qIFR5847Djq7xNpK3gJN2Z2nPu9mvjKgK5pwhOuP9dk3aLvUW0sInKn6tYkvsGKRnSv1CbiUesfBDgmwyLSQ8GgKF575jgaI11gTkJXVHxmb6P0pSUgnXBXRggz+qiJBCrqkUiLhwn6uPCZ8nXWShfTqwg+682qda/3mKX drue@drue-xps13"
+

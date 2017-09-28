@@ -1,0 +1,93 @@
+device_type: x15
+
+job_name: x15 tftp linux-next 118 LTP
+timeouts:
+  job:
+    minutes: 135
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+metadata:
+  source: https://git.linaro.org/lava-team/refactoring.git
+  path: x15-tftp-rpb.yaml
+  series: x15-reliability
+
+actions:
+- deploy:
+    timeout:
+      minutes: 15
+    to: tftp
+    namespace: droid
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-next/118/zImage--4.12+git0+d35adcbe86-r0-am57xx-evm-20170926052439-118.bin
+      type: zimage
+    modules:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-next/118/modules--4.12+git0+d35adcbe86-r0-am57xx-evm-20170926052439-118.tgz
+      compression: gz
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-next/118/rpb-console-image-am57xx-evm-20170926052439-118.rootfs.tar.xz
+      compression: xz
+    os: debian
+    dtb:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-next/118/zImage--4.12+git0+d35adcbe86-r0-am57xx-beagle-x15-20170926052439-118.dtb
+
+- boot:
+    namespace: droid
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands: nfs
+    timeout:
+      minutes: 15
+    method: u-boot
+
+- test:
+    namespace: droid
+    timeout:
+      minutes: 120
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: "Device preparation"
+        run:
+          steps:
+          # the image does not raise the interface itself
+          # force a DHCP request to avoid avahi using a zero conf address.
+          - set -x
+          - uname -a
+          - cat /etc/os-release
+          - netstat
+          - ip a
+          - df
+          - mount
+          - lsblk
+          - mkfs.ext4 /dev/mmcblk0p14 # 2.5GB
+          - mkdir -p /ltp-tmp
+          - mount /dev/mmcblk0p14 /ltp-tmp
+          - mount
+          - df -h
+      name: prep-inline
+      path: inline/prep.yaml
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      run:
+        - pwd
+        - ls -la
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'syscalls'
+        #SKIPFILE: 'skipfile-lkft-hikey'
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-syscalls-tests
+      timeout:
+        minutes: 120
