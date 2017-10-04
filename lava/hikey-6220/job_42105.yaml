@@ -1,0 +1,171 @@
+context:
+  test_character_delay: 10
+
+device_type: hi6220-hikey
+job_name: lkft-ltp-4.4.90-rc1-hikey-20171002-21
+timeouts:
+  job:
+    minutes: 90
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+
+# run udhcpc in the test shell before accessing the internet
+
+metadata:
+  git branch: 4.4.90-rc1-hikey-20171002
+  git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+  git commit: a6279f8aa398eafe8c7dc5d9e14c0fb0ef8e1095
+  git describe: v4.4.89-340-ga6279f8aa398
+  make_kernelversion: "4.4.90-rc1"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/defconfig
+  kselftest__url: https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.13.tar.xz
+  kselftest__version: "4.13"
+  libhugetlbfs__url: git://github.com/libhugetlbfs/libhugetlbfs.git
+  libhugetlbfs__version: "2.20"
+  libhugetlbfs__revision: "e44180072b796c0e28e53c4d01ef6279caaa2a99"
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: "20170516"
+  ltp-syscalls-tests__revision: "6c6c6ca40afb3611e52486f670085762ff451e91"
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linaro-hikey-stable-rc-4.4/DISTRO=rpb,MACHINE=hikey,label=docker-jessie-amd64/21/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21
+  series: lkft
+
+protocols:
+  lava-lxc:
+    name: lxc-hikey-oe
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://mirror.bytemark.co.uk/debian
+
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - 'root@(.*):/#'
+    - 'hikey:/'
+    timeout:
+      minutes: 5
+    method: lxc
+
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - from: inline
+      name: install-google-fastboot
+      path: inline/install-google-fastboot.yaml
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: install-fastboot
+          description: "Install fastboot provided by google"
+        run:
+          steps:
+          - wget https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+          - unzip platform-tools_r26.0.0-linux.zip
+          - ln -s `pwd`/platform-tools/fastboot /usr/bin/fastboot
+          - ln -s `pwd`/platform-tools/adb /usr/bin/adb
+          - fastboot --version
+
+- deploy:
+    timeout:
+      minutes: 15
+    to: fastboot
+    namespace: hikey-oe
+    connection: lxc
+    images:
+      ptable:
+        url: http://releases.linaro.org/reference-platform/embedded/hikey/16.12/rpb/bootloader/ptable-linux-8g.img
+        reboot: hard-reset
+      boot:
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/boot-0.0+AUTOINC+06e4def583-fb1158a365-r0-hikey-20171002145634-21.uefi.img
+        reboot: hard-reset
+      system:
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/rpb-console-image-hikey-20171002145634-21.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+        # ensure that this job raises a network interface with DHCP before relying on internet access
+    os: oe
+    protocols:
+      lava-lxc:
+      - action: fastboot-deploy
+        request: pre-power-command
+        timeout:
+          minutes: 2
+
+- boot:
+    namespace: hikey-oe
+    auto_login:
+      login_prompt: 'login:'
+      username: linaro
+      login_commands:
+        # Become super user to run tests
+        - su
+    prompts:
+    - 'hikey:~'
+    - 'root@(.*):/#'
+    timeout:
+      minutes: 5
+    method: uefi-menu
+    commands: fastboot
+    protocols:
+      lava-lxc:
+      # other action could be boot-fastboot
+      - action: uefi-commands
+        request: pre-os-command
+        timeout:
+          minutes: 2
+- test:
+    namespace: hikey-oe
+    timeout:
+      minutes: 90
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: "Device preparation"
+        run:
+          steps:
+          # the image does not raise the interface itself
+          # force a DHCP request to avoid avahi using a zero conf address.
+          - udhcpc
+          - netstat
+          - ip a
+          - ifconfig
+          - df
+          - cat /sys/class/thermal/thermal_zone0/policy || true
+          - echo "power_allocator" > /sys/class/thermal/thermal_zone0/policy || true
+          - cat /sys/class/thermal/thermal_zone0/policy || true
+          - cd /opt && rm -rf ltp && wget http://people.linaro.org/~dan.rue/files/ltp-20170929-arm64.tgz && tar xvzf ltp-20170929-arm64.tgz
+      name: prep-inline
+      path: inline/prep.yaml
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'syscalls'
+        SKIPFILE: 'skipfile-lkft-hikey'
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-syscalls-tests
+      timeout:
+        minutes: 90

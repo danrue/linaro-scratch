@@ -1,0 +1,8 @@
+Chase's example from an email:
+
+menuentry "PXE - D03-Debian-staging-403" --class red --class gnu-linux
+--class gnu --class os {
+   linux (tftp)/debian-installer/403/linux console=ttyS0,115200 ---
+   initrd (tftp)/debian-installer/403/initrd.gz
+}
+
