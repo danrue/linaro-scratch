@@ -1,0 +1,116 @@
+<?xml version='1.0' encoding='UTF-8'?><feed xmlns='http://www.w3.org/2005/Atom' xmlns:apps='http://schemas.google.com/apps/2006'>
+    <title>Mail Filters</title>
+    <author>
+        <name>Dan Rue</name>
+        <email>dan.rue@linaro.org</email>
+    </author>
+
+    <!--
+
+        Gmail filters are powerful but difficult to manage in the UI. For example,
+        in the UI, there is no easy way to specify filter order. Also, there is no
+        way to stop filtering - all emails will hit all filter rules, which means
+        that order is important.
+
+        Maintaining filters in XML and then importing them solves the order
+        issue. The multiple-match issue can be solved with complex rules that
+        match and then have lists of exclusions. Alternatively, and rules to
+        positively match emails I want to see, star them, and then exclude
+        starred emails from subsequent rules.
+
+        The easiest way to develop new rules is to write them in the UI, save
+        them, and then export them. Advanced search operators can be found @
+        https://support.google.com/mail/answer/7190
+
+        Inbox Zero - I prefer to keep any email I intend to ever read in my
+        inbox, and clear them out quickly (daily at worst), so the filters are
+        actually quite minimal. Mostly they just allow me to get small subsets
+        of mailing lists to my inbox using positive matches in Phase 1.
+
+        Structure:
+
+            Phase 1: Identify emails that should stay in inbox and star them.
+                Examples: Mailing list posts addressed to me
+                          Mailing list posts from certain individuals or with certain subject
+            Phase 2: Identify emails I never want to see and archive them (unless they're starred).
+                Examples: Auto-generated emails that have no value to me
+            Phase 3: Identify emails I want to label and remove from inbox (unless they're starred).
+                Examples: High volume mailing lists
+
+    -->
+
+
+    <!-- Phase 1: Star things I always want to see  -->
+    <!-- To me specifically, but not from bots (so, probably from a human) -->
+    <entry>
+        <category term='filter'></category>
+        <title>Star Personal Mail</title>
+        <!-- Don't star these senders -->
+        <apps:property name='from' value='-builds@travis-ci.org -projects@linaro.org -bugzilla-daemon@bugs.linaro.org -it-services@linaro.org'/>
+        <apps:property name='to' value='dan.rue@linaro.org'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+
+    <!-- Stable review threads started by Greg -->
+    <!-- Only the first message contains "stable review" in subject -->
+    <!-- The patches themselves have a patch-specific subject instead. -->
+    <entry>
+        <category term='filter'></category>
+        <title>Star stable review threads</title>
+        <apps:property name='subject' value='PATCH stable review'/>
+        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+
+
+    <!-- Phase 2: Stuff I never need to see -->
+    <!-- Archive straight away -->
+    <entry>
+        <category term='filter'></category>
+        <title>Build bot for Mark Brown</title>
+        <apps:property name='from' value='Build bot for Mark Brown broonie@kernel.org'/>
+        <apps:property name='hasTheWord' value='list:linaro-kernel.lists.linaro.org'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Olaf&apos;s autobuilder</title>
+        <apps:property name='from' value='Olof&apos;s autobuilder &lt;build@lixom.net&gt;'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
+
+    <!-- Phase 3: Apply labels and remove from inbox -->
+    <entry>
+        <category term='filter'></category>
+        <title>stable list - skip inbox, unless starred</title>
+        <apps:property name='to' value='stable@vger.kernel.org'/>
+        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
+        <apps:property name='label' value='lists'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
+    <entry>
+        <category term='filter'></category>
+        <title>LTP - skip inbox, unless starred</title>
+        <apps:property name='to' value='ltp@lists.linux.it'/>
+        <apps:property name='label' value='lists'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
+    <!-- Kernel CI -->
+    <!--
+    <entry>
+        <category term='filter'></category>
+        <title>Mail Filter</title>
+        <apps:property name='from' value='kernelci.org bot bot@kernelci.org'/>
+        <apps:property name='hasTheWord' value='list:(kernel-build-reports.lists.linaro.org)'/>
+        <apps:property name='shouldArchive' value='true'/>
+    </entry>
+    -->
+
+</feed>
