@@ -81,6 +81,18 @@
         <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
 
+    <!-- Archive automated patch emails from Greg (but not responses, if any) -->
+    <entry>
+        <category term='filter'></category>
+        <title>stable list automated patches from Greg</title>
+        <apps:property name='to' value='stable@vger.kernel.org'/>
+        <apps:property name='from' value='gregkh@linuxfoundation.org'/>
+        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
+        <apps:property name='subject' value='^Patch'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
 
     <!-- Phase 3: Apply labels and remove from inbox -->
     <entry>
