@@ -61,6 +61,30 @@
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Forward greg's stable review announcement to trello</title>
+        <apps:property name='subject' value='PATCH stable review -re'/> <!-- exclude responses -->
+        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
+        <apps:property name='forwardTo' value='danrue+opq99ph8cyedozwtp33q@boards.trello.com'/>
+    </entry>
+
+    <!-- From Linus -->
+    <entry>
+        <category term='filter'></category>
+        <title>Star Linus threads</title>
+        <apps:property name='from' value='torvalds@linux-foundation.org'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+
+    <entry>
+        <category term='filter'></category>
+        <title>Gerrit asking me to review</title>
+        <apps:property name='from' value='review@review.linaro.org'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='would like to Dan Rue to review this change)'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
 
 
     <!-- Phase 2: Stuff I never need to see -->
@@ -80,6 +104,24 @@
         <apps:property name='shouldArchive' value='true'/>
         <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Monitoring alerts</title>
+        <apps:property name='from' value='it-services@linaro.org'/>
+        <apps:property name='subject' value='(^OK|^Problem)'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='-qa-reports'/> <!-- Exclude hosts I care about -->
+    </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Gerrit</title>
+        <apps:property name='from' value='review@review.linaro.org'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='(lava-bot posted comments|would like to review this change)'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
 
     <!-- Archive automated patch emails from Greg (but not responses, if any) -->
     <entry>
@@ -100,7 +142,7 @@
         <title>stable list - skip inbox, unless starred</title>
         <apps:property name='to' value='stable@vger.kernel.org'/>
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
-        <apps:property name='label' value='lists'/>
+        <apps:property name='label' value='lists-stable'/>
         <apps:property name='shouldArchive' value='true'/>
         <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
@@ -109,10 +151,21 @@
         <category term='filter'></category>
         <title>LTP - skip inbox, unless starred</title>
         <apps:property name='to' value='ltp@lists.linux.it'/>
-        <apps:property name='label' value='lists'/>
+        <apps:property name='label' value='lists-ltp'/>
         <apps:property name='shouldArchive' value='true'/>
         <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
+
+    <entry>
+        <category term='filter'></category>
+        <title>LKML</title>
+        <apps:property name='to' value='linux-kernel@vger.kernel.org'/>
+        <apps:property name='hasTheWord' value='list:&lt;linux-kernel.vger.kernel.org&gt;'/>
+        <apps:property name='label' value='lists-lkml'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+    </entry>
+
 
     <!-- Kernel CI -->
     <!--
