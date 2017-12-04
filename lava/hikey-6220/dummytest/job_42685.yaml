@@ -1,0 +1,98 @@
+actions:
+- deploy:
+    namespace: tlxc
+    os: debian
+    packages: [wget, unzip]
+    timeout: {minutes: 15}
+    to: lxc
+- boot:
+    method: lxc
+    namespace: tlxc
+    prompts: ['root@(.*):/#', 'hikey:/']
+    timeout: {minutes: 5}
+- test:
+    definitions:
+    - from: inline
+      name: install-google-fastboot
+      path: inline/install-google-fastboot.yaml
+      repository:
+        metadata: {description: Install fastboot provided by google, format: Lava-Test
+            Test Definition 1.0, name: install-fastboot}
+        run:
+          steps: ['wget https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip',
+            unzip platform-tools_r26.0.0-linux.zip, ln -s `pwd`/platform-tools/fastboot
+              /usr/bin/fastboot, ln -s `pwd`/platform-tools/adb /usr/bin/adb, fastboot
+              --version]
+    namespace: tlxc
+    timeout: {minutes: 10}
+- deploy:
+    connection: lxc
+    images:
+      boot: {reboot: hard-reset, url: 'http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/315/boot-0.0+AUTOINC+06e4def583-fb1158a365-r0-hikey-20171004000112-315.uefi.img'}
+      ptable: {reboot: hard-reset, url: 'http://releases.linaro.org/reference-platform/embedded/hikey/16.12/rpb/bootloader/ptable-linux-8g.img'}
+      system: {apply-overlay: true, compression: gz, url: 'http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/315/rpb-console-image-hikey-20171004000112-315.rootfs.img.gz'}
+    namespace: hikey-oe
+    os: oe
+    protocols:
+      lava-lxc:
+      - action: fastboot-deploy
+        request: pre-power-command
+        timeout: {minutes: 2}
+    timeout: {minutes: 15}
+    to: fastboot
+- boot:
+    auto_login:
+      login_commands: [su]
+      login_prompt: 'login:'
+      username: linaro
+    commands: fastboot
+    method: uefi-menu
+    namespace: hikey-oe
+    prompts: ['hikey:~', 'root@(.*):/#']
+    protocols:
+      lava-lxc:
+      - action: uefi-commands
+        request: pre-os-command
+        timeout: {minutes: 2}
+    timeout: {minutes: 5}
+- test:
+    definitions:
+    - from: inline
+      name: prep-inline
+      path: inline/prep.yaml
+      repository:
+        metadata: {description: Device preparation, format: Lava-Test Test Definition
+            1.0, name: prep-tests}
+        run:
+          steps: [udhcpc, netstat, ip a, ifconfig, df, cat /sys/class/thermal/thermal_zone0/policy
+              || true, echo "power_allocator" > /sys/class/thermal/thermal_zone0/policy
+              || true, cat /sys/class/thermal/thermal_zone0/policy || true]
+    - from: git
+      name: libhugetlbfs
+      path: automated/linux/libhugetlbfs/libhugetlbfs.yaml
+      repository: git://git.linaro.org/qa/test-definitions.git
+      timeout: {minutes: 30}
+    namespace: hikey-oe
+    timeout: {minutes: 60}
+context: {test_character_delay: 10}
+device_type: hi6220-hikey
+job_name: lkft-libhugetlbfs-master-315
+metadata: {build-location: 'http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/315',
+  build-url: 'https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=hikey,label=docker-jessie-amd64/315/',
+  git branch: master, git commit: d81fa669e3de7eb8a631d7d95dac5fbcb2bf9d4e, git describe: v4.14-rc3-102-gd81fa669e3de,
+  git repo: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git',
+  kernel-config: 'http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/315/defconfig',
+  kselftest__url: 'https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.13.tar.xz',
+  kselftest__version: '4.13', libhugetlbfs__revision: e44180072b796c0e28e53c4d01ef6279caaa2a99,
+  libhugetlbfs__url: 'git://github.com/libhugetlbfs/libhugetlbfs.git', libhugetlbfs__version: '2.20',
+  ltp-syscalls-tests__revision: 6c6c6ca40afb3611e52486f670085762ff451e91, ltp-syscalls-tests__url: 'git://github.com/linux-test-project/ltp.git',
+  ltp-syscalls-tests__version: '20170516', make_kernelversion: 4.14.0-rc3, series: lkft}
+priority: medium
+protocols:
+  lava-lxc: {arch: amd64, distribution: debian, mirror: 'http://mirror.bytemark.co.uk/debian',
+    name: lxc-hikey-oe, release: jessie, template: debian}
+timeouts:
+  action: {minutes: 10}
+  connection: {minutes: 2}
+  job: {minutes: 60}
+visibility: public

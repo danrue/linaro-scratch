@@ -2,10 +2,10 @@ context:
   test_character_delay: 10
 
 device_type: hi6220-hikey
-job_name: lkft-ltp-20170929-4.4.90-rc1-hikey-20171002-21
+job_name: lkft-kselftest-master-316
 timeouts:
   job:
-    minutes: 90
+    minutes: 60
   action:
     minutes: 10
   connection:
@@ -16,12 +16,12 @@ visibility: public
 # run udhcpc in the test shell before accessing the internet
 
 metadata:
-  git branch: 4.4.90-rc1-hikey-20171002
-  git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-  git commit: a6279f8aa398eafe8c7dc5d9e14c0fb0ef8e1095
-  git describe: v4.4.89-340-ga6279f8aa398
-  make_kernelversion: "4.4.90-rc1"
-  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/defconfig
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: b7e14164417865e24b6a1b09110b63c01158fc8e
+  git describe: v4.14-rc3-159-gb7e141644178
+  make_kernelversion: "4.14.0-rc3"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/316/defconfig
   kselftest__url: https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.13.tar.xz
   kselftest__version: "4.13"
   libhugetlbfs__url: git://github.com/libhugetlbfs/libhugetlbfs.git
@@ -30,8 +30,8 @@ metadata:
   ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
   ltp-syscalls-tests__version: "20170516"
   ltp-syscalls-tests__revision: "6c6c6ca40afb3611e52486f670085762ff451e91"
-  build-url: https://ci.linaro.org/job/openembedded-lkft-linaro-hikey-stable-rc-4.4/DISTRO=rpb,MACHINE=hikey,label=docker-jessie-amd64/21/
-  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=hikey,label=docker-jessie-amd64/316/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/316
   series: lkft
 
 protocols:
@@ -95,10 +95,10 @@ actions:
         url: http://releases.linaro.org/reference-platform/embedded/hikey/16.12/rpb/bootloader/ptable-linux-8g.img
         reboot: hard-reset
       boot:
-        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/boot-0.0+AUTOINC+06e4def583-fb1158a365-r0-hikey-20171002145634-21.uefi.img
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/316/boot-0.0+AUTOINC+06e4def583-fb1158a365-r0-hikey-20171004170813-316.uefi.img
         reboot: hard-reset
       system:
-        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linaro-hikey-stable-rc-4.4/21/rpb-console-image-hikey-20171002145634-21.rootfs.img.gz
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-mainline/316/rpb-console-image-hikey-20171004170813-316.rootfs.img.gz
         compression: gz
         apply-overlay: true
         # ensure that this job raises a network interface with DHCP before relying on internet access
@@ -135,7 +135,7 @@ actions:
 - test:
     namespace: hikey-oe
     timeout:
-      minutes: 90
+      minutes: 60
     definitions:
     - from: inline
       repository:
@@ -155,35 +155,14 @@ actions:
           - cat /sys/class/thermal/thermal_zone0/policy || true
           - echo "power_allocator" > /sys/class/thermal/thermal_zone0/policy || true
           - cat /sys/class/thermal/thermal_zone0/policy || true
-          - cd /opt && rm -rf ltp && wget http://people.linaro.org/~dan.rue/files/ltp-20170929-arm64.tgz && tar xvzf ltp-20170929-arm64.tgz
+          - systemctl stop systemd-timesyncd || true
       name: prep-inline
       path: inline/prep.yaml
     - repository: git://git.linaro.org/qa/test-definitions.git
       from: git
-      path: automated/linux/ltp/ltp.yaml
+      path: automated/linux/kselftest/kselftest.yaml
+      name: kselftest
       parameters:
-        SKIP_INSTALL: 'true'
-        TST_CMDFILES: 'syscalls'
-        SKIPFILE: 'skipfile-lkft-hikey'
-        TIMEOUT_MULTIPLIER: 3
-      name: ltp-syscalls-tests
+        SKIPLIST: 
       timeout:
-        minutes: 90
-
-- test:
-   namespace: tlxc
-   timeout:
-     minutes: 5
-   definitions:
-    - from: inline
-      repository:
-        metadata:
-          format: Lava-Test Test Definition 1.0
-          name: dummy-tests
-          description: "Dummy tests"
-        run:
-          steps:
-          - ls
-      name: dummy-test
-      path: inline/dummy.yaml
-
+        minutes: 45

@@ -1,0 +1,71 @@
+context:
+  test_character_delay: 10
+
+device_type: x86
+job_name: lkft-ltp-syscalls-linux-4.4.y-43 - readahead02
+timeouts:
+  job:
+    minutes: 90
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+priority: high
+visibility: public
+
+metadata:
+  git branch: linux-4.4.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 528c687b455dced176c5e4be9275fb5a2ccdd60a
+  git describe: v4.4.97-57-g528c687b455d
+  make_kernelversion: "4.4.98-rc1"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-stable-rc-4.4/43/defconfig
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: "20170929"
+  ltp-syscalls-tests__revision: "e671f2a13c695bbd87f7dfec2954ca7e3c43f377"
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.4/DISTRO=rpb,MACHINE=intel-core2-32,label=docker-stretch-amd64/43/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-stable-rc-4.4/43
+  series: lkft
+
+actions:
+- deploy:
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-stable-rc-4.4/43/bzImage--4.4+git0+528c687b45-r0-intel-core2-32-20171113131610-43.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-stable-rc-4.4/43/rpb-console-image-intel-core2-32-20171113131610-43.rootfs.tar.xz
+      compression: xz
+    os: oe
+
+- boot:
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: "reboot: Restarting system"
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+        - su
+    prompts:
+    - 'root@intel-core2-32:'
+
+- test:
+    timeout:
+      minutes: 90
+    definitions:
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: 'syscalls'
+        SKIPFILE: 'skipfile-lkft-x86'
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-syscalls-tests
+      timeout:
+        minutes: 90

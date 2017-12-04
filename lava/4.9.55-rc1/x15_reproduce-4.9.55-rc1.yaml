@@ -1,0 +1,115 @@
+context:
+  test_character_delay: 10
+
+device_type: x15
+job_name: lkft-ltp-syscalls-linux-4.9.55-rc1
+timeouts:
+  job:
+    minutes: 90
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+priority: high
+visibility: public
+
+metadata:
+  git branch: linux-4.9.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 5baa6510b9c929682655869bb2de4c61677dba82
+  git describe: v4.9.54-106-g5baa6510b9c9
+  make_kernelversion: "4.9.55-rc1"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/72/defconfig
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: "20170929"
+  ltp-syscalls-tests__revision: "e671f2a13c695bbd87f7dfec2954ca7e3c43f377"
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=rpb,MACHINE=am57xx-evm,label=docker-stretch-amd64/72/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/72
+  series: lkft
+
+protocols:
+  lava-lxc:
+    name: lxc-x15-oe
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://mirror.bytemark.co.uk/debian
+
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 5
+    to: lxc
+    packages:
+    - android-tools-adb
+    - android-tools-fastboot
+    - systemd
+    - systemd-sysv
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - 'root@(.*):/#'
+    - 'shell@am57xevm:/'
+    timeout:
+      minutes: 5
+    method: lxc
+
+- deploy:
+    timeout:
+      minutes: 15
+    to: fastboot
+    namespace: x15-oe
+    images:
+      userdata:
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/72/rpb-console-image-am57xx-evm-20171010193232-72.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+
+- boot:
+    namespace: x15-oe
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands: mmc
+    timeout:
+      minutes: 15
+    method: u-boot
+
+- test:
+    namespace: x15-oe
+    timeout:
+      minutes: 60
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: "Device preparation"
+        run:
+          steps:
+          - set -x
+          - uname -a
+          - cat /etc/os-release
+          - netstat
+          - ip a
+          - ip link set eth0 down
+          - ip link set eth1 down
+          - ip link set eth0 up
+          - ip a
+          - udhcpc
+          - ip a
+          - ip link set eth0 down
+          - ip link set eth0 up
+          - ip a
+          - dhclient -v eth0
+          - ip a
+      name: prep-inline
+      path: inline/prep.yaml
