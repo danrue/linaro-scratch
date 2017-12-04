@@ -121,6 +121,14 @@
         <apps:property name='hasTheWord' value='(lava-bot posted comments|would like to review this change)'/>
         <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Suppress ci successful build notifications</title>
+        <apps:property name='from' value='ci_notify@linaro.org'/>
+        <apps:property name='shouldArchive' value='true'/>
+        <apps:property name='subject' value='Successful!'/>
+    </entry>
+
 
 
     <!-- Archive automated patch emails from Greg (but not responses, if any) -->
