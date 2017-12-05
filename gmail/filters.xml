@@ -57,14 +57,14 @@
     <entry>
         <category term='filter'></category>
         <title>Star stable review threads</title>
-        <apps:property name='subject' value='PATCH stable review'/>
+        <apps:property name='subject' value='PATCH stable review -3.18'/> <!-- exclude 3.18 -->
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Forward greg's stable review announcement to trello</title>
-        <apps:property name='subject' value='PATCH stable review -re'/> <!-- exclude responses -->
+        <apps:property name='subject' value='PATCH stable review -re -3.18'/> <!-- exclude responses, 3.18 branch -->
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
         <apps:property name='forwardTo' value='danrue+opq99ph8cyedozwtp33q@boards.trello.com'/>
     </entry>
