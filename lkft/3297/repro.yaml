@@ -1,0 +1,18 @@
+
+- test:
+    namespace: x15-oe
+    timeout:
+      minutes: 20
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: "kselftest-ftracetest"
+        run:
+          steps:
+          - cd /opt/kselftests/next/ftrace
+          - ./ftracetest
+      name: prep-inline
+      path: inline/kselftest-ftracetest

@@ -1,0 +1,95 @@
+
+context:
+  test_character_delay: 10
+
+timeouts:
+  job:
+    minutes: 45
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+
+
+device_type: x86
+job_name: lkft-kselftests-master-493
+priority: low
+visibility: public
+
+metadata:
+
+  
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: c6b3e9693f8a32ba3b07e2f2723886ea2aff4e94
+  git describe: v4.15-rc2-273-gc6b3e9693f8a
+  make_kernelversion: "4.15.0-rc2"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/493/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/493/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-core2-32,label=docker-stretch-amd64/493/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/493
+  series: lkft
+
+  kselftest__url: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  kselftest__version: "4.14+gitAUTOINC+c6b3e9693f"
+  kselftest__revision: "c6b3e9693f8a32ba3b07e2f2723886ea2aff4e94"
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/493/bzImage--4.14+git0+c6b3e9693f-r0-intel-core2-32-20171208182153-493.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/493/rpb-console-image-intel-core2-32-20171208182153-493.rootfs.tar.xz
+      compression: xz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: "reboot: Restarting system"
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+        - su
+    prompts:
+    - 'root@intel-core2-32:'
+
+
+
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 60
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: "kselftest-ftracetest"
+        run:
+          steps:
+          - cd /opt/kselftests/next/ftrace
+          - ./ftracetest
+      name: prep-inline
+      path: inline/kselftest-ftracetest
