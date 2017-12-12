@@ -127,6 +127,8 @@
         <apps:property name='from' value='ci_notify@linaro.org'/>
         <apps:property name='shouldArchive' value='true'/>
         <apps:property name='subject' value='Successful!'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='-"Reference Platform"'/> <!-- Exclude ERP -->
     </entry>
 
 
