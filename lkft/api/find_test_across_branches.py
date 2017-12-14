@@ -66,12 +66,10 @@ def find_test_results(needle):
         project_url = "{}projects/?slug={}".format(base_url, project)
         project_results = get(project_url).json()
         assert project_results['count'] == 1, 'project {} not found'.format(project)
-        latest_build = get(project_results['results'][0]['builds']).json()['results'][0]
+        latest_build = get(project_results['results'][0]['builds']).json()['results'][1]
 
         project_result['project'] = project
         project_result['version'] = latest_build['version']
-        for env in environments:
-            project_result[env] = None
 
         testruns = get_all_results(latest_build['testruns'])
 
