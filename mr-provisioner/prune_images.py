@@ -1,5 +1,15 @@
 #!/usr/bin/python
 
+# Delete images from mr-provisioner
+# Images which:
+#   - Belong to me
+#   - Are not 'known good'
+#   - Are older than a week
+#   - Are not attached to a machine
+#
+# Usage:
+#   > PROVISIONER_TOKEN="/BLAHBLAHBLAH=" python3 prune_images.py
+
 import json
 import os
 import requests
