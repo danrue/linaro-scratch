@@ -22,8 +22,6 @@ token = os.environ.get('PROVISIONER_TOKEN')
 
 def main():
 
-    allowed_types = ["Kernel", "Initrd"]
-
     headers = {'Authorization': token}
 
     # Retrieve my own images
