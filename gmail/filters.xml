@@ -28,19 +28,13 @@
         of mailing lists to my inbox using positive matches in Phase 1.
 
         Structure:
-
-            Phase 1: Identify emails that should stay in inbox and star them.
-                Examples: Mailing list posts addressed to me
-                          Mailing list posts from certain individuals or with certain subject
-            Phase 2: Identify emails I never want to see and archive them (unless they're starred).
-                Examples: Auto-generated emails that have no value to me
-            Phase 3: Identify emails I want to label and remove from inbox (unless they're starred).
-                Examples: High volume mailing lists
+            - Label emails according to their mailing list memberships. Multiple labels OK.
+            - Star emails that should stay in inbox.
+            - Last rule: Archive (remove from inbox) emails that match a list of labels, and are not starred.
 
     -->
 
 
-    <!-- Phase 1: Star things I always want to see  -->
     <!-- To me specifically, but not from bots (so, probably from a human) -->
     <entry>
         <category term='filter'></category>
@@ -74,6 +68,7 @@
         <category term='filter'></category>
         <title>Star kselftest threads</title>
         <apps:property name='hasTheWord' value='linux-kselftest@vger.kernel.org'/>
+        <apps:property name='label' value='lists-kselftest'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
 
@@ -87,82 +82,68 @@
 
     <entry>
         <category term='filter'></category>
-        <title>Gerrit asking me to review</title>
+        <title>Gerrit</title>
         <apps:property name='from' value='review@review.linaro.org'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='would like to Dan Rue to review this change)'/>
-        <apps:property name='shouldStar' value='true'/>
+        <apps:property name='label' value='gerrit'/>
     </entry>
 
+    <!--
+    <entry>
+        <category term='filter'></category>
+        <title>Gerrit asking me to review</title>
+        <apps:property name='from' value='review@review.linaro.org'/>
+        <apps:property name='hasTheWord' value='would like to Dan Rue to review this change'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+    -->
 
-    <!-- Phase 2: Stuff I never need to see -->
-    <!-- Archive straight away -->
+
     <entry>
         <category term='filter'></category>
         <title>Build bot for Mark Brown</title>
         <apps:property name='from' value='Build bot for Mark Brown broonie@kernel.org'/>
         <apps:property name='hasTheWord' value='list:linaro-kernel.lists.linaro.org'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='label' value='junk'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Olaf&apos;s autobuilder</title>
         <apps:property name='from' value='Olof&apos;s autobuilder &lt;build@lixom.net&gt;'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='label' value='junk'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Monitoring alerts</title>
         <apps:property name='from' value='it-services@linaro.org'/>
         <apps:property name='subject' value='(^OK|^Problem)'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='label' value='junk'/>
         <apps:property name='hasTheWord' value='-qa-reports'/> <!-- Exclude hosts I care about -->
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Gerrit</title>
         <apps:property name='from' value='review@review.linaro.org'/>
-        <apps:property name='shouldArchive' value='true'/>
         <apps:property name='hasTheWord' value='(lava-bot posted comments|would like to review this change)'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='label' value='junk'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Suppress ci successful build notifications</title>
         <apps:property name='from' value='ci_notify@linaro.org'/>
-        <apps:property name='shouldArchive' value='true'/>
         <apps:property name='subject' value='Successful!'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
         <apps:property name='hasTheWord' value='-"Reference Platform"'/> <!-- Exclude ERP -->
+        <apps:property name='label' value='junk'/>
     </entry>
 
 
 
-    <!-- Archive automated patch emails from Greg (but not responses, if any) -->
-    <entry>
-        <category term='filter'></category>
-        <title>stable list automated patches from Greg</title>
-        <apps:property name='to' value='stable@vger.kernel.org'/>
-        <apps:property name='from' value='gregkh@linuxfoundation.org'/>
-        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
-        <apps:property name='subject' value='^Patch'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
-    </entry>
-
-
-    <!-- Phase 3: Apply labels and remove from inbox -->
+    <!-- Phase 3: Apply labels -->
     <entry>
         <category term='filter'></category>
         <title>stable list - skip inbox, unless starred</title>
         <apps:property name='to' value='stable@vger.kernel.org'/>
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
         <apps:property name='label' value='lists-stable'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
 
     <entry>
@@ -170,8 +151,6 @@
         <title>LTP - skip inbox, unless starred</title>
         <apps:property name='to' value='ltp@lists.linux.it'/>
         <apps:property name='label' value='lists-ltp'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
 
     <entry>
@@ -180,10 +159,36 @@
         <apps:property name='to' value='linux-kernel@vger.kernel.org'/>
         <apps:property name='hasTheWord' value='list:&lt;linux-kernel.vger.kernel.org&gt;'/>
         <apps:property name='label' value='lists-lkml'/>
-        <apps:property name='shouldArchive' value='true'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
     </entry>
 
+    <entry>
+        <category term='filter'></category>
+        <title>Archive junk</title>
+        <apps:property name='hasTheWord' value='label:junk'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='shouldArchive' value='true'/>
+    </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Archive lists-ltp</title>
+        <apps:property name='hasTheWord' value='label:lists-ltp'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='shouldArchive' value='true'/>
+    </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Archive lists-stable</title>
+        <apps:property name='hasTheWord' value='label:lists-stable'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='shouldArchive' value='true'/>
+    </entry>
+    <entry>
+        <category term='filter'></category>
+        <title>Archive lists-lkml</title>
+        <apps:property name='hasTheWord' value='label:lists-lkml'/>
+        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='shouldArchive' value='true'/>
+    </entry>
 
     <!-- Kernel CI -->
     <!--
