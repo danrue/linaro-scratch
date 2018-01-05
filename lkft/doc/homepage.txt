@@ -1,0 +1,7 @@
+Sources:
+- https://collaborate.linaro.org/display/EP/LKFT+Triage+Team
+- https://collaborate.linaro.org/display/EP/LKFT+Builds
+
+
+https://collaborate.linaro.org/display/LKFT/Email+Reports
+https://collaborate.linaro.org/display/LKFT/LKFT+Projects
