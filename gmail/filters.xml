@@ -69,6 +69,14 @@
         <apps:property name='forwardTo' value='danrue+opq99ph8cyedozwtp33q@boards.trello.com'/>
     </entry>
 
+    <!-- kselftest list -->
+    <entry>
+        <category term='filter'></category>
+        <title>Star kselftest threads</title>
+        <apps:property name='hasTheWord' value='linux-kselftest@vger.kernel.org'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+
     <!-- From Linus -->
     <entry>
         <category term='filter'></category>
