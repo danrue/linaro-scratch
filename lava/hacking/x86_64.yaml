@@ -1,0 +1,85 @@
+context:
+  test_character_delay: 10
+
+timeouts:
+  job:
+    minutes: 45
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+
+
+device_type: x86
+job_name: lkft-master-502-inline-hacking
+priority: high
+visibility: public
+
+metadata:
+
+  
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: a638349bf6c29433b938141f99225b160551ff48
+  git describe: v4.15-rc3-33-ga638349bf6c2
+  make_kernelversion: "4.15.0-rc3"
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/502/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/502/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-core2-32,label=docker-stretch-amd64/502/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/502
+  series: lkft
+
+  kselftest__url: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  kselftest__version: "4.14+gitAUTOINC+a638349bf6"
+  kselftest__revision: "a638349bf6c29433b938141f99225b160551ff48"
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/502/bzImage--4.14+git0+a638349bf6-r0-intel-core2-32-20171212014156-502.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/502/rpb-console-image-intel-core2-32-20171212014156-502.rootfs.tar.xz
+      compression: xz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: "reboot: Restarting system"
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+        - su
+    prompts:
+    - 'root@intel-core2-32:'
+
+- test:
+    connection: lxc
+    timeout:
+      minutes: 60
+    definitions:
+      - repository: http://git.linaro.org/lava-team/hacking-session.git
+        from: git
+        path: hacking-session-debian.yaml
+        params:
+          PUB_KEY: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORl4HnMm6j9OsjXENsmJM73OFqBsNCWGmQ0Lucir7Wh+AxCRxDxXmtpnSmW1ZO3Foo0xVC0ie0BYCg3HkwFqst/0Ho7q0yK5zqnZ+oFIgyYdCpnsdNCOgdMTns9NRkW8PG7QfCsLH46h5JbxYp+MRysklPSO4l1sKXf8bTYxowTctC9qIFR5847Djq7xNpK3gJN2Z2nPu9mvjKgK5pwhOuP9dk3aLvUW0sInKn6tYkvsGKRnSv1CbiUesfBDgmwyLSQ8GgKF575jgaI11gTkJXVHxmb6P0pSUgnXBXRggz+qiJBCrqkUiLhwn6uPCZ8nXWShfTqwg+682qda/3mKX drue@drue-xps13"
+        name: lxc-hacking-session-ubuntu
