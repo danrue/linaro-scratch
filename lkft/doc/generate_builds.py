@@ -14,23 +14,16 @@ branches = [
     ('4.9-rc LTS', 'stable-rc-4.9-oe', 'stable-rc-4.9'),
 ]
 
-#def markdown(table, headers):
-#    buf = ""
-#    buf += "|{}|".format("|".join(headers))
-#    buf += "|{}}
-#    for row in table:
-#        buf +
-
-
 table = []
 for board in boards:
     row = []
     row.append(board[0]) # board pretty name is first column
+    row.append(board[1]) # board architecture is second column
     for branch in branches:
         # Append a row to the table
         row.append(
-            "![{}]({})<br />![{}]({})".format( # markdown
-            #'<a href="{}"><img src="{}" /></a><br /><a href="{}"><img src="{}" /></a>'.format( # html
+            #"![{}]({})<br />![{}]({})".format( # markdown
+            '<a href="{}"><img src="{}" /></a><br /><a href="{}"><img src="{}" /></a>'.format( # html
                 "https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch[2], board[2]),
                 "https://ci.linaro.org/buildStatus/icon?job=openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft".format(branch[2], board[2]),
                 "https://qa-reports.linaro.org/lkft/linux-{}/".format(branch[1]),
@@ -39,7 +32,7 @@ for board in boards:
         )
     table.append(row)
 
-headers = ['Board']
+headers = ['Board', 'Architecture']
 for branch in branches:
     headers.append(branch[0])
 
