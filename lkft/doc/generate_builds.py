@@ -4,6 +4,7 @@ boards = [
     # pretty name, architecture, jenkins MACHINE name
     ('hikey', 'arm64', 'hikey'),
     ('x15', 'arm', 'am57xx-evm'),
+    ('juno', 'arm64', 'juno'),
     ('dell', 'x86_64', 'intel-core2-32'),
 ]
 branches = [
@@ -12,6 +13,8 @@ branches = [
     ('4.14-rc LTS', 'stable-rc-4.14-oe', 'stable-rc-4.14'),
     ('4.9 LTS', 'stable-4.9-oe', 'stable-rc-4.9'),
     ('4.9-rc LTS', 'stable-rc-4.9-oe', 'stable-rc-4.9'),
+    ('4.4 LTS', 'stable-4.4-oe', 'stable-rc-4.4'),
+    ('4.4-rc LTS', 'stable-rc-4.4-oe', 'stable-rc-4.4'),
 ]
 
 table = []
@@ -22,7 +25,6 @@ for board in boards:
     for branch in branches:
         # Append a row to the table
         row.append(
-            #"![{}]({})<br />![{}]({})".format( # markdown
             '<a href="{}"><img src="{}" /></a><br /><a href="{}"><img src="{}" /></a>'.format( # html
                 "https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch[2], board[2]),
                 "https://ci.linaro.org/buildStatus/icon?job=openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft".format(branch[2], board[2]),
