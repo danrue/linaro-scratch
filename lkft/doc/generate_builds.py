@@ -20,33 +20,37 @@ class Board(object):
         self.name = name
         self.architecture = architecture
         self.jenkins_name = jenkins_name
-        self.branches = [
+        self.branches = self._init_branches()
+
+    def _init_branches(self):
+        return [
             # pretty name, squad name, jenkins name
-            Branch('4.14 LTS',
+            Branch('4.14',
                    'linux-stable-4.14-oe',
                    'openembedded-lkft-linux-stable-4.14'
                   ),
-            Branch('4.14-rc LTS',
+            Branch('4.14-rc',
                    'linux-stable-rc-4.14-oe',
                    'openembedded-lkft-linux-stable-rc-4.14'
                   ),
-            Branch('4.9 LTS',
+            Branch('4.9',
                    'linux-stable-4.9-oe',
                    'openembedded-lkft-linux-stable-rc-4.9'
                   ),
-            Branch('4.9-rc LTS',
+            Branch('4.9-rc',
                    'linux-stable-rc-4.9-oe',
                    'openembedded-lkft-linux-stable-rc-4.9'
                   ),
-            Branch('4.4 LTS',
+            Branch('4.4',
                    'linux-stable-4.4-oe',
                    'openembedded-lkft-linux-stable-rc-4.4',
                   ),
-            Branch('4.4-rc LTS',
+            Branch('4.4-rc',
                    'linux-stable-rc-4.4-oe',
                    'openembedded-lkft-linux-stable-rc-4.4',
                   ),
         ]
+
     def get_name(self):
         return self.name
     def get_architecture(self):
@@ -57,50 +61,54 @@ class Board(object):
         return iter(self.branches)
 
     def jenkins_badge_url(self, branch):
-        # openembedded-lkft-linaro-hikey-stable-4.4/DISTRO=rpb,MACHINE=hikey,label=docker-stretch-amd64/
         return "https://ci.linaro.org/buildStatus/icon?job={}/DISTRO=rpb,MACHINE={},label={}".format(branch.get_jenkins_name(), self.get_jenkins_name(), branch.get_label())
 
     def jenkins_build_url(self, branch):
-        return "https://ci.linaro.org/view/lkft/job/{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch.get_jenkins_name(), self.get_jenkins_name()),
+        return "https://ci.linaro.org/view/lkft/job/{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch.get_jenkins_name(), self.get_jenkins_name())
 
     def squad_badge_url(self):
         return "squad_favicon.png"
     def squad_project_url(self, branch):
         return "https://qa-reports.linaro.org/lkft/{}/".format(branch.get_squad_name())
+    def generate_row(self):
+        row = {}
+        row["Board"] = self.get_name()
+        row["Architecture"] = self.get_architecture()
+        for branch in self.get_branches():
+            row[branch.get_name()] = \
+                '<a href="{}"><img src="{}" /></a><br /><a href="{}"><img src="{}" /></a>'.format(
+                self.jenkins_build_url(branch),
+                self.jenkins_badge_url(branch),
+                self.squad_project_url(branch),
+                self.squad_badge_url(),
+                )
+        return row
 
 
 class BoardHikey(Board):
     def __init__(self):
         super().__init__("hikey", "arm64", "hikey")
-        self.branches = [
-            # pretty name, squad name, jenkins name
-            Branch('4.14 LTS',
-                   'linux-stable-4.14-oe',
-                   'openembedded-lkft-linux-stable-4.14'
-                  ),
-            Branch('4.14-rc LTS',
-                   'linux-stable-rc-4.14-oe',
-                   'openembedded-lkft-linux-stable-rc-4.14'
-                  ),
-            Branch('4.9 LTS',
-                   'linux-stable-4.9-oe',
-                   'openembedded-lkft-linux-stable-rc-4.9'
-                  ),
-            Branch('4.9-rc LTS',
-                   'linux-stable-rc-4.9-oe',
-                   'openembedded-lkft-linux-stable-rc-4.9'
-                  ),
-            Branch('Linaro Hikey 4.4 LTS',
-                   'linaro-hikey-stable-4.4-oe',
-                   'openembedded-lkft-linaro-hikey-stable-4.4',
-                   label="docker-stretch-amd64"
-                  ),
-            Branch('Linaro Hikey 4.4-rc LTS',
-                   'linaro-hikey-stable-rc-4.4-oe',
-                   'openembedded-lkft-linaro-hikey-stable-rc-4.4',
-                   label="docker-stretch-amd64"
-                  ),
-        ]
+    def _init_branches(self):
+        default = super(BoardHikey, self)._init_branches()
+        branches = []
+        # Hikey has its own 4.4 and 4.4-rc branches.
+        for branch in branches:
+            if "4.4" == branch.get_name():
+                branches.append(Branch('Hikey 4.4',
+                       'linaro-hikey-stable-4.4-oe',
+                       'openembedded-lkft-linaro-hikey-stable-4.4',
+                       label="docker-stretch-amd64"
+                      ))
+            elif "4.4-rc" == branch.get_name():
+                branches.append(Branch('Hikey 4.4-rc',
+                       'linaro-hikey-stable-rc-4.4-oe',
+                       'openembedded-lkft-linaro-hikey-stable-rc-4.4',
+                       label="docker-stretch-amd64"
+                      ))
+            else:
+                branches.append(branch)
+        return branches
+
 class BoardX15(Board):
     def __init__(self):
         super().__init__("x15", "arm", "am57xx-evm")
@@ -122,23 +130,6 @@ boards = [
 
 table = []
 for board in boards:
-    row = []
-    row.append(board.get_name())
-    row.append(board.get_architecture())
-    for branch in board.get_branches():
-        # Append a row to the table
-        row.append(
-            '<a href="{}"><img src="{}" /></a><br /><a href="{}"><img src="{}" /></a>'.format( # html
-            board.jenkins_build_url(branch),
-            board.jenkins_badge_url(branch),
-            board.squad_project_url(branch),
-            board.squad_badge_url(),
-            )
-        )
-    table.append(row)
+    table.append(board.generate_row())
 
-headers = ['Board', 'Architecture']
-for branch in BoardX15().get_branches():
-    headers.append(branch.get_name())
-
-print(tabulate(table, headers=headers, tablefmt="html"))
+print(tabulate(table, headers="keys", tablefmt="html"))
