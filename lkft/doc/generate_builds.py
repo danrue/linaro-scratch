@@ -89,10 +89,10 @@ class BoardHikey(Board):
     def __init__(self):
         super().__init__("hikey", "arm64", "hikey")
     def _init_branches(self):
-        default = super(BoardHikey, self)._init_branches()
+        default_branches = super(BoardHikey, self)._init_branches()
         branches = []
         # Hikey has its own 4.4 and 4.4-rc branches.
-        for branch in branches:
+        for branch in default_branches:
             if "4.4" == branch.get_name():
                 branches.append(Branch('Hikey 4.4',
                        'linaro-hikey-stable-4.4-oe',
