@@ -3,6 +3,17 @@
 Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
+## 2018-01-08
+### 4.4.111
+Results in <24h
+- Release candidate republished 4 times
+### 4.9.76
+Results in <24h
+- Release candidate republished 5 times
+### 4.14.111
+Results in <24h
+- Release candidate republished 3 times
+
 ## 2018-01-06
 ### 4.14.12
 Results in <24h.

@@ -5,12 +5,39 @@ class Board(object):
         self.name = name
         self.architecture = architecture
         self.jenkins_name = jenkins_name
+    def get_name(self):
+        return self.name
+    def get_architecture(self):
+        return self.architecture
+    def get_jenkins_name(self):
+        return self.jenkins_name
+    #openembedded-lkft-linaro-hikey-stable-rc-4.4
+
+class BoardHikey(Board):
+    def __init__(self):
+        super().__init__("hikey", "arm64", "hikey")
+class BoardX15(Board):
+    def __init__(self):
+        super().__init__("x15", "arm", "am57xx-evm")
+class BoardJuno(Board):
+    def __init__(self):
+        super().__init__("juno", "arm64", "juno")
+class BoardDell(Board):
+    def __init__(self):
+        super().__init__("dell", "x86_64", "intel-core2-32")
+
 
 class Branch(object):
     def __init__(self, name, squad_name, jenkins_name):
         self.name = name
         self.squad_name = squad_name
         self.jenkins_name = jenkins_name
+    def get_name(self):
+        return self.name
+    def get_squad_name(self):
+        return self.squad_name
+    def get_jenkins_name(self):
+        return self.jenkins_name
 
 class BoardxBranch(object):
     def __init__(self, board, branch):
@@ -18,23 +45,23 @@ class BoardxBranch(object):
         self.Branch = branch
 
     def jenkins_badge_url(self):
-        return "https://ci.linaro.org/buildStatus/icon?job=openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft".format(branch.jenkins_name, board.jenkins_name)
+        return "https://ci.linaro.org/buildStatus/icon?job=openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft".format(branch.get_jenkins_name(), board.get_jenkins_name())
 
     def jenkins_build_url(self):
-        return "https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch.jenkins_name, board.jenkins_name),
+        return "https://ci.linaro.org/view/lkft/job/openembedded-lkft-linux-{}/DISTRO=rpb,MACHINE={},label=docker-lkft/".format(branch.get_jenkins_name(), board.get_jenkins_name()),
 
     def squad_badge_url(self):
         return "squad_favicon.png"
     def squad_project_url(self):
-        return "https://qa-reports.linaro.org/lkft/linux-{}/".format(branch.squad_name)
+        return "https://qa-reports.linaro.org/lkft/linux-{}/".format(branch.get_squad_name())
 
 
 boards = [
     # pretty name, architecture, jenkins MACHINE name
-    Board('hikey', 'arm64', 'hikey'),
-    Board('x15', 'arm', 'am57xx-evm'),
-    Board('juno', 'arm64', 'juno'),
-    Board('dell', 'x86_64', 'intel-core2-32'),
+    BoardHikey(),
+    BoardX15(),
+    BoardJuno(),
+    BoardDell(),
 ]
 branches = [
     # pretty name, squad name, jenkins name
@@ -49,8 +76,8 @@ branches = [
 table = []
 for board in boards:
     row = []
-    row.append(board.name)
-    row.append(board.architecture)
+    row.append(board.get_name())
+    row.append(board.get_architecture())
     for branch in branches:
         rowdata = BoardxBranch(board, branch)
         # Append a row to the table
@@ -66,6 +93,6 @@ for board in boards:
 
 headers = ['Board', 'Architecture']
 for branch in branches:
-    headers.append(branch.name)
+    headers.append(branch.get_name())
 
 print(tabulate(table, headers=headers, tablefmt="html"))
