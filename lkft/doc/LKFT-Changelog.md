@@ -6,7 +6,8 @@ infrastructure.
 ## 2018
 
 ### Week 2
-
+- [LKFT LAVA](https://lkft.validation.linaro.org/) upgraded to Debian Stretch
+  and LAVA 2018.01.
 
 ### Week 1
 - x86 environments now running LTP on local disk instead of NFS. All

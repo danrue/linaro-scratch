@@ -3,6 +3,16 @@
 Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
+## 2018-01-15
+### 4.4.112
+Results in <24h
+- Build (infrastructure) failure with hikey, requiring manual intervention.
+### 4.9.77
+Results in <24h
+### 4.14.14
+Results in <24h
+- Build (infrastructure) failure with hikey, requiring manual intervention.
+
 ## 2018-01-08
 ### 4.4.111
 Results in <24h
@@ -10,7 +20,7 @@ Results in <24h
 ### 4.9.76
 Results in <24h
 - Release candidate republished 5 times
-### 4.14.111
+### 4.14.13
 Results in <24h
 - Release candidate republished 3 times
 
