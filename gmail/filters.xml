@@ -164,29 +164,25 @@
     <entry>
         <category term='filter'></category>
         <title>Archive junk</title>
-        <apps:property name='hasTheWord' value='label:junk'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='label:junk -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Archive lists-ltp</title>
-        <apps:property name='hasTheWord' value='label:lists-ltp'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='label:lists-ltp -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Archive lists-stable</title>
-        <apps:property name='hasTheWord' value='label:lists-stable'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='label:lists-stable -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
     <entry>
         <category term='filter'></category>
         <title>Archive lists-lkml</title>
-        <apps:property name='hasTheWord' value='label:lists-lkml'/>
-        <apps:property name='hasTheWord' value='-label:starred'/> <!-- Exclude starred -->
+        <apps:property name='hasTheWord' value='label:lists-lkml -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
 
