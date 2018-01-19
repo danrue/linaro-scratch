@@ -5,6 +5,11 @@ infrastructure.
 
 ## 2018
 
+### Week 3
+- Juno boards changed to use SSD drives over SATA, rather than USB thumbdrives
+  for temporary storage when running LTP. This should eliminate false failures
+  on I/O related tests.
+
 ### Week 2
 - [LKFT LAVA](https://lkft.validation.linaro.org/) upgraded to Debian Stretch
   and LAVA 2018.01.

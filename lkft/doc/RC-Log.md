@@ -4,14 +4,20 @@ Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
 ## 2018-01-15
+- Greg requested verifying bpf in 4.4 and 4.9 but we did not have a good way to
+  do so. Tests aren’t backported. We are looking at getting bcc running on
+  hikey, as a means of manual verification.
 ### 4.4.112
 Results in <24h
 - Build (infrastructure) failure with hikey, requiring manual intervention.
+- 5 RCs
 ### 4.9.77
 Results in <24h
+- 6 RCs
 ### 4.14.14
 Results in <24h
 - Build (infrastructure) failure with hikey, requiring manual intervention.
+- 4 RCs
 
 ## 2018-01-08
 ### 4.4.111
