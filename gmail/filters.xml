@@ -72,11 +72,10 @@
         <apps:property name='shouldStar' value='true'/>
     </entry>
 
-    <!-- From Linus -->
     <entry>
         <category term='filter'></category>
-        <title>Star Linus threads</title>
-        <apps:property name='from' value='torvalds@linux-foundation.org'/>
+        <title>Star threads from special people</title>
+        <apps:property name='from' value='torvalds@linux-foundation.org|milosz.wasilewski@linaro.org|chase.qi@linaro.org|anders.roxell@linaro.org|naresh.kamboju@linaro.org|ryan.arnold@linaro.org'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
 
