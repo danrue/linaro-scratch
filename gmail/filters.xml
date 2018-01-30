@@ -166,12 +166,14 @@
         <apps:property name='hasTheWord' value='label:junk -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
+    <!--
     <entry>
         <category term='filter'></category>
         <title>Archive lists-ltp</title>
         <apps:property name='hasTheWord' value='label:lists-ltp -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
+    -->
     <entry>
         <category term='filter'></category>
         <title>Archive lists-stable</title>

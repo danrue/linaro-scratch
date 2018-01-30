@@ -5,6 +5,10 @@ infrastructure.
 
 ## 2018
 
+### Week 4
+
+- No updates.
+
 ### Week 3
 - Juno boards changed to use SSD drives over SATA, rather than USB thumbdrives
   for temporary storage when running LTP. This should eliminate false failures

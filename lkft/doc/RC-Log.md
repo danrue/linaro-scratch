@@ -3,6 +3,16 @@
 Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
+## 2018-01-22
+### 4.4.113
+Results in <24h
+- Issue with 'main.sh' kselftest on hikey due to missing patch on linaro's
+  hikey tree. Resolved.
+### 4.9.78
+Results in <24h
+### 4.14.15
+Results in <24h
+
 ## 2018-01-15
 - Greg requested verifying bpf in 4.4 and 4.9 but we did not have a good way to
   do so. Tests aren’t backported. We are looking at getting bcc running on
