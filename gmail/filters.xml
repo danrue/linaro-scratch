@@ -13,10 +13,8 @@
         that order is important.
 
         Maintaining filters in XML and then importing them solves the order
-        issue. The multiple-match issue can be solved with complex rules that
-        match and then have lists of exclusions. Alternatively, and rules to
-        positively match emails I want to see, star them, and then exclude
-        starred emails from subsequent rules.
+        issue. The multiple-match issue can be solved by starring email (or
+        labeling them) and then excluding later rules based on the star.
 
         The easiest way to develop new rules is to write them in the UI, save
         them, and then export them. Advanced search operators can be found @
@@ -25,7 +23,7 @@
         Inbox Zero - I prefer to keep any email I intend to ever read in my
         inbox, and clear them out quickly (daily at worst), so the filters are
         actually quite minimal. Mostly they just allow me to get small subsets
-        of mailing lists to my inbox using positive matches in Phase 1.
+        of mailing lists to my inbox using positive matches.
 
         Structure:
             - Label emails according to their mailing list memberships. Multiple labels OK.
@@ -38,10 +36,10 @@
     <!-- To me specifically, but not from bots (so, probably from a human) -->
     <entry>
         <category term='filter'></category>
-        <title>Star Personal Mail</title>
+        <title>Star Personal and special people Mail</title>
         <!-- Don't star these senders -->
         <apps:property name='from' value='-builds@travis-ci.org -projects@linaro.org -bugzilla-daemon@bugs.linaro.org -it-services@linaro.org'/>
-        <apps:property name='to' value='dan.rue@linaro.org'/>
+        <apps:property name='to' value='dan.rue@linaro.org|anders.roxell@linaro.org|naresh.kamboju@linaro.org|daniel.diaz@linaro.org'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
 
@@ -75,7 +73,7 @@
     <entry>
         <category term='filter'></category>
         <title>Star threads from special people</title>
-        <apps:property name='from' value='torvalds@linux-foundation.org|milosz.wasilewski@linaro.org|chase.qi@linaro.org|anders.roxell@linaro.org|naresh.kamboju@linaro.org|ryan.arnold@linaro.org'/>
+        <apps:property name='from' value='torvalds@linux-foundation.org|milosz.wasilewski@linaro.org|chase.qi@linaro.org|anders.roxell@linaro.org|naresh.kamboju@linaro.org|ryan.arnold@linaro.org|daniel.diaz@linaro.org'/>
         <apps:property name='shouldStar' value='true'/>
     </entry>
 
