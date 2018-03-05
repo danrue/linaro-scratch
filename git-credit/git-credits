@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+
+import datetime
+import pprint
+import re
+import sys
+import subprocess
+import time
+
+emails = ['<dan.rue@linaro.org>',
+          '<anders.roxell@linaro.org>',
+          '<naresh.kamboju@linaro.org>',
+          '<daniel.diaz@linaro.org>',
+         ]
+email_regex = re.compile('({})'.format('|'.join(emails), re.IGNORECASE))
+
+start_time = datetime.datetime(2018, 1, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
+end_time = datetime.datetime(2018, 3, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
+
+GIT_COMMIT_FIELDS = {
+    "short_hash": "%h",
+    "author": "%an <%ae>",
+    "author_date": "%ad",
+    "subject": "%s",
+    "committer": "%cn <%ce>",
+    "committer_date": "%cd",
+    "committer_date_unix": "%ct",
+    "body": "%b",
+}
+GIT_LOG_FORMAT = '%x1f'.join(GIT_COMMIT_FIELDS.values()) + '%x1e'
+
+git = subprocess.run("git log --reverse --format='{}' -50000".format(GIT_LOG_FORMAT),
+                     shell=True,
+                     stdout=subprocess.PIPE,
+                     universal_newlines=True)
+
+
+log = git.stdout
+log = log.strip('\n\x1e').split("\x1e")
+log = [row.strip().split("\x1f") for row in log]
+log = [dict(zip(GIT_COMMIT_FIELDS.keys(), row)) for row in log]
+
+for commit in log:
+    if ((int(commit['committer_date_unix']) < start_time) or
+        (int(commit['committer_date_unix']) >= end_time)):
+        # Commit is earlier or more recent than our date range
+        continue
+    lines = list(filter(email_regex.search, commit.values()))
+    if len(lines) == 0:
+        continue
+
+    print('{} ("{}")'.format(commit['short_hash'], commit['subject']))
+    #print('    Author Date: {}'.format(commit['author_date']))
+    print('    Commit Date: {}'.format(commit['committer_date']))
+    print('    Author: {}'.format(commit['author']))
+    #if commit['author'] != commit['committer']:
+    #    print('    Committer: {}'.format(commit['committer']))
+    for line in commit['body'].split('\n'):
+        if email_regex.search(line):
+            print("    {}".format(line))
+    print()
