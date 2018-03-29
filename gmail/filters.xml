@@ -160,6 +160,14 @@
 
     <entry>
         <category term='filter'></category>
+        <title>linux-next</title>
+        <apps:property name='to' value='linux-next@vger.kernel.org'/>
+        <apps:property name='hasTheWord' value='list:&lt;linux-next.vger.kernel.org&gt;'/>
+        <apps:property name='label' value='lists-next'/>
+    </entry>
+
+    <entry>
+        <category term='filter'></category>
         <title>Archive junk</title>
         <apps:property name='hasTheWord' value='label:junk -label:starred'/>
         <apps:property name='shouldArchive' value='true'/>
