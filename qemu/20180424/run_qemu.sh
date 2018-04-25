@@ -18,5 +18,7 @@ qemu-system-x86_64 \
 
   #-append "vsyscall=native" \
   #-append "console=ttyAMA0 root=/dev/vda rw" \
+
+  # From http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-stable-rc-4.9/244/bzImage--4.9+git0+8617c15e22-r0-intel-core2-32-20180423185518-244.bin
   #-kernel bzImage--4.9+git0+8617c15e22-r0-intel-core2-32-20180423185518-244.bin \
 
