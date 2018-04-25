@@ -1,0 +1,84 @@
+4.9, x15:
+
+lkft-ltp-syscalls-linux-4.9.y-236
+1. https://lkft.validation.linaro.org/scheduler/job/187418
+2. https://lkft.validation.linaro.org/scheduler/job/187550
+
+clone09.c:72: INFO: create clone in a new netns with 'CLONE_NEWNET' flag
+Cannot kill test processes!
+Congratulation, likely test hit a kernel bug.
+Exitting uncleanly...
+
+last output:
+gethostbyname_r01    1  TPASS  :  not vulnerable
+
+next test: gethostid01
+
+
+lkft-kselftests-linux-4.9.y-236
+1. https://lkft.validation.linaro.org/scheduler/job/187429
+2. https://lkft.validation.linaro.org/scheduler/job/187428
+3. https://lkft.validation.linaro.org/scheduler/job/187421
+
+last output:
+case: test_kmod.sh
+case_id: 27482565
+definition: 1_kselftest
+result: skip
+
+next test:
+./test_xdp_redirect.sh
+
+
+lkft-ltp-fs-linux-4.9.y-236
+1. https://lkft.validation.linaro.org/scheduler/job/187430
+2. https://lkft.validation.linaro.org/scheduler/job/187422
+
+last output:
+fs_di      10  TPASS  :  Test Successful
+
+next test: proc01 proc01 -m 128
+
+
+ltp debugging:
+https://lkft.validation.linaro.org/scheduler/job/187554#L3479
++ cd /opt/ltp/testcases/bin
++ strace -f ./gethostid01
+getsockopt(3, SOL_NETLINK, 9, NULL, [0]) = 0
+... long wait ...
+sendto(3, {{len=24, type=0x16 /* NLMSG_??? */, flags=NLM_F_REQUEST|NLM_F_ACK|0x300, seq=1, pid=0}, \"\2 \0\0\0\0\0\0\"}, 24, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 16[  598.273074] random: crng init done
+
+
+
+kselftest debugging:
+https://lkft.validation.linaro.org/scheduler/job/187552
+- cd /opt/kselftests/mainline/bpf && ./test_xdp_redirect.sh
+- result: hang
+
+https://lkft.validation.linaro.org/scheduler/job/187556
+- cd /opt/kselftests/mainline/bpf && /bin/sh -x test_xdp_redirect.sh
+- result: hang after "ip link set dev lo xdpgeneric off"
+
+https://lkft.validation.linaro.org/scheduler/job/187558
+- ip link
+- ip link set dev lo xdpgeneric off
+- result: hang on "ip link"
+
+https://lkft.validation.linaro.org/scheduler/job/187559
+- strace ip link
+- result:
+getsockname(3, {sa_family=AF_NETLINK, nl_pid=353, nl_groups=00000000}, [12]) = 0
+.... long wait ....
+send(3, {{len=40, type=0x12 /* NLMSG_??? */, flags=NLM_F_REQUEST|0x300, seq=1522961258, pid=0}, \"\21\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\10\0\35\0\1\0\0\0\"}, 40, 0[  898.113375] random: crng init done
+
+
+https://lkft.validation.linaro.org/scheduler/job/187562
+- strace -T -f ip link
+getsockopt(3, SOL_NETLINK, 9, NULL, [0]) = 0
+sendto(3, {{len=24, type=0x16 /* NLMSG_??? */, flags=NLM_F_REQUEST|NLM_F_ACK|0x300, seq=1, pid=0}, \"\2 \0\0\0\0\0\0\"}, 24, 0, {sa_family=AF_NETLINK, nl_pid=0, nl_groups=00000000}, 16[  598.273074] random: crng init done
+
+
+
+https://lkft.validation.linaro.org/scheduler/job/187560
+- hacking session
+

@@ -3,6 +3,177 @@
 Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
+
+## 2018-04-22
+- Rare Sunday morning push (first this year), complicated by Monday qa-reports
+  scheduled outage.
+### 4.4.129
+- Reported no regressions in <24h
+### 4.9.96
+- Reported arm64 boot regression in <24h
+- Manual bisection results reported in <48h
+- Reported no regressions in <48h on RC3
+### 4.14.36
+- Shuah reported locking issue during boot
+- Reported no regressions in <48h on RC3
+### 4.16.4
+- Shuah reported locking issue during boot
+- Reported no regressions in <48h on RC3
+
+## 2018-04-17
+- All RC builds failed due to change in -next. Fixed via
+  https://github.com/96boards/meta-rpb/pull/166
+### 4.9.95
+First response in <48h.
+A network driver issue from 4.9.94 was discovered on x15 in the network stack,
+reported at
+https://lists.linaro.org/pipermail/linux-stable-mirror/2018-April/038977.html
+### 4.14.35
+Response in <24h
+### 4.15.18
+Response in <24h
+### 4.16.3
+Response in <24h
+
+## 2018-04-11
+### 4.4.128
+Response in <24h
+### 4.9.94
+Response in <24h
+
+## 2018-04-10
+### 4.14.34
+Response in <24h
+### 4.15.17
+Response in <24h
+### 4.16.2
+Response in <24h
+
+## 2018-04-06
+### 4.4.127
+Response in <24h
+### 4.9.93
+Response in <24h
+db410c issue detected - bug 3723; cpu-on-off-test
+### 4.14.33
+Response in <24h
+### 4.15.16
+Response in <8h
+### 4.16.1
+Response in <24h
+
+## 2018-03-29
+### 4.4.126
+Results in <24h
+### 4.9.92
+Results in <48h
+### 4.14.32
+Results in <24h
+### 4.15.15
+Results in <48h
+
+## 2018-03-27
+Initially, all branches had a build error due to /COPYING changing on -next,
+and the checksum of said file being hard coded in our OE recipe.
+### 4.4.125
+Build failure on arm64 reported in <8h
+Results in <48h
+### 4.9.91
+Results in <24h
+### 4.14.31
+- Regression identified in libhugetlbfs/arm32
+  https://bugs.linaro.org/show_bug.cgi?id=3689
+- Results in <48h
+### 4.15.14
+- Regression identified in libhugetlbfs/arm32
+  https://bugs.linaro.org/show_bug.cgi?id=3689
+- Results in <48h
+
+## 2018-03-23
+### 4.4.124
+Results in <8h
+### 4.9.90
+Results in <8h
+### 4.14.30
+Build failed on arm32
+First response in <8h
+- No results for hikey or db410c due to offline devices and limited support
+  availability due to Connect (arm64 was still covered by juno devices)
+### 4.15.13
+Build failed on arm32
+First response in <8h
+- No results for hikey or db410c due to offline devices and limited support
+  availability due to Connect (arm64 was still covered by juno devices)
+
+## 2018-03-20
+### 4.4.123
+Failed to build on arm32
+First response in <8h
+### 4.9.89
+Failed to build on arm32,arm64.. 6 patches causing build issues
+First response in <8h
+### 4.14.29
+Results in <24h
+### 4.15.12
+Results in <24h
+
+## 2018-03-16
+### 4.4.122
+Results in <24h
+### 4.9.88
+Results in <24h
+### 4.14.28
+- rc1: arm/arm64 build error reported
+- rc3: arm build error reported
+First response in <8h
+### 4.15.11
+- arm/arm64 build error reported
+- rc3: arm build error reported
+First response in <8h
+
+## SLA
+Current SLA
+4.4.121-4.4.109 = 13
+4.9.87-4.9.74 = 13
+4.14.26-4.14.11 = 15
+4.15.9-4.15.1 = 9
+total = 50
+met SLA = 46
+SLA=92%
+
+## 2018-03-13
+- -rc1 contained arm64 boot breakage reported (as previously seen on next and
+  mainline per https://bugs.linaro.org/show_bug.cgi?id=3676). Greg pulled the
+  patch and released an -rc2.
+### 4.14.27
+Results in <48h
+### 4.15.10
+Results in <48h
+
+## 2018-03-10
+- Results longer than 48h due to weekend availability. RC was pushed at Sat Mar 10 00:18:21 UTC 2018.
+- Many infrastructure failures were mentioned with regard to the reported boot
+  failures that we experience on db410c.
+- Some incorrect results were sent and then corrected, due to manual nature of
+  reporting.
+- 4.4 x86_64 not reported due to build error (sstate_create_package error,
+  CTT-1010)
+### 4.4.121
+Results in <72h
+### 4.9.87
+Results in <72h
+### 4.14.26
+Results in <72h
+### 4.15.9
+Results in <72h
+
+## 2018-03-07
+- self induced snapshots.linaro.org outage during build
+### 4.14.25
+Results in <24h
+### 4.15.8
+Results in <24h
+
 ## 2018-03-02
 - git.yoctoproject.org outage caused build delays in 4.4 and 4.14
 - db410c and qemu x86_64 reported for first time
