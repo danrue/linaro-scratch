@@ -2,12 +2,14 @@
 
 set -ex
 
-test -f rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4 ||
-    wget http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.16/16/rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4.gz && \
+if [ ! -f rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4 ]; then
+    wget http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.16/16/rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4.gz
     gunzip rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4.gz
+fi
 
-test -f zImage--4.16+git0+e5ce9f6879-r0-am57xx-evm-20180426095506-16.bin || \
+if [ ! -f zImage--4.16+git0+e5ce9f6879-r0-am57xx-evm-20180426095506-16.bin ]; then
     wget http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.16/16/zImage--4.16+git0+e5ce9f6879-r0-am57xx-evm-20180426095506-16.bin
+fi
 
 qemu-system-arm \
   -cpu cortex-a15 \
