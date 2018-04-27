@@ -1,0 +1,124 @@
+
+timeouts:
+  job:
+    minutes: 120
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  arch: arm64
+  netdevice: tap
+  machine: virt
+  cpu: cortex-a57
+  guestfs_interface: virtio
+
+
+device_type: qemu
+job_name: lkft-ltp-syscalls-linux-4.16.y-17
+priority: 75
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.16.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: d804f93aa2d92746fe97707a51352689786ee98a
+  git describe: v4.16.5-82-gd804f93aa2d9
+  make_kernelversion: 4.16.6-rc1
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-stable-rc-4.16/17/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-stable-rc-4.16/17/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.16/DISTRO=rpb,MACHINE=hikey,label=docker-lkft/17/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-stable-rc-4.16/17
+  toolchain: aarch64-linaro-linux linaro-6.2
+  series: lkft
+
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: '20180118'
+  ltp-syscalls-tests__revision: 731cd34e682d297b207668be8b1d15320a9ac1b1
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tmpfs
+    images:
+      rootfs:
+        image_arg: -drive format=raw,file={rootfs},if=virtio -m 4096 -smp 4 -nographic
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-stable-rc-4.16/17/rpb-console-image-hikey-20180427152124-17.rootfs.ext4.gz
+        compression: gz
+        apply-overlay: true
+        sparse: false
+      kernel:
+        image_arg: -kernel {kernel} --append "console=ttyAMA0 root=/dev/vda rw"
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/hikey/rpb/linux-stable-rc-4.16/17/Image--4.16+git0+d804f93aa2-r0-hikey-20180427152124-17.bin
+        type: image
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: qemu
+    media: tmpfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - root@hikey:~#
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 120
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Link /ltp-tmp to /tmp
+        run:
+          steps:
+          - df -h
+          - ln -s /tmp /ltp-tmp
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+
+
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: syscalls
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: qemu_arm64
+        BRANCH: '4.16'
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-syscalls-tests
+      timeout:
+        minutes: 115
+
+

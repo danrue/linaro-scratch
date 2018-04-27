@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+
+import email
+import imaplib
+import os
+import pprint
+import sys
+
+emails = ['dan.rue@linaro.org',
+          'anders.roxell@linaro.org',
+          'naresh.kamboju@linaro.org',
+          'daniel.diaz@linaro.org',
+         ]
+email_regex = '|'.join(emails)
+
+
+# to:linux-kernel@vger.kernel.org from:dan.rue@linaro.org|naresh.kamboju@linaro.org after:2018-02-02 before:2018-03-01
+
+"""
+
+    Look through a google INBOX and for each email message matching
+    a pattern...
+
+    Example Usage:
+    EMAIL_ADDRESS=dan.rue@linaro.org EMAIL_PASSWORD=XXX python3 email_responder.py
+
+    Example cron:
+    */5 * * * * cd /home/drue/src/lava-triager && EMAIL_ADDRESS=dan.rue@linaro.org EMAIL_PASSWORD=XXX python3 email_responder.py >> /home/drue/lava-triager.log 2>&1
+
+"""
+
+
+
+
+print(os.environ.get('EMAIL_ADDRESS'), os.environ.get('EMAIL_PASSWORD'))
+mail = imaplib.IMAP4_SSL('imap.gmail.com')
+mail.login(os.environ.get('EMAIL_ADDRESS'), os.environ.get('EMAIL_PASSWORD'))
+mail.select('"[Gmail]/All Mail"')
+result, data = mail.uid('search', None, r'(X-GM-RAW "to:linux-kernel@vger.kernel.org from:'+email_regex+r' after:2018-01-01 before:2018-03-01")')
+#result, data = mail.uid('search', None, r'(X-GM-RAW "to:linux-kernel@vger.kernel.org from:dan.rue@linaro.org")')
+#result, data = mail.uid('search', None, 'X-GM-RAW', "to:linux-kernel@vger.kernel.org")
+#result, data = mail.uid('search', None, 'X-GM-RAW', "from:dan.rue@linaro.org")
+                                        #'X-GM-RAW', "from:dan.rue@linaro.org")
+
+for uid in data[0].split():
+    result, data = mail.uid('fetch', uid, '(RFC822)')
+    raw_email = data[0][1]
+
+    email_message = email.message_from_string(raw_email.decode("utf-8"))
+    print(email_message)
+    sys.exit()

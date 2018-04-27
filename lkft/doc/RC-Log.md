@@ -3,6 +3,22 @@
 Log of status and events while doing release candidate testing in Linaro's
 Linux Kernel Functional Test (LKFT) project.
 
+## 2018-04-27
+### 4.4.130
+- Reported no regressions in <8h
+### 4.9.97
+- Reported no regressions in <8h
+### 4.14.38
+- Reported no regressions in <8h
+### 4.16.6
+- Reported no regressions in <8h
+
+## 2018-04-25
+### 4.14.37
+- Reported no regressions in <24h
+### 4.16.5
+- Reported no 4.16.5 regressions in <24h
+- Noted regression in 4.16.4 on db410c
 
 ## 2018-04-22
 - Rare Sunday morning push (first this year), complicated by Monday qa-reports

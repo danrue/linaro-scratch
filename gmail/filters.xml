@@ -194,7 +194,6 @@
     </entry>
 
     <!-- Kernel CI -->
-    <!--
     <entry>
         <category term='filter'></category>
         <title>Mail Filter</title>
@@ -202,6 +201,5 @@
         <apps:property name='hasTheWord' value='list:(kernel-build-reports.lists.linaro.org)'/>
         <apps:property name='shouldArchive' value='true'/>
     </entry>
-    -->
 
 </feed>

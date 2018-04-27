@@ -1,0 +1,7 @@
+lava-tool jobs-list lkft | jq -c '.[] | "\(.[0]) \(.[1]) \(.[2]) \(.[4].name)"' | grep submitted | grep hi6220-hikey | grep master
+
+# Cancel all 'master' jobs on hikey
+lava-tool jobs-list lkft | jq -c '.[] | "\(.[0]) \(.[1]) \(.[2]) \(.[4].name)"' | grep submitted | grep hi6220-hikey | grep master | awk '{print $1}' | sed s/\"// | xargs -n 1 lava-tool cancel-job lkft
+
+# Cancel all 'master' jobs on dragonboard
+lava-tool jobs-list lkft | jq -c '.[] | "\(.[0]) \(.[1]) \(.[2]) \(.[4].name)"' | grep submitted | grep dragonboard | grep master | awk '{print $1}' | sed s/\"// | xargs -n 1 lava-tool cancel-job lkft

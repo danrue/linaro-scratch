@@ -1,0 +1,114 @@
+context:
+  arch: amd64
+  guestfs_interface: virtio
+
+timeouts:
+  job:
+    minutes: 95
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+
+
+device_type: qemu
+job_name: lkft-ltp-fs_virtio-experiment
+priority: low
+visibility: public
+
+metadata:
+
+  
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: ea9b5ee31078b027ced5b6e9ec4f2a10bd5e49c0
+  git describe: v4.16-rc4-152-gea9b5ee31078
+  make_kernelversion: 4.16.0-rc4
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-core2-32,label=docker-stretch-amd64/700/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700
+  series: lkft
+
+  ltp-fs-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-fs-tests__version: '20180118'
+  ltp-fs-tests__revision: 731cd34e682d297b207668be8b1d15320a9ac1b1
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tmpfs
+    images:
+      rootfs:
+        image_arg: -drive format=raw,file={rootfs},if=virtio -m 4096 -smp 4 -nographic
+        url: http://people.linaro.org/~milosz.wasilewski/rpb-console-image-intel-core2-32-20180315152617.hddimg.gz
+        compression: gz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: qemu
+    media: tmpfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 60
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Link /ltp-tmp to /tmp
+        run:
+          steps:
+          - df -h
+          - ln -s /tmp /ltp-tmp
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+
+
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: fs
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: qemu_x86_64
+        BRANCH: mainline
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-fs-tests
+      timeout:
+        minutes: 90
+
+

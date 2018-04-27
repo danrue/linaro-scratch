@@ -79,7 +79,7 @@ actions:
     definitions:
       - repository: http://git.linaro.org/lava-team/hacking-session.git
         from: git
-        path: hacking-session-debian.yaml
+        path: hacking-session-oe.yaml
         params:
           PUB_KEY: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDORl4HnMm6j9OsjXENsmJM73OFqBsNCWGmQ0Lucir7Wh+AxCRxDxXmtpnSmW1ZO3Foo0xVC0ie0BYCg3HkwFqst/0Ho7q0yK5zqnZ+oFIgyYdCpnsdNCOgdMTns9NRkW8PG7QfCsLH46h5JbxYp+MRysklPSO4l1sKXf8bTYxowTctC9qIFR5847Djq7xNpK3gJN2Z2nPu9mvjKgK5pwhOuP9dk3aLvUW0sInKn6tYkvsGKRnSv1CbiUesfBDgmwyLSQ8GgKF575jgaI11gTkJXVHxmb6P0pSUgnXBXRggz+qiJBCrqkUiLhwn6uPCZ8nXWShfTqwg+682qda/3mKX drue@drue-xps13"
         name: lxc-hacking-session-ubuntu

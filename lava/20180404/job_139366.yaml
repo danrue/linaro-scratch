@@ -1,0 +1,56 @@
+actions:
+- deploy:
+    images:
+      rootfs: {image_arg: '-drive format=raw,file={rootfs} -m 4096 -smp 4 -nographic',
+        url: 'http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700/rpb-console-image-intel-core2-32-20180308001204-700.hddimg'}
+    namespace: target
+    os: oe
+    timeout: {minutes: 15}
+    to: tmpfs
+- boot:
+    auto_login:
+      login_commands: [su]
+      login_prompt: 'login:'
+      username: root
+    media: tmpfs
+    method: qemu
+    namespace: target
+    prompts: ['root@intel-core2-32:']
+    timeout: {minutes: 10}
+- test:
+    definitions:
+    - from: inline
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+      repository:
+        metadata: {description: Link /ltp-tmp to /tmp, format: Lava-Test Test Definition
+            1.0, name: prep-tmp-disk}
+        run:
+          steps: [df -h, ln -s /tmp /ltp-tmp]
+    - from: git
+      name: ltp-fs-tests
+      parameters: {BOARD: qemu_x86_64, BRANCH: mainline, ENVIRONMENT: production,
+        SKIPFILE: skipfile-lkft.yaml, SKIP_INSTALL: 'true', TIMEOUT_MULTIPLIER: 3,
+        TST_CMDFILES: fs}
+      path: automated/linux/ltp/ltp.yaml
+      repository: git://git.linaro.org/qa/test-definitions.git
+      timeout: {minutes: 90}
+    namespace: target
+    timeout: {minutes: 60}
+context: {arch: amd64}
+device_type: qemu
+job_name: lkft-ltp-fs-master-700
+metadata: {build-location: 'http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700',
+  build-url: 'https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-core2-32,label=docker-stretch-amd64/700/',
+  git branch: master, git commit: ea9b5ee31078b027ced5b6e9ec4f2a10bd5e49c0, git describe: v4.16-rc4-152-gea9b5ee31078,
+  git repo: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git',
+  kernel-config: 'http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700/config',
+  kernel-defconfig: 'http://snapshots.linaro.org/openembedded/lkft/morty/intel-core2-32/rpb/linux-mainline/700/defconfig',
+  ltp-fs-tests__revision: 731cd34e682d297b207668be8b1d15320a9ac1b1, ltp-fs-tests__url: 'git://github.com/linux-test-project/ltp.git',
+  ltp-fs-tests__version: '20180118', make_kernelversion: 4.16.0-rc4, series: lkft}
+priority: low
+timeouts:
+  action: {minutes: 10}
+  connection: {minutes: 2}
+  job: {minutes: 95}
+visibility: public
