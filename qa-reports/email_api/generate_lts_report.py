@@ -22,17 +22,23 @@ branches = {
 
 }
 
+report = ""
 for i, url in enumerate(branches[branch]):
     r = requests.get(url+'builds')
     result = r.json()['results'][0]
+
+    # Check status, make sure it is finished
+    r = requests.get(result['status'])
+    status = r.json()
+    assert status['finished'], "ERROR: Build {} not yet Finished".format(url)
+
     r = requests.get(result['url']+'email?template=9')
     text = r.text
     if len(branches[branch]) > 1 and i != len(branches[branch])-1:
         # Remove the last 3 line (sig) if there are more reports
         # coming
         text = '\n'.join(text.split('\n')[:-3])
-    #if i > 0:
-    #    text = '\n'.join(text.split('\n')[3:])
-    print(text)
+    report += text
 
+print(report)
 
