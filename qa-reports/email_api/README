@@ -1,0 +1,39 @@
+## generating project status email via api
+
+Basic version:
+https://qa-reports.linaro.org/api/builds/5811/email/
+5811 is the primary key of the build. You can filter/search the build (below)
+
+Version with different template:
+https://qa-reports.linaro.org/api/builds/5811/email/?template=4
+4 is the primary key of the email template. There is a special value
+of this variable = 'default'. This forces using SQUAD's hardcoded
+default templates. For some reason this gives ServerError at the
+moment. All email templates can be found here:
+https://qa-reports.linaro.org/api/emailtemplates/
+
+Full version:
+https://qa-reports.linaro.org/api/builds/5811/email/?template=4&output=text/html
+If html version exists it will be generated. Otherwise it will be just
+text/plain with incorrect mime type.
+
+Filtering build version:
+https://qa-reports.linaro.org/api/builds/?version=v4.9.94-165-g9155d55d5cea
+This might return more than one entry. In order to limit it to proper
+project, you'll need to provide project primary key:
+https://qa-reports.linaro.org/api/builds/?version=v4.9.94-165-g9155d55d5cea&project=23
+
+Projects can be filtered the same way:
+https://qa-reports.linaro.org/api/projects/?slug=linux-stable-rc-4.9-oe
+
+But you need to find the proper group first:
+https://qa-reports.linaro.org/api/groups/?slug=lkft
+
+Searching works similarly to filtering, but it uses predefined set of
+fields. So for this use case it's not that useful. You use it by
+adding ?search= keyword to API endpoint.
+
+I guess it's worth creating a script for running email preview but I'd
+like to finish the external config first. Once this is done, I'll try
+to document the options in the API as well.
+
