@@ -23,6 +23,7 @@ branches = {
 }
 
 report = ""
+no_regressions = True
 for i, url in enumerate(branches[branch]):
     r = requests.get(url+'builds')
     result = r.json()['results'][0]
@@ -34,11 +35,27 @@ for i, url in enumerate(branches[branch]):
 
     r = requests.get(result['url']+'email?template=9')
     text = r.text
+    if "Regressions" in text:
+        no_regressions = False
+
     if len(branches[branch]) > 1 and i != len(branches[branch])-1:
         # Remove the last 3 line (sig) if there are more reports
         # coming
         text = '\n'.join(text.split('\n')[:-3])
     report += text
+
+if no_regressions:
+    report = (
+"""Results from Linaro’s test farm.
+No regressions on arm64, arm and x86_64.
+
+""" + report)
+else:
+    report = (
+"""Results from Linaro’s test farm.
+Regressions detected.
+
+""" + report)
 
 print(report)
 
