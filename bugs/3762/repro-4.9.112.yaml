@@ -1,0 +1,146 @@
+
+
+timeouts:
+  job:
+    minutes: 45
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  test_character_delay: 10
+
+
+
+device_type: x15
+job_name: lkft-bug3762-linux-4.9.y-312
+priority: 100
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.9.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 74d7eea2e72c5481ba8b578cfa663c117ab7f23b
+  git describe: v4.9.111-53-g74d7eea2e72c
+  make_kernelversion: 4.9.112-rc1
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/312/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/312/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=rpb,MACHINE=am57xx-evm,label=docker-lkft/312/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/312
+  toolchain: arm-linaro-linux-gnueabi linaro-6.2
+  series: lkft
+
+  kselftest__url: https://www.kernel.org/pub/linux/kernel/v4.x/linux-4.17.tar.xz
+  kselftest__version: '4.17'
+  kselftest__revision: '4.17'
+
+
+
+protocols:
+  lava-lxc:
+    name: lxc-target
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+
+
+actions:
+
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: lxc
+
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - from: inline
+      name: install-google-fastboot
+      path: inline/install-google-fastboot.yaml
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: install-fastboot
+          description: Install fastboot provided by google
+        run:
+          steps:
+          - wget http://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+          - unzip -q platform-tools_r26.0.0-linux.zip
+          - ln -s `pwd`/platform-tools/fastboot /usr/bin/fastboot
+          - ln -s `pwd`/platform-tools/adb /usr/bin/adb
+          - fastboot --version
+
+
+- deploy:
+    timeout:
+      minutes: 25
+    to: fastboot
+    namespace: target
+    connection: lxc
+    images:
+      userdata:
+        url: http://snapshots.linaro.org/openembedded/lkft/morty/am57xx-evm/rpb/linux-stable-rc-4.9/312/rpb-console-image-lkft-am57xx-evm-20180710183744-312.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - setenv bootpart 1:f
+    - run mmcboot
+    timeout:
+      minutes: 15
+    method: u-boot
+
+
+
+
+- test:
+    namespace: target
+    timeout:
+      minutes: 60
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: timesync-off
+          description: Disable systemd time sync services
+        run:
+          steps:
+          - systemctl stop systemd-timesyncd || true
+          - ethtool --phy-statistics eth0
+      name: timesync-off
+      path: inline/timesync-off.yaml
