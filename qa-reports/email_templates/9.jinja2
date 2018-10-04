@@ -38,6 +38,24 @@ Regressions (compared to build {{previous_build.version}})
 No regressions (compared to build {{previous_build.version}})
 {%- endif %}
 
+{% if fixes_grouped_by_suite -%}
+Fixes (compared to build {{previous_build.version}})
+------------------------------------------------------------------------
+{% for env, tests_by_suite in fixes_grouped_by_suite.items() %}
+{{env}}:
+{%- for suite, tests in tests_by_suite.items() %}
+  {{suite}}:
+{%- for test in  tests %}
+    * {{test}}
+{%- endfor %}
+
+    * test src: {{metadata[suite + '__url'] or "not informed"}}
+{%- endfor%}
+{% endfor %}
+{%- else %}
+No fixes (compared to build {{previous_build.version}})
+{%- endif %}
+
 
 Ran {{summary.tests_pass}} total tests in the following environments and test suites.
 
