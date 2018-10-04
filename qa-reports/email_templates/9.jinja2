@@ -1,0 +1,56 @@
+{#- Calculate test counts #}
+{%- set ns = namespace() %}
+{%- set ns.suite_list = [] %}
+{%- for board,suites in build.test_suites_by_environment.items() %}
+  {%- for suite, results in suites -%}
+    {%- if suite not in ns.suite_list %}
+      {%- set ns.suite_list = ns.suite_list + [suite] %}
+    {%- endif %}
+  {%- endfor -%}
+{%- endfor -%}
+
+Summary
+------------------------------------------------------------------------
+
+{% if 'make_kernelversion' in metadata -%}
+kernel: {{metadata['make_kernelversion']}}
+{% endif -%}
+{% for key in ('git repo', 'git branch', 'git commit', 'git describe') -%}
+{{key}}: {{metadata[key] or "not informed"}}
+{% endfor -%}
+Test details: {{settings.BASE_URL}}/{{build.project}}/build/{{build.version}}
+
+{% if regressions_grouped_by_suite -%}
+Regressions (compared to build {{previous_build.version}})
+------------------------------------------------------------------------
+{% for env, tests_by_suite in regressions_grouped_by_suite.items() %}
+{{env}}:
+{%- for suite, tests in tests_by_suite.items() %}
+  {{suite}}:
+{%- for test in  tests %}
+    * {{test}}
+{%- endfor %}
+
+    * test src: {{metadata[suite + '__url'] or "not informed"}}
+{%- endfor%}
+{% endfor %}
+{%- else %}
+No regressions (compared to build {{previous_build.version}})
+{%- endif %}
+
+
+Ran {{summary.tests_pass}} total tests in the following environments and test suites.
+
+Environments
+--------------
+{% for board,suites in build.test_suites_by_environment.items() -%}
+- {{board}}
+{% endfor %}
+Test Suites
+-----------
+{% for suite in ns.suite_list -%}
+  * {{suite}}
+{% endfor %}
+-- 
+Linaro LKFT
+https://lkft.linaro.org

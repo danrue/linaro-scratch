@@ -1,0 +1,3 @@
+name: LKFT - short
+subject: {{metadata.get('make_kernelversion', metadata.get('git describe', 'unknown short version'))}}/{{metadata['git commit'] | truncate(12, True, '', 0)}}: {% if regressions %}regressions detected{% else %}no regressions found{% endif %} in project {{project.name}}
+plain_text: 9.jinja2
