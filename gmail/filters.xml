@@ -55,6 +55,13 @@
     </entry>
     <entry>
         <category term='filter'></category>
+        <title>Star stable release announcements</title>
+        <apps:property name='subject' value='Linux'/>
+        <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt; announcing the release of the'/>
+        <apps:property name='shouldStar' value='true'/>
+    </entry>
+    <entry>
+        <category term='filter'></category>
         <title>Forward greg's stable review announcement to trello</title>
         <apps:property name='subject' value='PATCH stable review -re -3.18'/> <!-- exclude responses, 3.18 branch -->
         <apps:property name='hasTheWord' value='list:&lt;stable.vger.kernel.org&gt;'/>
