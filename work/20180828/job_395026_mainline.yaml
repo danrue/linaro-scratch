@@ -1,0 +1,124 @@
+
+timeouts:
+  job:
+    minutes: 60
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  test_character_delay: 10
+
+
+device_type: x86
+job_name: lkft-ltp-cve-master-1150
+priority: 25
+visibility: public
+
+metadata:
+
+  
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: 5b394b2ddf0347bef56e50c69a58773c94343ff3
+  git describe: v4.19-rc1
+  make_kernelversion: 4.19.0-rc1
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1150/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1150/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-corei7-64,label=docker-stretch-amd64/1150/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1150
+  toolchain: x86_64-linaro-linux linaro-7.%
+  series: lkft
+
+  ltp-cve-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-cve-tests__version: '20180515'
+  ltp-cve-tests__revision: 96cbf48313afa65ef4d693d3441cbfd60a8d9b27
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1150/bzImage--4.18+git0+5b394b2ddf-r0-intel-corei7-64-20180826230629-1150.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1150/rpb-console-image-lkft-intel-corei7-64-20180826230629-1150.rootfs.tar.xz
+      compression: xz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 60
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Mount local disk for tmp space
+        run:
+          steps:
+          - df -h
+          - mount
+          - ls /dev/disk/by-id/ -l
+          - export TMPDISK=$(ls /dev/disk/by-id/ata-TOSHIBA_MG03ACA100_*)
+          - echo "y" | mkfs -t ext4 ${TMPDISK}
+          - mkdir -p /ltp-tmp
+          - mount ${TMPDISK} /ltp-tmp || lava-test-raise "mount failed job exit"
+          - df -h
+          - mount
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+
+
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: cve
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: x86
+        BRANCH: mainline
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-cve-tests
+      timeout:
+        minutes: 55
+
+

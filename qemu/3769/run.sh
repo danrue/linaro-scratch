@@ -16,12 +16,15 @@ qemu-system-arm \
   -machine virt \
   -nographic \
   -monitor none \
-  -kernel zImage--4.16+git0+e5ce9f6879-r0-am57xx-evm-20180426095506-16.bin \
+  -kernel /home/drue/ragnar-artifacts/staging/arm/v4.15-3279-g7b1cd95d65eb/zImage-v4.15-3279-g7b1cd95d65eb \
   --append "console=ttyAMA0 root=/dev/vda rw" \
-  -drive format=raw,file=rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4,if=virtio \
+  -drive format=raw,file=rootfs.ext4,if=virtio \
   -m 4096 \
   -smp 2 \
   -nographic
+
+  #-kernel zImage--4.16+git0+e5ce9f6879-r0-am57xx-evm-20180426095506-16.bin \
+  #-drive format=raw,file=rpb-console-image-am57xx-evm-20180426095506-16.rootfs.ext4,if=virtio \
 
 # am57xx-evm login: root
 # root@am57xx-evm:~# cd /opt/kselftests/default-in-kernel/gpio/
