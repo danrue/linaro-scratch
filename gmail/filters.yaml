@@ -1,0 +1,179 @@
+# Gmail filters are powerful but difficult to manage in the UI. For example,
+# in the UI, there is no easy way to specify filter order. Also, there is no
+# way to stop filtering - all emails will hit all filter rules, which means
+# that order is important.
+#
+# Maintaining filters in XML and then importing them solves the order
+# issue. The multiple-match issue can be solved by starring email (or
+# labeling them) and then excluding later rules based on the star.
+#
+# The easiest way to develop new rules is to write them in the UI, save
+# them, and then export them. Advanced search operators can be found @
+# https://support.google.com/mail/answer/7190
+#
+# Inbox Zero - I prefer to keep any email I intend to ever read in my
+# inbox, and clear them out quickly (daily at worst), so the filters are
+# actually quite minimal. Mostly they just allow me to get small subsets
+# of mailing lists to my inbox using positive matches.
+#
+# Structure:
+#     - Label emails according to their mailing list memberships. Multiple labels OK.
+#     - Star emails that should stay in inbox.
+#     - Last rule: Archive (remove from inbox) emails that match a list of labels, and are not starred.
+
+# To me specifically, but not from bots (so, probably from a human)
+-
+  to:
+    any:
+      - dan.rue@linaro.org
+      - anders.roxell@linaro.org
+      - naresh.kamboju@linaro.org
+      - daniel.diaz@linaro.org
+      - matt.hart@linaro.org
+      - rafael.tinoco@linaro.org
+  from:
+    all:
+      - -builds@travis-ci.org
+      - -projects@linaro.org
+      - -bugzilla-daemon@bugs.linaro.org
+      - -it-services@linaro.org
+  label: todo
+  archive: true
+
+#    <title>Star threads from special people</title>
+-
+  from:
+    any:
+      - torvalds@linux-foundation.org
+      - milosz.wasilewski@linaro.org
+      - chase.qi@linaro.org
+      - anders.roxell@linaro.org
+      - naresh.kamboju@linaro.org
+      - ryan.arnold@linaro.org
+      - daniel.diaz@linaro.org
+  label: todo
+  archive: true
+
+
+#<!-- Stable review threads started by Greg -->
+#<!-- Only the first message contains "stable review" in subject -->
+#<!-- The patches themselves have a patch-specific subject instead. -->
+-
+  list: stable@vger.kernel.org
+  label: lists-stable
+  archive: true
+-
+  subject:
+    any:
+      - PATCH
+      - stable review
+    all:
+      - "-3.18" # exclude 3.18
+  list: stable@vger.kernel.org
+  label: todo
+  archive: true
+-
+  subject: announcing the release of the
+  list: stable@vger.kernel.org
+  label: todo
+  archive: true
+
+
+#    <title>Star mainline release announcements</title>
+-
+  list: linux-kernel@vger.kernel.org
+  label: lists-lkml
+  archive: true
+-
+  list: linux-kernel@vger.kernel.org
+  subject:
+    any:
+      - Linux [0-9]
+    all:
+      - -PATCH
+      - -GIT
+  label: todo
+  archive: true
+
+
+#<!-- kselftest list -->
+-
+  list: linux-kselftest@vger.kernel.org
+  label: lists-kselftest
+  archive: true
+
+#    <title>Gerrit</title>
+-
+  from: review@review.linaro.org
+  label: gerrit
+
+#    <title>Build bot for Mark Brown</title>
+-
+  from: Build bot for Mark Brown broonie@kernel.org
+  list: linux-kernel@vger.kernel.org
+  label: junk
+  archive: true
+
+#    <title>Olaf&apos;s autobuilder</title>
+-
+  from: Olof's autobuilder <build@lixom.net>
+  label: junk
+  archive: true
+
+#    <title>Monitoring alerts</title>
+-
+  from: it-services@linaro.org
+  label: junk
+  archive: true
+
+#    <title>Gerrit</title>
+-
+  from: review@review.linaro.org
+  has:
+    any:
+      - lava-bot posted comments
+      - would like to review this change
+  label: junk
+  archive: true
+
+#    <title>Suppress ci successful build notifications</title>
+-
+  from: ci_notify@linaro.org
+  subject: Successful!
+  label: junk
+  archive: true
+
+#
+#    <category term='filter'></category>
+#    <title>LTP - skip inbox, unless starred</title>
+#    <apps:property name='to' value='ltp@lists.linux.it'/>
+#    <apps:property name='label' value='lists-ltp'/>
+#</entry>
+#
+-
+  for_each:
+    - todo
+    - lists-ltp
+  rule:
+    list: ltp@lists.linux.it
+    label: "{item}"
+    archive: true
+
+#    <title>linux-next</title>
+-
+  list: linux-next@vger.kernel.org
+  label: lists-next
+  archive: true
+
+#<!-- Kernel CI -->
+#<entry>
+#    <category term='filter'></category>
+#    <title>Mail Filter</title>
+#    <apps:property name='from' value='kernelci.org bot bot@kernelci.org'/>
+#    <apps:property name='hasTheWord' value='list:(kernel-build-reports.lists.linaro.org)'/>
+#    <apps:property name='shouldArchive' value='true'/>
+#</entry>
+-
+  from: kernelci.org bot bot@kernelci.org
+  list: kernel-build-reports@lists.linaro.org
+  archive: true
