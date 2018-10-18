@@ -1,4 +1,3 @@
-#
 # Gmail has a great search interface and very frustrating filter behavior:
 # Every email is evaluated against every rule; there is no way to stop
 # filtering, and there is no way to guarantee order of filtering.
