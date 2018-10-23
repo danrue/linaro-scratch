@@ -7,15 +7,18 @@ import sys
 import subprocess
 import time
 
-emails = ['<dan.rue@linaro.org>',
-          '<anders.roxell@linaro.org>',
-          '<naresh.kamboju@linaro.org>',
+emails = [
+          #'<dan.rue@linaro.org>',
+          #'<anders.roxell@linaro.org>',
+          #'<matt.hart@linaro.org>',
+          #'<naresh.kamboju@linaro.org>',
           '<daniel.diaz@linaro.org>',
+          #'<rafael.tinoco@linaro.org>',
          ]
 email_regex = re.compile('({})'.format('|'.join(emails), re.IGNORECASE))
 
 start_time = datetime.datetime(2018, 1, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
-end_time = datetime.datetime(2018, 3, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
+end_time = datetime.datetime(2019, 1, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
 
 GIT_COMMIT_FIELDS = {
     "short_hash": "%h",
@@ -29,7 +32,9 @@ GIT_COMMIT_FIELDS = {
 }
 GIT_LOG_FORMAT = '%x1f'.join(GIT_COMMIT_FIELDS.values()) + '%x1e'
 
-git = subprocess.run("git log --reverse --format='{}' -50000".format(GIT_LOG_FORMAT),
+#cmd = "git log --reverse --format='{}' -50000".format(GIT_LOG_FORMAT)
+cmd = "git log --reverse --format='{}' -100000".format(GIT_LOG_FORMAT)
+git = subprocess.run(cmd,
                      shell=True,
                      stdout=subprocess.PIPE,
                      universal_newlines=True)
