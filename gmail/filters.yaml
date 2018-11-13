@@ -61,12 +61,6 @@
   list: stable@vger.kernel.org
   label: todo
   archive: true
-# Stable release announcements go to todo
--
-  subject: announcing the release of the
-  list: stable@vger.kernel.org
-  label: todo
-  archive: true
 
 
 # LKML
@@ -79,9 +73,16 @@
   list: linux-kernel@vger.kernel.org
   subject:
     all:
-      - Linux [0-9]
+      - Linux
       - -PATCH
       - -GIT
+    any:
+      - "4.4"
+      - "4.9"
+      - "4.14"
+      - "4.18"
+      - "4.19"
+      - "4.20"
   label: todo
   archive: true
 
@@ -108,13 +109,13 @@
 # Build bot for Mark Brown
 -
   from: Build bot for Mark Brown broonie@kernel.org
-  list: linux-kernel@vger.kernel.org
+  list: linaro-kernel@lists.linaro.org
   label: junk
   archive: true
 
-# Olaf's autobuilder
+# Olof's autobuilder
 -
-  from: Olof's autobuilder <build@lixom.net>
+  from: Olof's autobuilder
   label: junk
   archive: true
 
@@ -128,6 +129,30 @@
 -
   from: ci_notify@linaro.org
   subject: Successful!
+  label: junk
+  archive: true
+
+# Suppress lite/zephyr test reports
+-
+  from: qa-reports@linaro.org
+  subject: lite/zephyr
+  label: junk
+  archive: true
+
+# Suppress android test reports
+-
+  from: qa-reports@linaro.org
+  subject: android-lkft
+  label: junk
+  archive: true
+
+# My own JIRA updates
+-
+  from:
+    all:
+      - projects@linaro.org
+      - Dan Rue
+  subject: JIRA
   label: junk
   archive: true
 
@@ -146,6 +171,11 @@
   list: linux-next@vger.kernel.org
   label: lists-next
   archive: true
+
+# fuego ml
+-
+  list: fuego@lists.linuxfoundation.org
+  label: lists-fuego
 
 # kernelci bot
 -
