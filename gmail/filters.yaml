@@ -108,7 +108,7 @@
 
 # Build bot for Mark Brown
 -
-  from: Build bot for Mark Brown broonie@kernel.org
+  from: Build bot for Mark Brown
   list: linaro-kernel@lists.linaro.org
   label: junk
   archive: true
@@ -163,6 +163,16 @@
     - lists-ltp
   rule:
     list: ltp@lists.linux.it
+    label: "{item}"
+    archive: true
+
+# Label all kernelci emails and send all to todo
+-
+  for_each:
+    - todo
+    - lists-kernelci
+  rule:
+    list: kernelci@groups.io
     label: "{item}"
     archive: true
 
