@@ -28,6 +28,7 @@
       - -projects@linaro.org
       - -bugzilla-daemon@bugs.linaro.org
       - -it-services@linaro.org
+  is: -chats # the to: rules picks up google chat logs; exclude them
   label: todo
   archive: true
 
