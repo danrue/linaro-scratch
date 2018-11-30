@@ -87,6 +87,12 @@
   label: todo
   archive: true
 
+# netdev
+-
+  list: netdev@vger.kernel.org
+  label: lists-netdev
+  archive: true
+
 # kselftest list
 -
   list: linux-kselftest@vger.kernel.org
