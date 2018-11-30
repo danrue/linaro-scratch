@@ -1,0 +1,30 @@
+From c18567523e59c445769e81328475369261ba5fdb Mon Sep 17 00:00:00 2001
+From: Dan Rue <dan.rue@linaro.org>
+Date: Tue, 20 Nov 2018 16:09:50 -0600
+Subject: [PATCH] selftests: firmware: add
+ CONFIG_FW_LOADER_USER_HELPER_FALLBACK to config
+
+CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y is required for fw_fallback.sh.
+Without it, fw_fallback.sh fails with 'usermode helper disabled so
+ignoring test'. Enable the config in selftest so that it gets built by
+default.
+
+Signed-off-by: Dan Rue <dan.rue@linaro.org>
+---
+ tools/testing/selftests/firmware/config | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/testing/selftests/firmware/config b/tools/testing/selftests/firmware/config
+index bf634dda0720..913a25a4a32b 100644
+--- a/tools/testing/selftests/firmware/config
++++ b/tools/testing/selftests/firmware/config
+@@ -1,5 +1,6 @@
+ CONFIG_TEST_FIRMWARE=y
+ CONFIG_FW_LOADER=y
+ CONFIG_FW_LOADER_USER_HELPER=y
++CONFIG_FW_LOADER_USER_HELPER_FALLBACK=y
+ CONFIG_IKCONFIG=y
+ CONFIG_IKCONFIG_PROC=y
+-- 
+2.19.1
+

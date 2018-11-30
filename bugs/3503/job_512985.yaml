@@ -1,0 +1,126 @@
+
+
+timeouts:
+  job:
+    minutes: 45
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  arch: amd64
+  guestfs_interface: virtio
+
+
+
+device_type: qemu
+job_name: lkft-kselftests-master-1398
+priority: 25
+visibility: public
+
+metadata:
+
+  
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: 9ff01193a20d391e8dbce4403dd5ef87c7eaaca6
+  git describe: v4.20-rc3
+  make_kernelversion: 4.20.0-rc3
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1398/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1398/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=intel-corei7-64,label=docker-stretch-amd64/1398/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1398
+  toolchain: x86_64-linaro-linux linaro-7.%
+  series: lkft
+  email-notification: ''
+
+  kselftest__url: git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  kselftest__version: 4.19+gitAUTOINC+9ff01193a2
+  kselftest__revision: 9ff01193a20d391e8dbce4403dd5ef87c7eaaca6
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tmpfs
+    images:
+      rootfs:
+        image_arg: -drive format=raw,file={rootfs},if=virtio -m 4096 -smp 4 -nographic
+        url: http://snapshots.linaro.org/openembedded/lkft/rocko/intel-corei7-64/rpb/linux-mainline/1398/rpb-console-image-lkft-intel-corei7-64-20181118215209-1398.hddimg.xz
+        compression: xz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: qemu
+    media: tmpfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 45
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Link /ltp-tmp to /tmp
+        run:
+          steps:
+          - df -h
+          - ln -s /tmp /ltp-tmp
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: timesync-off
+          description: Disable systemd time sync services
+        run:
+          steps:
+          - systemctl stop systemd-timesyncd || true
+      name: timesync-off
+      path: inline/timesync-off.yaml
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/kselftest/kselftest.yaml
+      name: kselftest
+      parameters:
+        KSELFTEST_PATH: /opt/kselftests/default-in-kernel/
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: qemu_x86_64
+        BRANCH: mainline
+        ENVIRONMENT: production
+      timeout:
+        minutes: 40
+
+

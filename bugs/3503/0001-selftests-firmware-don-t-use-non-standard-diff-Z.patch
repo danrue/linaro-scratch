@@ -1,0 +1,44 @@
+From bdb361d8c019a213433648165bd244db0ae86990 Mon Sep 17 00:00:00 2001
+From: Dan Rue <dan.rue@linaro.org>
+Date: Tue, 20 Nov 2018 15:28:25 -0600
+Subject: [PATCH] selftests: firmware: don't use non-standard diff -Z
+
+diff -Z will always fail from a version of diff that does not support
+-Z, such as busybox's, causing a false failure to be reported in
+fw_filesystem.sh.
+
+Signed-off-by: Dan Rue <dan.rue@linaro.org>
+---
+ tools/testing/selftests/firmware/fw_filesystem.sh | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/tools/testing/selftests/firmware/fw_filesystem.sh b/tools/testing/selftests/firmware/fw_filesystem.sh
+index a4320c4b44dc..466cf2f91ba0 100755
+--- a/tools/testing/selftests/firmware/fw_filesystem.sh
++++ b/tools/testing/selftests/firmware/fw_filesystem.sh
+@@ -155,11 +155,8 @@ read_firmwares()
+ {
+ 	for i in $(seq 0 3); do
+ 		config_set_read_fw_idx $i
+-		# Verify the contents are what we expect.
+-		# -Z required for now -- check for yourself, md5sum
+-		# on $FW and DIR/read_firmware will yield the same. Even
+-		# cmp agrees, so something is off.
+-		if ! diff -q -Z "$FW" $DIR/read_firmware 2>/dev/null ; then
++		# Verify the contents match
++		if ! diff -q "$FW" $DIR/read_firmware 2>/dev/null ; then
+ 			echo "request #$i: firmware was not loaded" >&2
+ 			exit 1
+ 		fi
+@@ -171,7 +168,7 @@ read_firmwares_expect_nofile()
+ 	for i in $(seq 0 3); do
+ 		config_set_read_fw_idx $i
+ 		# Ensures contents differ
+-		if diff -q -Z "$FW" $DIR/read_firmware 2>/dev/null ; then
++		if diff -q "$FW" $DIR/read_firmware 2>/dev/null ; then
+ 			echo "request $i: file was not expected to match" >&2
+ 			exit 1
+ 		fi
+-- 
+2.19.1
+
