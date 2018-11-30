@@ -3,6 +3,7 @@
 import os
 import pdb
 import requests
+import subprocess
 
 # Snapshot base url without arguments
 base_snapshot_url = "http://snapshots.linaro.org"
@@ -49,6 +50,22 @@ branch_repo_url_map = {
         ("https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/", "?h=linux-4.19.y"),
 }
 
+branch_board_build_map = {
+    "mainline": {
+        "build_number": "1411",  # v4.20-rc4
+        "boards": [
+            "am57xx-evm",
+            "dragonboard-410c",
+            "hikey",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-stretch-amd64",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=",
+    }
+}
+
 def get_request(*args):
     r = requests.get(*args)
     r.raise_for_status()
@@ -87,10 +104,10 @@ def fetch_current_configs():
             if branch['name'] not in snapshot_branches:
                 continue
 
-            # Retrieve defconfig from snapshot for the board/branch combination
+            # Retrieve config from snapshot for the board/branch combination
             destination_path = "snapshot_configs/{}/{}".format(board['name'], branch['name'])
-            source_url = urljoiner(base_snapshot_url, branch['url'], "latest", "defconfig")
-            save_file(source_url, destination_path, "defconfig")
+            source_url = urljoiner(base_snapshot_url, branch['url'], "latest", "config")
+            save_file(source_url, destination_path, "config")
 
             # Using same path scheme, retrieve the upstream defconfig
             destination_path = "kernel_configs/{}/{}".format(board['name'], branch['name'])
@@ -102,12 +119,45 @@ def fetch_current_configs():
             )
             save_file(source_url, destination_path, "defconfig")
 
+def run(command):
+    print(command)
+    subprocess.run(command.split(), check=True)
+
+def build_oe_configs():
+    run("mkdir -p loeb")
+    os.chdir("loeb")
+    HOME = os.environ.get("HOME")
+    run("mkdir -p {}/.cache/oe-downloads".format(HOME))
+    run("mkdir -p {}/.cache/oe-sstate-cache".format(HOME))
+    run("ln -sf {}/.cache/oe-downloads downloads".format(HOME))
+    run("ln -sf {}/.cache/oe-sstate-cache sstate-cache".format(HOME))
+    run("rm -f .loeb.config")
+    run("loeb copyconfig https://ci.linaro.org/job/openembedded-lkft-linux-mainline/1418/DISTRO=rpb,MACHINE=intel-corei7-64,label=docker-stretch-amd64/")
+    run("loeb init --quiet")
+
+    for branch_name, branch in branch_board_build_map.items():
+        for board in branch['boards']:
+            build_dir = "build-{}".format(branch_name)
+            os.putenv("BUILD_DIR", build_dir)
+            run("loeb reset -f")
+            build_url = branch['base_url'] + board + ',label=' + branch['label'] + '/' + branch['build_number'] + '/'
+            run("rm -f .loeb.config")
+            run("loeb copyconfig {}".format(build_url))
+            run("loeb apply lkft")
+            run("loeb env bitbake -c configure virtual/kernel")
+            import pdb; pdb.set_trace()
+
+
+
 def compare_current_configs():
     pass
 
+
 def main():
-    fetch_current_configs()
-    compare_current_configs()
+    #fetch_current_configs()
+    #compare_current_configs()
+
+    build_oe_configs()
 
 if __name__ == '__main__':
     main()
