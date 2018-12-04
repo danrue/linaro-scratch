@@ -50,22 +50,6 @@ branch_repo_url_map = {
         ("https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/plain/", "?h=linux-4.19.y"),
 }
 
-branch_board_build_map = {
-    "mainline": {
-        "build_number": "1411",  # v4.20-rc4
-        "boards": [
-            "am57xx-evm",
-            "dragonboard-410c",
-            "hikey",
-            "intel-core2-32",
-            "intel-corei7-64",
-            "juno",
-        ],
-        "label": "docker-stretch-amd64",
-        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=",
-    }
-}
-
 def get_request(*args):
     r = requests.get(*args)
     r.raise_for_status()
@@ -121,16 +105,97 @@ def fetch_current_configs():
 
 def run(command):
     print(command)
-    subprocess.run(command.split(), check=True)
+    subprocess.run(command, check=True, shell=True)
+
+
+branch_board_build_map = {
+#    "mainline": {
+#        "build_number": "1411",  # v4.20-rc4
+#        "version": "v4.20-rc4",
+#        "boards": [
+#            "am57xx-evm",
+#            "dragonboard-410c",
+#            "hikey",
+#            "intel-core2-32",
+#            "intel-corei7-64",
+#            "juno",
+#        ],
+#        "label": "docker-stretch-amd64",
+#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=",
+#    },
+#    "4.19": {
+#        "build_number": "27",  # v4.19.5
+#        "version": "v4.19.5",
+#        "boards": [
+#            "am57xx-evm",
+#            "dragonboard-410c",
+#            "hikey",
+#            "intel-core2-32",
+#            "intel-corei7-64",
+#            "juno",
+#        ],
+#        "label": "docker-lkft",
+#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=",
+#    },
+#    "4.14": {
+#        "build_number": "338",  # v4.14.84
+#        "version": "v4.14.84",
+#        "boards": [
+#            "am57xx-evm",
+#            "dragonboard-410c",
+#            "hikey",
+#            "intel-core2-32",
+#            "intel-corei7-64",
+#            "juno",
+#        ],
+#        "label": "docker-lkft",
+#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=rpb,MACHINE=",
+#    },
+#    "4.9": {
+#        "build_number": "430",  # v4.9.141
+#        "version": "v4.9.141",
+#        "boards": [
+#            "am57xx-evm",
+#            "dragonboard-410c",
+#            "hikey",
+#            "intel-core2-32",
+#            "intel-corei7-64",
+#            "juno",
+#        ],
+#        "label": "docker-lkft",
+#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=rpb,MACHINE=",
+#    },
+#    "4.4": {
+#        "build_number": "358",  # v4.4.165
+#        "version": "v4.4.165",
+#        "boards": [
+#            "am57xx-evm",
+#            "intel-core2-32",
+#            "intel-corei7-64",
+#            "juno",
+#        ],
+#        "label": "docker-lkft",
+#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.4/DISTRO=rpb,MACHINE=",
+#    },
+    "4.4-hikey": {
+        "build_number": "262",  # v4.4.165-rc2
+        "version": "v4.4.165-rc2",
+        "boards": [
+            "hikey",
+        ],
+        "label": "docker-stretch-amd64",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linaro-hikey-stable-rc-4.4/DISTRO=rpb,MACHINE=",
+    },
+}
 
 def build_oe_configs():
     run("mkdir -p loeb")
     os.chdir("loeb")
     HOME = os.environ.get("HOME")
-    run("mkdir -p {}/.cache/oe-downloads".format(HOME))
-    run("mkdir -p {}/.cache/oe-sstate-cache".format(HOME))
-    run("ln -sf {}/.cache/oe-downloads downloads".format(HOME))
-    run("ln -sf {}/.cache/oe-sstate-cache sstate-cache".format(HOME))
+    run("mkdir -p {}/oe-downloads".format(HOME))
+    run("mkdir -p {}/oe-sstate-cache".format(HOME))
+    run("ln -sf {}/oe-downloads downloads".format(HOME))
+    run("ln -sf {}/oe-sstate-cache sstate-cache".format(HOME))
     run("rm -f .loeb.config")
     run("loeb copyconfig https://ci.linaro.org/job/openembedded-lkft-linux-mainline/1418/DISTRO=rpb,MACHINE=intel-corei7-64,label=docker-stretch-amd64/")
     run("loeb init --quiet")
@@ -144,8 +209,14 @@ def build_oe_configs():
             run("rm -f .loeb.config")
             run("loeb copyconfig {}".format(build_url))
             run("loeb apply lkft")
-            run("loeb env bitbake -c configure virtual/kernel")
-            import pdb; pdb.set_trace()
+            run("sed -i s%96boards/meta-96boards%danrue/meta-96boards/g% pinned-manifest.xml source-manifest.xml")
+            run('sed -i s%revision=\"[0-9a-f]*\"%revision=\"rocko-no-kselftest\"% pinned-manifest.xml')
+            run("loeb env bitbake -c configure virtual/kernel") # cp -p tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig unique_defconfig
+            #run("loeb env bitbake rpb-console-image")
+            run('mkdir -p ../lkft-configs/{}'.format(branch['version']))
+            #run('cp {}/tmp*/deploy/images/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
+            run('cp {}/tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
+            #import pdb; pdb.set_trace()
 
 
 
