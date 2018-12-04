@@ -40,13 +40,13 @@ class muttemail():
         epoch_time = mktime_tz(tz_tuple)
         self.message.add_header('X-Date', formatdate(epoch_time, localtime=True))
 
-    def create_xlore_header(self):
+    def create_xuri_header(self):
         '''
             If the mail is sent to a lore-supported ml, provide a header with
             a lore link directly.
 
             in: python email object
-            out: python email object, with X-Lore header added
+            out: python email object, with X-URI header added
         '''
 
         # In order of preference; first match wins
@@ -86,5 +86,5 @@ class muttemail():
 
 email = muttemail(sys.stdin.read())
 email.create_xdate_header()
-email.create_xlore_header()
+email.create_xuri_header()
 sys.stdout.write(email.as_string())
