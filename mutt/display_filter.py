@@ -17,13 +17,14 @@ import email
 from email.utils import mktime_tz, parsedate_tz, formatdate
 from collections import OrderedDict
 
+
 class muttemail:
 
     def __init__(self, raw_message):
-       self.message = email.message_from_string(raw_message)
+        self.message = email.message_from_string(raw_message)
 
     def as_string(self):
-       return self.message.as_string()
+        return self.message.as_string()
 
     def create_xdate_header(self):
         ''' Add an X-Date header, which is Date converted to localtime. '''
@@ -76,8 +77,9 @@ class muttemail:
                 self.message.add_header('X-URI', lore_url+message_id[1:-1])
                 return
 
+
 if __name__ == '__main__':
-    email = muttemail(sys.stdin.read())
-    email.create_xdate_header()
-    email.create_xuri_header()
-    sys.stdout.write(email.as_string())
+    e = muttemail(sys.stdin.read())
+    e.create_xdate_header()
+    e.create_xuri_header()
+    sys.stdout.write(e.as_string())
