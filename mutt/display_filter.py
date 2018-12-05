@@ -3,7 +3,7 @@
 # Utility script to modify the display of email in mutt.
 #
 # Installation:
-#   In muttrc, sett:
+#   In muttrc, set the following:
 #     set display_filter="$HOME/.mutt/display_filter.py"
 #
 # This script contains the following functions:
@@ -11,27 +11,22 @@
 #   X-URI: Add an X-URI header, which is added when lore-compatible mail is
 #          found
 
-import email
 import sys
+import email
 
 from email.utils import mktime_tz, parsedate_tz, formatdate
 from collections import OrderedDict
 
-class muttemail():
+class muttemail:
 
     def __init__(self, raw_message):
-        self.message = email.message_from_string(raw_message)
+       self.message = email.message_from_string(raw_message)
 
     def as_string(self):
-        return self.message.as_string()
+       return self.message.as_string()
 
     def create_xdate_header(self):
-        '''
-            Add an X-Date header, which is Date converted to localtime.
-
-            in: python email object
-            out: python email object, with X-Date header added
-        '''
+        ''' Add an X-Date header, which is Date converted to localtime. '''
         date = self.message.get('Date', None)
         if not date:
             return
@@ -42,11 +37,8 @@ class muttemail():
 
     def create_xuri_header(self):
         '''
-            If the mail is sent to a lore-supported ml, provide a header with
-            a lore link directly.
-
-            in: python email object
-            out: python email object, with X-URI header added
+        If the mail is sent to a lore-supported mailing list, provide a header
+        with a lore link directly.
         '''
 
         # In order of preference; first match wins
@@ -84,7 +76,8 @@ class muttemail():
                 self.message.add_header('X-URI', lore_url+message_id[1:-1])
                 return
 
-email = muttemail(sys.stdin.read())
-email.create_xdate_header()
-email.create_xuri_header()
-sys.stdout.write(email.as_string())
+if __name__ == '__main__':
+    email = muttemail(sys.stdin.read())
+    email.create_xdate_header()
+    email.create_xuri_header()
+    sys.stdout.write(email.as_string())
