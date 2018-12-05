@@ -5,6 +5,13 @@
 # Installation:
 #   In muttrc, set the following:
 #     set display_filter="$HOME/.mutt/display_filter.py"
+#     ignore *
+#     unignore from date subject to cc x-date x-uri User-Agent message-id
+#
+# Note that it's important that message-id is unignored; only unignored headers
+# are passed to display_filter. If message-id is not passed, x-uri won't be
+# generated. Therefore as a workaround, the message-id header will be removed
+# so that it will not actually be displayed.
 #
 # This script contains the following functions:
 #   X-Date: Add an X-Date header, which is Date translated to localtime
@@ -36,12 +43,21 @@ class muttemail:
         epoch_time = mktime_tz(tz_tuple)
         self.message.add_header('X-Date', formatdate(epoch_time, localtime=True))
 
+    def remove_header(self, header):
+        ''' Remove the named header '''
+        for i in reversed(range(len(self.message._headers))):
+            header_name = self.message._headers[i][0].lower()
+            if header_name == header.lower():
+                del(self.message._headers[i])
+
     def create_xuri_header(self):
         '''
         If the mail is sent to a lore-supported mailing list, provide a header
         with a lore link directly.
-        '''
 
+        Message-ID header must be present. Be sure it is unignored. This
+        function will remove Message-ID.
+        '''
         # In order of preference; first match wins
         lore_lists = OrderedDict({
             'linux-kernel@vger.kernel.org': 'https://lore.kernel.org/lkml/',
@@ -71,10 +87,11 @@ class muttemail:
         message_id = self.message.get('Message-ID', None)
         if not message_id:
             return
+
         recipients = self.message.get('To', '') + ' ' + self.message.get('Cc', '')
         for email_list, lore_url in lore_lists.items():
             if email_list in recipients:
-                self.message.add_header('X-URI', lore_url+message_id[1:-1])
+                self.message.add_header('X-URI', str(lore_url+message_id[1:-1]))
                 return
 
 
@@ -82,4 +99,5 @@ if __name__ == '__main__':
     e = muttemail(sys.stdin.read())
     e.create_xdate_header()
     e.create_xuri_header()
+    e.remove_header('Message-ID')
     sys.stdout.write(e.as_string())
