@@ -218,8 +218,8 @@ def build_oe_configs():
             run("rm -f .loeb.config")
             run("loeb copyconfig {}".format(build_url))
             run("loeb apply lkft")
-            run("sed -i s%96boards/meta-96boards%danrue/meta-96boards/g% pinned-manifest.xml source-manifest.xml")
-            run('sed -i s%revision=\"[0-9a-f]*\"%revision=\"rocko-no-kselftest\"% pinned-manifest.xml')
+            run("sed -i 's%96boards/meta-96boards\"%danrue/meta-96boards\" revision=\"rocko-no-kselftest\"%g' .repo/manifest.xml")
+            run('repo sync --force-sync')
             run("loeb env bitbake -c configure virtual/kernel") # cp -p tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig unique_defconfig
             #run("loeb env bitbake rpb-console-image")
             run('mkdir -p ../lkft-configs/{}'.format(branch['version']))
