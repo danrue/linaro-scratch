@@ -32,6 +32,14 @@ board_config_map = {
     "intel-corei7-64": "arch/x86/configs/x86_64_defconfig",
     "dragonboard-410c": "arch/arm64/configs/defconfig",
 }
+board_arch_map = {
+    "juno": "arm64",
+    "am57xx-evm": "arm",
+    "intel-core2-32": "i386",
+    "hikey": "arm64",
+    "intel-corei7-64": "x86_64",
+    "dragonboard-410c": "arm64",
+}
 
 # Map branch names (as used in snapshot_branches) with git repos.
 # The second argument is a required url argument, if necessary.
@@ -109,77 +117,78 @@ def run(command):
 
 
 branch_board_build_map = {
-#    "mainline": {
-#        "build_number": "1411",  # v4.20-rc4
-#        "version": "v4.20-rc4",
-#        "boards": [
-#            "am57xx-evm",
-#            "dragonboard-410c",
-#            "hikey",
-#            "intel-core2-32",
-#            "intel-corei7-64",
-#            "juno",
-#        ],
-#        "label": "docker-stretch-amd64",
-#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=",
-#    },
-#    "4.19": {
-#        "build_number": "27",  # v4.19.5
-#        "version": "v4.19.5",
-#        "boards": [
-#            "am57xx-evm",
-#            "dragonboard-410c",
-#            "hikey",
-#            "intel-core2-32",
-#            "intel-corei7-64",
-#            "juno",
-#        ],
-#        "label": "docker-lkft",
-#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=",
-#    },
-#    "4.14": {
-#        "build_number": "338",  # v4.14.84
-#        "version": "v4.14.84",
-#        "boards": [
-#            "am57xx-evm",
-#            "dragonboard-410c",
-#            "hikey",
-#            "intel-core2-32",
-#            "intel-corei7-64",
-#            "juno",
-#        ],
-#        "label": "docker-lkft",
-#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=rpb,MACHINE=",
-#    },
-#    "4.9": {
-#        "build_number": "430",  # v4.9.141
-#        "version": "v4.9.141",
-#        "boards": [
-#            "am57xx-evm",
-#            "dragonboard-410c",
-#            "hikey",
-#            "intel-core2-32",
-#            "intel-corei7-64",
-#            "juno",
-#        ],
-#        "label": "docker-lkft",
-#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=rpb,MACHINE=",
-#    },
-#    "4.4": {
-#        "build_number": "358",  # v4.4.165
-#        "version": "v4.4.165",
-#        "boards": [
-#            "am57xx-evm",
-#            "intel-core2-32",
-#            "intel-corei7-64",
-#            "juno",
-#        ],
-#        "label": "docker-lkft",
-#        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.4/DISTRO=rpb,MACHINE=",
-#    },
+    "mainline": {
+        "build_number": "1411",  # v4.20-rc4
+        "version": "v4.20-rc4",
+        "boards": [
+            "am57xx-evm",
+            "dragonboard-410c",
+            "hikey",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-stretch-amd64",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=rpb,MACHINE=",
+    },
+    "4.19": {
+        "build_number": "27",  # v4.19.5
+        "version": "v4.19.5",
+        "boards": [
+            "am57xx-evm",
+            "dragonboard-410c",
+            "hikey",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-lkft",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=",
+    },
+    "4.14": {
+        "build_number": "338",  # v4.14.84
+        "version": "v4.14.84",
+        "boards": [
+            "am57xx-evm",
+            "dragonboard-410c",
+            "hikey",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-lkft",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=rpb,MACHINE=",
+    },
+    "4.9": {
+        "build_number": "430",  # v4.9.141
+        "version": "v4.9.141",
+        "boards": [
+            "am57xx-evm",
+            "dragonboard-410c",
+            "hikey",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-lkft",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=rpb,MACHINE=",
+    },
+    "4.4": {
+        "build_number": "358",  # v4.4.165
+        "version": "v4.4.165",
+        "boards": [
+            "am57xx-evm",
+            "intel-core2-32",
+            "intel-corei7-64",
+            "juno",
+        ],
+        "label": "docker-lkft",
+        "base_url": "https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.4/DISTRO=rpb,MACHINE=",
+    },
     "4.4-hikey": {
         "build_number": "262",  # v4.4.165-rc2
-        "version": "v4.4.165-rc2",
+        #"version": "v4.4.165-rc2",
+        "version": "4.4.165-rc2-hikey-20181126-324",
         "boards": [
             "hikey",
         ],
@@ -219,16 +228,33 @@ def build_oe_configs():
             #import pdb; pdb.set_trace()
 
 
+def build_linux_configs():
+    # Assume linux/<branch> exists and is up to date
+    for branch_name, branch in branch_board_build_map.items():
+        for arch in ['x86_64', 'i386', 'arm64', 'arm']:
+            os.chdir('linux/{}'.format(branch_name))
+            run('git reset --hard {}'.format(branch['version']))
+            run('make ARCH={} defconfig'.format(arch))
+            run('make savedefconfig')
+            run('mkdir -p ../../linux-configs/{}'.format(branch['version']))
+            run('cp defconfig ../../linux-configs/{}/{}.defconfig'.format(branch['version'], arch))
+            os.chdir('../../')
 
-def compare_current_configs():
-    pass
+def compare_configs():
+    for branch_name, branch in branch_board_build_map.items():
+        for board in branch['boards']:
+            run('mkdir -p lkft-fragments/{}'.format(branch['version']))
+            run('diffconfig -m linux-configs/{}/{}.defconfig lkft-configs/{}/{}.defconfig > lkft-fragments/{}/{}.frag'.format(
+                branch['version'], board_arch_map[board], branch['version'], board, branch['version'], board))
 
 
 def main():
-    #fetch_current_configs()
-    #compare_current_configs()
+    #fetch_current_configs() # This turned out not to be useful, because production
+                             # built defconfigs contain kselftest configs merged in
 
-    build_oe_configs()
+    #build_oe_configs()
+    #build_linux_configs()
+    compare_configs()
 
 if __name__ == '__main__':
     main()
