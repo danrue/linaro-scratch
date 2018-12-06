@@ -187,8 +187,8 @@ branch_board_build_map = {
     },
     "4.4-hikey": {
         "build_number": "262",  # v4.4.165-rc2
-        #"version": "v4.4.165-rc2",
-        "version": "4.4.165-rc2-hikey-20181126-324",
+        "version": "v4.4.165-rc2",
+        "git_version": "4.4.165-rc2-hikey-20181126-324",
         "boards": [
             "hikey",
         ],
@@ -233,12 +233,25 @@ def build_linux_configs():
     # Assume linux/<branch> exists and is up to date
     for branch_name, branch in branch_board_build_map.items():
         for arch in ['x86_64', 'i386', 'arm64', 'arm']:
+            defconfig = "defconfig"
+            if arch == 'arm':
+                # On 4.4 arm, 'make ARCH=arm defconfig' will use versatile_defconfig, otherwise
+                defconfig = 'multi_v7_defconfig'
             os.chdir('linux/{}'.format(branch_name))
-            run('git reset --hard {}'.format(branch['version']))
-            run('make ARCH={} defconfig'.format(arch))
+            run('git reset --hard {}'.format(branch.get('git_version', branch['version'])))
+            run('make ARCH={} {}'.format(arch, defconfig))
             run('make savedefconfig')
             run('mkdir -p ../../linux-configs/{}'.format(branch['version']))
             run('cp defconfig ../../linux-configs/{}/{}.defconfig'.format(branch['version'], arch))
+            os.chdir('../../')
+
+def minimize_lkft_configs():
+    for branch_name, branch in branch_board_build_map.items():
+        for board in branch['boards']:
+            os.chdir('linux/{}'.format(branch_name))
+            run('cp ../../lkft-configs/{}/{}.defconfig .config'.format(branch['version'], board))
+            run('make savedefconfig')
+            run('cp defconfig ../../lkft-configs/{}/{}.defconfig'.format(branch['version'], board))
             os.chdir('../../')
 
 def compare_configs():
@@ -254,8 +267,10 @@ def main():
                              # built defconfigs contain kselftest configs merged in
 
     #build_oe_configs()
-    #build_linux_configs()
+    build_linux_configs()
+    minimize_lkft_configs()
     compare_configs()
+
 
 if __name__ == '__main__':
     main()
