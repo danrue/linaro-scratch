@@ -220,11 +220,12 @@ def build_oe_configs():
             run("loeb apply lkft")
             run("sed -i 's%96boards/meta-96boards\"%danrue/meta-96boards\" revision=\"rocko-no-kselftest\"%g' .repo/manifest.xml")
             run('repo sync --force-sync')
-            run("loeb env bitbake -c configure virtual/kernel") # cp -p tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig unique_defconfig
-            #run("loeb env bitbake rpb-console-image")
+            #run("loeb env bitbake -c configure virtual/kernel") # cp -p tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig unique_defconfig
+            run("loeb env bitbake rpb-console-image")
             run('mkdir -p ../lkft-configs/{}'.format(branch['version']))
-            #run('cp {}/tmp*/deploy/images/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
-            run('cp {}/tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
+            run('cp {}/tmp*/deploy/images/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
+            #run('cp {}/tmp-rpb-glibc/work/*/linux-generic*/*/*/defconfig ../lkft-configs/{}/{}.defconfig'.format(build_dir, branch['version'], board))
+            run('rm -rf {}'.format(build_dir))
             #import pdb; pdb.set_trace()
 
 
