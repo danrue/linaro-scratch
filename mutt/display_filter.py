@@ -20,8 +20,9 @@
 
 import sys
 import email
+import email.policy
 
-from email.utils import mktime_tz, parsedate_tz, formatdate
+from email.utils import mktime_tz, parsedate_tz, formatdate, parsedate_to_datetime
 from collections import OrderedDict
 
 
@@ -31,7 +32,7 @@ class muttemail:
         self.message = email.message_from_string(raw_message)
 
     def as_string(self):
-        return self.message.as_string()
+        return self.message.as_string(policy=email.policy.EmailPolicy(utf8=True))
 
     def create_xdate_header(self):
         ''' Add an X-Date header, which is Date converted to localtime. '''
