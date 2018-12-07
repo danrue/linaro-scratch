@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os
+import os.path
 import pdb
 import requests
 import subprocess
@@ -254,22 +255,42 @@ def minimize_lkft_configs():
             run('cp defconfig ../../lkft-configs/{}/{}.defconfig'.format(branch['version'], board))
             os.chdir('../../')
 
-def compare_configs():
+def create_frags_per_board():
     for branch_name, branch in branch_board_build_map.items():
         for board in branch['boards']:
-            run('mkdir -p lkft-fragments/{}'.format(branch['version']))
-            run('diffconfig -m linux-configs/{}/{}.defconfig lkft-configs/{}/{}.defconfig > lkft-fragments/{}/{}.frag'.format(
+            run('mkdir -p lkft-fragments-per-board/{}'.format(branch['version']))
+            run('diffconfig -m linux-configs/{}/{}.defconfig lkft-configs/{}/{}.defconfig > lkft-fragments-per-board/{}/{}.frag'.format(
                 branch['version'], board_arch_map[board], branch['version'], board, branch['version'], board))
+
+def create_frags_per_arch():
+    for branch_name, branch in branch_board_build_map.items():
+        for board in branch['boards']:
+            linux_file = 'linux-configs/{}/{}.defconfig'.format(branch['version'], board_arch_map[board])
+            lkft_file = 'lkft-configs/{}/{}.defconfig'.format(branch['version'], board)
+            frag_file = 'lkft-fragments/{}/{}.frag'.format(branch['version'],  board_arch_map[board])
+
+            run('mkdir -p lkft-fragments/{}'.format(branch['version']))
+            #run('diffconfig -m linux-configs/{}/{}.defconfig lkft-configs/{}/{}.defconfig > lkft-fragments/{}/{}.frag'.format(
+                #branch['version'], board_arch_map[board], branch['version'], board, branch['version'], board_arch_map[board]))
+            if os.path.exists(frag_file):
+                run('diffconfig -m {} {} > tmp'.format(linux_file, lkft_file))
+                run('diff -q tmp {}'.format(frag_file)) # Ensure files match
+                run('rm -f tmp')
+
+            else:
+                run('diffconfig -m {} {} > {}'.format(linux_file, lkft_file, frag_file))
+
 
 
 def main():
-    #fetch_current_configs() # This turned out not to be useful, because production
+    fetch_current_configs() # This turned out not to be useful, because production
                              # built defconfigs contain kselftest configs merged in
 
     #build_oe_configs()
-    build_linux_configs()
-    minimize_lkft_configs()
-    compare_configs()
+    #build_linux_configs()
+    #minimize_lkft_configs()
+    #create_frags_per_board()
+    #create_frags_per_arch()
 
 
 if __name__ == '__main__':
