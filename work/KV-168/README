@@ -1,0 +1,33 @@
+x15: success https://lkft.validation.linaro.org/scheduler/job/547218
+  - resolv.conf:
+    nameserver 8.8.8.8
+hikey: failed at 'ip a' https://lkft.validation.linaro.org/scheduler/job/546491
+  - resolv.conf:
+    nameserver 8.8.8.8
+  - 'ip a' failed
+db410c: dns fail https://lkft.validation.linaro.org/scheduler/job/547219
+  - resolv.conf:
+    8.8.8.8
+juno: success https://lkft.validation.linaro.org/scheduler/job/546498
+  - resolv.conf:
+    nameserver 10.66.16.10
+  - no IP raised
+qemu arm: success https://lkft.validation.linaro.org/scheduler/job/546490
+  - resolv.conf:
+    nameserver 10.66.16.10
+qemu x86_64: success https://lkft.validation.linaro.org/scheduler/job/546497
+  - resolv.conf:
+    nameserver 10.66.16.10
+qemu arm64: success https://lkft.validation.linaro.org/scheduler/job/546492
+  - resolv.conf:
+    nameserver 10.66.16.10
+qemu i386: success https://lkft.validation.linaro.org/scheduler/job/546494
+  - resolv.conf:
+    nameserver 10.66.16.10
+x86: success https://lkft.validation.linaro.org/scheduler/job/546496
+  - resolv.conf:
+    8.8.8.8
+x86: success https://lkft.validation.linaro.org/scheduler/job/546493
+  - resolv.conf:
+    8.8.8.8
+

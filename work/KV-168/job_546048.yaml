@@ -1,0 +1,160 @@
+
+timeouts:
+  job:
+    minutes: 20
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  test_character_delay: 10
+
+
+device_type: hi6220-hikey-r2
+job_name: lkft-ltp-timers-linux-4.19.y-40
+priority: 100
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.19.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: be53d23e68c29900da6b6ce486b5ab8507de94b1
+  git describe: v4.19.9
+  make_kernelversion: 4.19.9
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/rocko/hikey/rpb/linux-stable-rc-4.19/40/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/rocko/hikey/rpb/linux-stable-rc-4.19/40/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=hikey,label=docker-lkft/40/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/rocko/hikey/rpb/linux-stable-rc-4.19/40
+  toolchain: aarch64-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+
+
+  ltp-timers-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-timers-tests__version: '20180926'
+  ltp-timers-tests__revision: f424769b1ad9fca477118763f88a6cec98ea2c0a
+
+
+
+
+protocols:
+  lava-lxc:
+    name: lxc-target
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+
+
+actions:
+
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: lxc
+
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/android-platform-tools/install.yaml
+      name: install-android-platform-tools-r2600
+      parameters:
+        LINK: https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+
+
+- deploy:
+    timeout:
+      minutes: 15
+    to: fastboot
+    namespace: target
+    connection: lxc
+    images:
+      ptable:
+        url: http://images.validation.linaro.org/snapshots.linaro.org/96boards/reference-platform/components/uefi-staging/69/hikey/release/ptable-linux-8g.img
+        reboot: hard-reset
+      boot:
+        url: http://snapshots.linaro.org/openembedded/lkft/rocko/hikey/rpb/linux-stable-rc-4.19/40/boot-0.0+AUTOINC+2d8c108bf0-ed8112606c-r0-hikey-20181213132534-40.uefi.img
+        reboot: hard-reset
+      system:
+        url: http://snapshots.linaro.org/openembedded/lkft/rocko/hikey/rpb/linux-stable-rc-4.19/40/rpb-console-image-lkft-hikey-20181213132534-40.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+    protocols:
+      lava-lxc:
+      - action: fastboot-deploy
+        request: pre-power-command
+        timeout:
+          minutes: 2
+
+
+
+- boot:
+    namespace: target
+    auto_login:
+      login_prompt: 'login:'
+      username: linaro
+      login_commands:
+        # Become super user to run tests
+      - su
+    prompts:
+    - hikey:~
+    - hikey:/home/linaro#
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: grub
+    commands: installed
+    protocols:
+      lava-lxc:
+      # other action could be boot-fastboot
+      - action: grub-sequence-action
+        request: pre-os-command
+        timeout:
+          minutes: 2
+
+
+
+
+- test:
+    namespace: target
+    timeout:
+      minutes: 20
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: troubleshoot networking
+        run:
+          steps:
+          - cat /etc/resolv.conf
+          #- ip a
+          - nslookup google.com
+          - ping -c 3 google.com || true
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+

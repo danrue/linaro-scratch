@@ -1,0 +1,111 @@
+
+timeouts:
+  job:
+    minutes: 20
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  bootloader_prompt: juno#
+
+
+device_type: juno-r2
+job_name: lkft-ltp-timers-linux-4.19.y-40
+priority: 100
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.19.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: be53d23e68c29900da6b6ce486b5ab8507de94b1
+  git describe: v4.19.9
+  make_kernelversion: 4.19.9
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=juno,label=docker-lkft/40/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40
+  toolchain: aarch64-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+
+
+  ltp-timers-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-timers-tests__version: '20180926'
+  ltp-timers-tests__revision: f424769b1ad9fca477118763f88a6cec98ea2c0a
+
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: recovery
+    timeout:
+      minutes: 10
+    to: vemsd
+    recovery_image:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/juno-oe-uboot.zip
+      compression: zip
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 10
+    to: tftp
+    os: oe
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/Image--4.19+git0+be53d23e68-r0-juno-20181213145916-40.bin
+      type: image
+    dtb:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/Image--4.19+git0+be53d23e68-r0-juno-r2-20181213145916-40.dtb
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/rocko/juno/rpb/linux-stable-rc-4.19/40/rpb-console-image-lkft-juno-20181213145916-40.rootfs.tar.xz
+      compression: xz
+
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    connection-namespace: recovery
+    method: u-boot
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - root@(.*):~#
+
+
+
+- test:
+    namespace: target
+    timeout:
+      minutes: 20
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: troubleshoot networking
+        run:
+          steps:
+          - cat /etc/resolv.conf
+          - ip a
+          - nslookup google.com
+          - ping -c 3 google.com || true
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+

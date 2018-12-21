@@ -1,0 +1,139 @@
+
+timeouts:
+  job:
+    minutes: 20
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  test_character_delay: 10
+
+
+device_type: x15
+job_name: lkft-ltp-timers-linux-4.19.y-40
+priority: 100
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.19.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: be53d23e68c29900da6b6ce486b5ab8507de94b1
+  git describe: v4.19.9
+  make_kernelversion: 4.19.9
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/rocko/am57xx-evm/rpb/linux-stable-rc-4.19/40/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/rocko/am57xx-evm/rpb/linux-stable-rc-4.19/40/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=rpb,MACHINE=am57xx-evm,label=docker-lkft/40/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/rocko/am57xx-evm/rpb/linux-stable-rc-4.19/40
+  toolchain: arm-linaro-linux-gnueabi 7.%
+  series: lkft
+  email-notification: ''
+
+
+  ltp-timers-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-timers-tests__version: '20180926'
+  ltp-timers-tests__revision: f424769b1ad9fca477118763f88a6cec98ea2c0a
+
+
+
+
+protocols:
+  lava-lxc:
+    name: lxc-target
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+
+
+actions:
+
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+
+- boot:
+    namespace: tlxc
+    prompts:
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: lxc
+
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - repository: https://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/android-platform-tools/install.yaml
+      name: install-android-platform-tools-r2600
+      parameters:
+        LINK: https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+
+
+- deploy:
+    timeout:
+      minutes: 25
+    to: fastboot
+    namespace: target
+    connection: lxc
+    images:
+      userdata:
+        url: http://snapshots.linaro.org/openembedded/lkft/rocko/am57xx-evm/rpb/linux-stable-rc-4.19/40/rpb-console-image-lkft-am57xx-evm-20181213133843-40.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - setenv bootpart 1:f
+    - run mmcboot
+    timeout:
+      minutes: 15
+    method: u-boot
+
+
+- test:
+    namespace: target
+    timeout:
+      minutes: 20
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: troubleshoot networking
+        run:
+          steps:
+          - cat /etc/resolv.conf
+          - ip a
+          - nslookup google.com
+          - ping -c 3 google.com || true
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+

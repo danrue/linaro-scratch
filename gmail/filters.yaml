@@ -183,6 +183,46 @@
     label: "{item}"
     archive: true
 
+# lava-users
+-
+  for_each:
+    - todo
+    - lists-lava-users
+  rule:
+    list: lava-users@lists.lavasoftware.org
+    label: "{item}"
+    archive: true
+
+# lava-devel
+-
+  for_each:
+    - todo
+    - lists-lava-devel
+  rule:
+    list: lava-devel@lists.lavasoftware.org
+    label: "{item}"
+    archive: true
+
+# linaro-conf
+-
+  for_each:
+    - todo
+    - lists-linaro-conf
+  rule:
+    list: conf@lists.linaro.org
+    label: "{item}"
+    archive: true
+
+# linaro-kernel
+-
+  for_each:
+    - todo
+    - lists-linaro-kernel
+  rule:
+    list: linaro-kernel@lists.linaro.org
+    label: "{item}"
+    archive: true
+
 # linux-next
 -
   list: linux-next@vger.kernel.org
