@@ -1,0 +1,30 @@
+#!/bin/bash
+
+DEFAULT_MANIFEST_URL="https://github.com/96boards/oe-rpb-manifest"
+DEFAULT_MANIFEST_BRANCH="lkft/rocko"
+FORCE_RSYNC=""
+
+if [ -n "${MANIFEST_URL}" -a ! "${MANIFEST_URL}" = "${DEFAULT_MANIFEST_URL}" ]; then
+  FORCE_RSYNC=1
+fi
+
+if [ -n "{MANIFEST_BRANCH}" -a ! "${MANIFEST_BRANCH}" = "${DEFAULT_MANIFEST_BRANCH}" ]; then
+  FORCE_RSYNC=1
+fi
+
+cd /oe
+
+if [ -n "${FORCE_RSYNC}" ]; then
+  $HOME/bin/repo init -b "${MANIFEST_BRANCH}" -u "${MANIFEST_URL}"
+  $HOME/bin/repo sync --force-sync
+else
+  $HOME/bin/repo sync
+fi
+
+sudo chown -R lkftuser /oe/build-lkft
+:>>/oe/build-lkft/pre
+:>>/oe/build-lkft/post
+chmod 777 /oe/build-lkft/pre /oe/build-lkft/post
+
+echo "Running with parameters: [$@]"
+/bin/bash --rcfile <(cat /etc/bash.bashrc $HOME/.bashrc /oe/setup-environment && echo /oe/build-lkft/pre && echo $@ && echo /oe/build-lkft/post && echo exit)
