@@ -1,5 +1,5 @@
 mkdir -p linux
-test -d linux/mainline || git clone --reference /home/drue/src/linux/mainline git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux/mainline
+test -d linux/mainline || git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux/mainline
 (cd linux/mainline && git remote get-url hikey || git remote add hikey https://git.linaro.org/lkft/arm64-stable-rc.git)
 (cd linux/mainline && git remote get-url next || git remote add next git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git)
 (cd linux/mainline && git remote get-url stable || git remote add stable git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git)
