@@ -1,5 +1,7 @@
 #!/bin/sh
 set -ex
+curl -fsSL 'https://github.com/mrchapp.keys' -o keys
+cat keys >> /home/ubuntu/.ssh/authorized_keys
 curl -fsSL 'https://gist.githubusercontent.com/danrue/5595ddb3ed47ec9d3a4cb0ba0f552c2d/raw/gistfile1.txt' -o setup.sh
 curl -fsSL 'https://gist.githubusercontent.com/danrue/d2260630ec6943706f6e3ae9d7934450/raw/gistfile1.txt' -o build.sh
 sh setup.sh > setup-stdout.out 2> setup-stderr.out
