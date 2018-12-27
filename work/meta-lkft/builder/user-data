@@ -1,10 +1,10 @@
 #!/bin/sh
 set -ex
 
-MACHINE="intel-corei7-64"
-KERNEL_RECIPE="linux-generic-stable-rc"
-KERNEL_VERSION="4.19"
-SRCREV_kernel="v4.19.1"
+export MACHINE="intel-corei7-64"
+export KERNEL_RECIPE="linux-generic-stable-rc"
+export KERNEL_VERSION="4.19"
+export SRCREV_kernel="07a03b97b9ce2a6430344386eeab9b16283b893f"
 BUILD_TIMESTAMP=$(date '+%Y%m%d%H%M%S')
 
 cleanup() {

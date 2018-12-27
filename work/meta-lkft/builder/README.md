@@ -58,3 +58,9 @@ Before using this, an AWS account needs to have some things set up:
 - Ensure instance is in the same VPC, subnet, and sg as EFS
 
 These resources are passes as parameters to the spotBuilder class.
+
+## TODO
+
+- Determine build success/failure from build.py
+- Use a spot fleet to allow multiple instance types
+- Determine when a failure is due to spot termination and restart build

@@ -18,7 +18,6 @@ class spotBuilder:
         image_root_device="/dev/sda1",
         volume_size_gb=20,
         ec2_type="c5.2xlarge",
-        spot_price="0.30",
         spot_timeout=180,
     ):
         """
@@ -32,7 +31,6 @@ class spotBuilder:
             image_root_device: root device path in AMI
             volume_size_gb: EBS volume size in GB (int)
             ec2_type: EC2 instance type
-            spot_price: Max spot price (string)
             spot_timeout: Max seconds to wait for spot request (int)
 
         """
@@ -44,7 +42,6 @@ class spotBuilder:
         self.image_root_device = image_root_device
         self.volume_size_gb = volume_size_gb
         self.ec2_type = ec2_type
-        self.spot_price = spot_price
         self.spot_timeout = spot_timeout
         self.instance_profile_arn = instance_profile_arn
 
@@ -77,7 +74,6 @@ class spotBuilder:
                 "SecurityGroupIds": self.security_groups,
                 "UserData": base64.b64encode(self.user_data).decode("utf-8"),
             },
-            SpotPrice=self.spot_price,
             Type="one-time",
         )
 
@@ -154,7 +150,6 @@ if __name__ == "__main__":
         image_root_device="/dev/sda1",
         volume_size_gb=20,
         ec2_type="c5.2xlarge",
-        spot_price="0.30",
         spot_timeout=180,
     )
     build.run()
