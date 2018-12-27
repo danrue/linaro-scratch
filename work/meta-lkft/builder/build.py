@@ -56,7 +56,7 @@ class spotBuilder:
         self.instance_id = self.submit_spot_request()
         self.wait_for_instance()
         end = time.time()
-        print("Build complete ({} seconds)".format(int(end-start)))
+        print("Build complete ({} seconds)".format(int(end - start)))
 
     def submit_spot_request(self):
         """ Submits a spot request, and returns an instance id """
@@ -64,13 +64,11 @@ class spotBuilder:
         response = self.client.request_spot_instances(
             InstanceCount=1,
             LaunchSpecification={
-                "IamInstanceProfile": {
-                   "Arn": self.instance_profile_arn,
-                },
+                "IamInstanceProfile": {"Arn": self.instance_profile_arn},
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": self.image_root_device,
-                        "Ebs": {"VolumeSize": self.volume_size_gb},
+                        "Ebs": {"VolumeSize": self.volume_size_gb, "VolumeType": "gp2"},
                     }
                 ],
                 "ImageId": self.image_id,
@@ -93,7 +91,7 @@ class spotBuilder:
             WaiterConfig={"Delay": 5, "MaxAttempts": 80},
         )
         end = time.time()
-        print("Spot instance request fulfilled ({} seconds)".format(int(end-start)))
+        print("Spot instance request fulfilled ({} seconds)".format(int(end - start)))
 
         status = self.client.describe_spot_instance_requests(
             SpotInstanceRequestIds=[request_id]
@@ -121,13 +119,12 @@ class spotBuilder:
             InstanceIds=[self.instance_id], WaiterConfig={"Delay": 5, "MaxAttempts": 80}
         )
         end = time.time()
-        print("Instance is running ({} seconds)".format(int(end-start)))
+        print("Instance is running ({} seconds)".format(int(end - start)))
 
-
-        status = self.client.describe_instances(
-            InstanceIds=[self.instance_id]
-        )['Reservations'][0]['Instances'][0]
-        print("Instance is online at {}".format(status['PublicIpAddress']))
+        status = self.client.describe_instances(InstanceIds=[self.instance_id])[
+            "Reservations"
+        ][0]["Instances"][0]
+        print("Instance is online at {}".format(status["PublicIpAddress"]))
 
         waiter = self.client.get_waiter("instance_terminated")
         print("Waiting until instance is terminated")
@@ -137,8 +134,7 @@ class spotBuilder:
             WaiterConfig={"Delay": 15, "MaxAttempts": 80},
         )
         end = time.time()
-        print("Instance terminated ({} seconds)".format(int(end-start)))
-
+        print("Instance terminated ({} seconds)".format(int(end - start)))
 
 
 if __name__ == "__main__":
