@@ -1,6 +1,7 @@
 #!/bin/sh
 set -ex
 
+MACHINE="intel-corei7-64"
 KERNEL_RECIPE="linux-generic-stable-rc"
 KERNEL_VERSION="4.19"
 SRCREV_kernel="v4.19.1"
@@ -10,7 +11,7 @@ cleanup() {
     set +e
     echo "Cleaning up"
     aws s3 cp /var/log/cloud-init-output.log s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
-    curl curl http://169.254.169.254/latest/user-data > /user-data
+    curl http://169.254.169.254/latest/user-data > /user-data
     aws s3 cp /user-data s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
     shutdown -h now
 }
@@ -36,7 +37,7 @@ usermod -aG docker ubuntu
 
 # Run build
 su ubuntu -c 'docker run -t -e DISTRO=lkft \
-    -e MACHINE=intel-corei7-64 \
+    -e MACHINE \
     -e KERNEL_RECIPE \
     -e KERNEL_VERSION \
     -e SRCREV_kernel \
