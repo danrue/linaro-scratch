@@ -153,7 +153,7 @@ if __name__ == "__main__":
             "sg-c4c356be",
             "sg-d10590ab",
         ],
-        user_data=open("user-data", "rb").read(),
+        user_data=open(sys.argv[1], "rb").read(),
         instance_profile_arn="arn:aws:iam::418461531736:instance-profile/therub-builds-role",
         image_root_device="/dev/sda1",
         volume_size_gb=20,

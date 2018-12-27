@@ -2,16 +2,16 @@
 set -ex
 
 KERNEL_RECIPE="linux-generic-stable-rc"
-KERNEL_VERSION="4.14"
-SRCREV_kernel="dafc7cbbb79e3fa3743ebcb0e0014b95905752b9"
+KERNEL_VERSION="4.19"
+SRCREV_kernel="v4.19.1"
 BUILD_TIMESTAMP=$(date '+%Y%m%d%H%M%S')
 
 cleanup() {
     set +e
     echo "Cleaning up"
-    aws s3 cp /var/log/cloud-init-output.log s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/
+    aws s3 cp /var/log/cloud-init-output.log s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
     curl curl http://169.254.169.254/latest/user-data > /user-data
-    aws s3 cp /user-data s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/
+    aws s3 cp /user-data s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
     shutdown -h now
 }
 trap cleanup EXIT
@@ -46,4 +46,4 @@ su ubuntu -c 'docker run -t -e DISTRO=lkft \
     bitbake rpb-console-image-lkft'
 
 # Sync build and logs
-aws s3 sync /build-lkft/tmp-*/deploy/images/*/ s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/
+aws s3 sync /build-lkft/tmp-*/deploy/images/*/ s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/ --acl public-read
