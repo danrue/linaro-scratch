@@ -14,6 +14,7 @@ class spotBuilder:
         ec2_key_name,
         security_groups,
         user_data,
+        instance_profile_arn,
         image_root_device="/dev/sda1",
         volume_size_gb=20,
         ec2_type="c5.2xlarge",
@@ -27,6 +28,7 @@ class spotBuilder:
             ec2_key_name: EC2 SSH key name
             security_groups: EC2 security groups (list)
             user_data: User data script - byte string
+            instance_profile_arn: Instance profile to attach to spot instance
             image_root_device: root device path in AMI
             volume_size_gb: EBS volume size in GB (int)
             ec2_type: EC2 instance type
@@ -34,7 +36,6 @@ class spotBuilder:
             spot_timeout: Max seconds to wait for spot request (int)
 
         """
-        start = time.time()
         self.image_id = image_id
         self.ec2_key_name = ec2_key_name
         self.security_groups = security_groups
@@ -45,9 +46,13 @@ class spotBuilder:
         self.ec2_type = ec2_type
         self.spot_price = spot_price
         self.spot_timeout = spot_timeout
+        self.instance_profile_arn = instance_profile_arn
 
         self.client = boto3.client("ec2")
 
+    def run(self):
+        print("Starting build")
+        start = time.time()
         self.instance_id = self.submit_spot_request()
         self.wait_for_instance()
         end = time.time()
@@ -59,9 +64,9 @@ class spotBuilder:
         response = self.client.request_spot_instances(
             InstanceCount=1,
             LaunchSpecification={
-                # "IamInstanceProfile": {
-                #    "Arn": "arn:aws:iam::123456789012:instance-profile/my-iam-role"
-                # },
+                "IamInstanceProfile": {
+                   "Arn": self.instance_profile_arn,
+                },
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": self.image_root_device,
@@ -81,7 +86,7 @@ class spotBuilder:
         request_id = response["SpotInstanceRequests"][0]["SpotInstanceRequestId"]
 
         waiter = self.client.get_waiter("spot_instance_request_fulfilled")
-        print("Spot instance request submitted.")
+        print("Spot instance request submitted")
         start = time.time()
         waiter.wait(
             SpotInstanceRequestIds=[request_id],
@@ -104,9 +109,8 @@ class spotBuilder:
 
         # Wait for instance
         instance_id = status.get("InstanceId", None)
-        instance_ip = status.get("PublicIpAddress", None)
         assert instance_id, "Error, InstanceId not found: {}".format(status)
-        print("Instance {} launched at {}".format(instance_id, instance_ip))
+        print("Instance {} launched".format(instance_id))
         return instance_id
 
     def wait_for_instance(self):
@@ -118,6 +122,12 @@ class spotBuilder:
         )
         end = time.time()
         print("Instance is running ({} seconds)".format(int(end-start)))
+
+
+        status = self.client.describe_instances(
+            InstanceIds=[self.instance_id]
+        )['Reservations'][0]['Instances'][0]
+        print("Instance is online at {}".format(status['PublicIpAddress']))
 
         waiter = self.client.get_waiter("instance_terminated")
         print("Waiting until instance is terminated")
@@ -132,19 +142,6 @@ class spotBuilder:
 
 
 if __name__ == "__main__":
-    # Need a terraform to launch prerequisites
-    # - instance-profile
-
-    USER_DATA = b"""#!/bin/sh
-    set -ex
-    curl -fsSL 'https://github.com/mrchapp.keys' -o keys
-    cat keys >> /home/ubuntu/.ssh/authorized_keys
-    curl -fsSL 'https://gist.githubusercontent.com/danrue/5595ddb3ed47ec9d3a4cb0ba0f552c2d/raw/gistfile1.txt' -o setup.sh
-    curl -fsSL 'https://gist.githubusercontent.com/danrue/d2260630ec6943706f6e3ae9d7934450/raw/gistfile1.txt' -o build.sh
-    sh setup.sh > setup-stdout.out 2> setup-stderr.out
-    su ubuntu -c 'sh build.sh' > build-stdout.out 2> build-stderr.out
-    shutdown -h now
-    """
 
     build = spotBuilder(
         image_id="ami-0ac019f4fcb7cb7e6",  # ubuntu 18.04 amd64
@@ -156,10 +153,12 @@ if __name__ == "__main__":
             "sg-c4c356be",
             "sg-d10590ab",
         ],
-        user_data=USER_DATA,
+        user_data=open("user-data", "rb").read(),
+        instance_profile_arn="arn:aws:iam::418461531736:instance-profile/therub-builds-role",
         image_root_device="/dev/sda1",
         volume_size_gb=20,
         ec2_type="c5.2xlarge",
         spot_price="0.30",
         spot_timeout=180,
     )
+    build.run()

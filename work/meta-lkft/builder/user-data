@@ -1,0 +1,49 @@
+#!/bin/sh
+set -ex
+
+KERNEL_RECIPE="linux-generic-stable-rc"
+KERNEL_VERSION="4.14"
+SRCREV_kernel="dafc7cbbb79e3fa3743ebcb0e0014b95905752b9"
+BUILD_TIMESTAMP=$(date '+%Y%m%d%H%M%S')
+
+cleanup() {
+    set +e
+    echo "Cleaning up"
+    aws s3 cp /var/log/cloud-init-output.log s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/
+    curl curl http://169.254.169.254/latest/user-data > /user-data
+    aws s3 cp /user-data s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/
+    shutdown -h now
+}
+trap cleanup EXIT
+
+# Install Daniel's keys into instance
+curl -fsSL 'https://github.com/mrchapp.keys' -o keys
+cat keys >> /home/ubuntu/.ssh/authorized_keys
+
+# Install apt dependencies
+apt-get update && apt-get install -y --no-install-recommends nfs-common awscli
+
+# Mount cache directory from EFS at /oe
+mkdir /oe
+mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport fs-e72a9e06.efs.us-east-1.amazonaws.com:/ /oe
+
+# Install Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+apt-get update
+apt-get install -y docker-ce
+usermod -aG docker ubuntu
+
+# Run build
+su ubuntu -c 'docker run -t -e DISTRO=lkft \
+    -e MACHINE=intel-corei7-64 \
+    -e KERNEL_RECIPE \
+    -e KERNEL_VERSION \
+    -e SRCREV_kernel \
+    -v /oe/downloads:/oe/downloads \
+    -v /oe/sstate-cache:/oe/sstate-cache \
+    -v /build-lkft:/oe/build-lkft mrchapp/lkft-rocko \
+    bitbake rpb-console-image-lkft'
+
+# Sync build and logs
+aws s3 sync /build-lkft/tmp-*/deploy/images/*/ s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/
