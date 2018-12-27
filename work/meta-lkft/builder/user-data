@@ -43,8 +43,8 @@ su ubuntu -c 'docker run -t -e DISTRO=lkft \
     -e SRCREV_kernel \
     -v /oe/downloads:/oe/downloads \
     -v /oe/sstate-cache:/oe/sstate-cache \
-    -v /build-lkft:/oe/build-lkft mrchapp/lkft-rocko \
-    bitbake rpb-console-image-lkft'
+    -v /build-lkft:/oe/build-lkft \
+    mrchapp/lkft-rocko bitbake rpb-console-image-lkft'
 
 # Sync build and logs
 aws s3 sync /build-lkft/tmp-*/deploy/images/*/ s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/ --acl public-read
