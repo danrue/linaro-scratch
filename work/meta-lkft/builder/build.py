@@ -65,12 +65,18 @@ class spotBuilder:
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": self.image_root_device,
-                        "Ebs": {"VolumeSize": self.volume_size_gb, "VolumeType": "gp2"},
+                        "Ebs": {
+                            "VolumeSize": self.volume_size_gb,
+                            "VolumeType": "gp2",
+                            "DeleteOnTermination": True,
+                        },
                     }
                 ],
+                "EbsOptimized": True,
                 "ImageId": self.image_id,
                 "InstanceType": self.ec2_type,
                 "KeyName": self.ec2_key_name,
+                "Monitoring": {"Enabled": True},
                 "SecurityGroupIds": self.security_groups,
                 "UserData": base64.b64encode(self.user_data).decode("utf-8"),
             },
@@ -127,7 +133,7 @@ class spotBuilder:
         start = time.time()
         waiter.wait(
             InstanceIds=[self.instance_id],
-            WaiterConfig={"Delay": 15, "MaxAttempts": 80},
+            WaiterConfig={"Delay": 15, "MaxAttempts": 540},
         )
         end = time.time()
         print("Instance terminated ({} seconds)".format(int(end - start)))
