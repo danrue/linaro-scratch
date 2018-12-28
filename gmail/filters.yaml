@@ -113,13 +113,6 @@
 #  label: junk
 #  archive: true
 
-# Build bot for Mark Brown
--
-  from: Build bot for Mark Brown
-  list: linaro-kernel@lists.linaro.org
-  label: junk
-  archive: true
-
 # Olof's autobuilder
 -
   from: Olof's autobuilder
@@ -215,13 +208,14 @@
 
 # linaro-kernel
 -
-  for_each:
-    - todo
-    - lists-linaro-kernel
-  rule:
-    list: linaro-kernel@lists.linaro.org
-    label: "{item}"
-    archive: true
+  list: linaro-kernel@lists.linaro.org
+  label: lists-linaro-kernel
+  archive: true
+-
+  list: linaro-kernel@lists.linaro.org
+  label: todo
+  from: -"Build bot for Mark Brown"
+  archive: true
 
 # linux-next
 -
