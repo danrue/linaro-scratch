@@ -166,6 +166,16 @@
     label: "{item}"
     archive: true
 
+# Label all automated-testing emails and send all to todo
+-
+  for_each:
+    - todo
+    - lists-ltp
+  rule:
+    list: automated-testing@yoctoproject.org
+    label: "{item}"
+    archive: true
+
 # Label all kernelci emails and send all to todo
 -
   for_each:
