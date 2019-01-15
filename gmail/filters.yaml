@@ -6,8 +6,8 @@
 # the inbox. However, that's not possible. Instead, you have to write rules to
 # match everything that *shouldn't* stay in the inbox.
 #
-# The below design therefore is a compromise. It will apply the label 'todo' to
-# all emails which should be read, which basically makes 'todo' a second inbox.
+# The below design therefore is a compromise. It will apply the label '+todo' to
+# all emails which should be read, which basically makes '+todo' a second inbox.
 #
 # Emails which don't match any filter stay in the inbox.
 
@@ -29,7 +29,7 @@
       - -bugzilla-daemon@bugs.linaro.org
       - -it-services@linaro.org
   is: -chats # the to: rules picks up google chat logs; exclude them
-  label: todo
+  label: +todo
   archive: true
 
 # Emails from people I follow
@@ -44,7 +44,7 @@
       - ryan.arnold@linaro.org
       - daniel.diaz@linaro.org
       - rafael.tinoco@linaro.org
-  label: todo
+  label: +todo
   archive: true
 
 # Label all stable emails
@@ -52,7 +52,7 @@
   list: stable@vger.kernel.org
   label: lists-stable
   archive: true
-# Stable review threads should go to todo
+# Stable review threads should go to +todo
 -
   subject:
     all:
@@ -60,7 +60,7 @@
       - PATCH
       - stable review
   list: stable@vger.kernel.org
-  label: todo
+  label: +todo
   archive: true
 
 
@@ -84,7 +84,7 @@
       - "4.18"
       - "4.19"
       - "4.20"
-  label: todo
+  label: +todo
   archive: true
 
 # netdev
@@ -102,7 +102,7 @@
 # Gerrit
 -
   from: review@review.linaro.org
-  label: todo
+  label: +todo
   archive: true
 #-
 #  from: review@review.linaro.org
@@ -156,30 +156,30 @@
   label: junk
   archive: true
 
-# Label all ltp emails and send all to todo
+# Label all ltp emails and send all to +todo
 -
   for_each:
-    - todo
+    - +todo
     - lists-ltp
   rule:
     list: ltp@lists.linux.it
     label: "{item}"
     archive: true
 
-# Label all automated-testing emails and send all to todo
+# Label all automated-testing emails and send all to +todo
 -
   for_each:
-    - todo
+    - +todo
     - lists-ltp
   rule:
     list: automated-testing@yoctoproject.org
     label: "{item}"
     archive: true
 
-# Label all kernelci emails and send all to todo
+# Label all kernelci emails and send all to +todo
 -
   for_each:
-    - todo
+    - +todo
     - lists-kernelci
   rule:
     list: kernelci@groups.io
@@ -189,7 +189,7 @@
 # lava-users
 -
   for_each:
-    - todo
+    - +todo
     - lists-lava-users
   rule:
     list: lava-users@lists.lavasoftware.org
@@ -199,17 +199,29 @@
 # lava-devel
 -
   for_each:
-    - todo
+    - +todo
     - lists-lava-devel
   rule:
     list: lava-devel@lists.lavasoftware.org
     label: "{item}"
     archive: true
 
+# threads of interest
+-
+  for_each:
+    - +todo
+    - interesting-threads
+  rule:
+    subject:
+      any:
+        - "x86/fpu: Don't export __kernel_fpu_"
+    label: "{item}"
+    archive: true
+
 # linaro-conf
 -
   for_each:
-    - todo
+    - +todo
     - lists-linaro-conf
   rule:
     list: conf@lists.linaro.org
@@ -223,7 +235,7 @@
   archive: true
 -
   list: linaro-kernel@lists.linaro.org
-  label: todo
+  label: +todo
   from: -"Build bot for Mark Brown"
   archive: true
 
