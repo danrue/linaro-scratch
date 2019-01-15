@@ -1,21 +1,18 @@
 #!/bin/sh
 set -ex
 
-export MACHINE="intel-corei7-64"
+export MACHINE="hikey"
 export KERNEL_RECIPE="linux-generic-stable-rc"
 export KERNEL_VERSION="4.19"
 export SRCREV_kernel="08ae917b140b0fdd38906cfd569014b030a0f60e"
 BUILD_TIMESTAMP=$(date '+%Y%m%d%H%M%S')
-BUILD_BUCKET="therub-builds"
-BUILD_BASE_PATH="s3://${BUILD_BUCKET}/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/${MACHINE}"
-BUILD_LOGS_PATH="${BUILD_BASE_PATH}/build_${BUILD_TIMESTAMP}"
 
 cleanup() {
     set +e
     echo "Cleaning up"
-    aws s3 cp /var/log/cloud-init-output.log ${BUILD_LOGS_PATH}/ --acl public-read
+    aws s3 cp /var/log/cloud-init-output.log s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
     curl http://169.254.169.254/latest/user-data > /user-data
-    aws s3 cp /user-data ${BUILD_LOGS_PATH}/ --acl public-read
+    aws s3 cp /user-data s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/build_${BUILD_TIMESTAMP}/ --acl public-read
     shutdown -h now
 }
 trap cleanup EXIT
@@ -47,7 +44,7 @@ su ubuntu -c 'docker run -t -e DISTRO=lkft \
     -v /oe/downloads:/oe/downloads \
     -v /oe/sstate-cache:/oe/sstate-cache \
     -v /build-lkft:/oe/build-lkft \
-    mrchapp/lkft-rocko bitbake rpb-console-image-lkft' > /output/log 2>&1
+    mrchapp/lkft-rocko bitbake rpb-console-image-lkft'
 
 # Sync build and logs
-aws s3 sync /build-lkft/tmp-*/deploy/images/*/ ${BUILD_BASE_PATH}/ --acl public-read
+aws s3 sync /build-lkft/tmp-*/deploy/images/*/ s3://therub-builds/${KERNEL_RECIPE}/${KERNEL_VERSION}/${SRCREV_kernel}/ --acl public-read
