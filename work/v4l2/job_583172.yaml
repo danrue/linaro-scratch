@@ -1,0 +1,129 @@
+
+timeouts:
+  job:
+    minutes: 20
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  arch: arm64
+  netdevice: tap
+  machine: virt-2.10,accel=kvm
+  cpu: host
+  guestfs_interface: virtio
+
+
+device_type: qemu-arm
+job_name: lkft-ltp-io-linux-4.19.y-71
+priority: 75
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.19.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 23b6b8bf9011dc714e7c66ada789c665261607ac
+  git describe: v4.19.17
+  make_kernelversion: 4.19.17
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/hikey/lkft/linux-stable-rc-4.19/71/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/hikey/lkft/linux-stable-rc-4.19/71/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=hikey,label=docker-lkft/71/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/hikey/lkft/linux-stable-rc-4.19/71
+  toolchain: aarch64-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+
+
+  ltp-io-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-io-tests__version: '20180926'
+  ltp-io-tests__revision: f424769b1ad9fca477118763f88a6cec98ea2c0a
+
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tmpfs
+    images:
+      rootfs:
+        image_arg: -drive format=raw,file={rootfs},if=virtio -m 4096 -smp 4 -nographic
+        url: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/hikey/lkft/linux-stable-rc-4.19/71/rpb-console-image-lkft-hikey-20190123102144-71.rootfs.ext4.gz
+        compression: gz
+        apply-overlay: true
+        sparse: false
+      kernel:
+        image_arg: -kernel {kernel} --append "console=ttyAMA0 root=/dev/vda rw"
+        url: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/hikey/lkft/linux-stable-rc-4.19/71/Image--4.19+git0+23b6b8bf90-r0-hikey-20190123102144-71.bin
+        type: image
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: qemu
+    media: tmpfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - root@hikey:~#
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 20
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Link /ltp-tmp to /tmp
+        run:
+          steps:
+          - df -h
+          - ln -s /tmp /ltp-tmp
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+
+
+
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: io
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: qemu_arm64
+        BRANCH: '4.19'
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-io-tests
+      timeout:
+        minutes: 15
+
+
+

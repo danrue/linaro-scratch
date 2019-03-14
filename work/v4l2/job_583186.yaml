@@ -1,0 +1,129 @@
+
+timeouts:
+  job:
+    minutes: 20
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+
+context:
+  test_character_delay: 10
+
+
+device_type: x86
+job_name: lkft-ltp-io-linux-4.19.y-71
+priority: 75
+visibility: public
+
+metadata:
+
+  
+  git branch: linux-4.19.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 23b6b8bf9011dc714e7c66ada789c665261607ac
+  git describe: v4.19.17
+  make_kernelversion: 4.19.17
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/intel-core2-32/lkft/linux-stable-rc-4.19/71/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/intel-core2-32/lkft/linux-stable-rc-4.19/71/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.19/DISTRO=lkft,MACHINE=intel-core2-32,label=docker-lkft/71/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/intel-core2-32/lkft/linux-stable-rc-4.19/71
+  toolchain: i686-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+
+
+  ltp-io-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-io-tests__version: '20180926'
+  ltp-io-tests__revision: f424769b1ad9fca477118763f88a6cec98ea2c0a
+
+
+
+
+
+
+actions:
+
+
+
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/intel-core2-32/lkft/linux-stable-rc-4.19/71/bzImage--4.19+git0+23b6b8bf90-r0-intel-core2-32-20190123103620-71.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/rocko/intel-core2-32/lkft/linux-stable-rc-4.19/71/rpb-console-image-lkft-intel-core2-32-20190123103620-71.rootfs.tar.xz
+      compression: xz
+    os: oe
+
+
+
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+
+
+
+  
+  
+- test:
+    namespace: target
+    timeout:
+      minutes: 20
+    definitions:
+
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Mount local disk for tmp space
+        run:
+          steps:
+          - df -h
+          - mount
+          - ls /dev/disk/by-id/ -l
+          - export TMPDISK=$(ls /dev/disk/by-id/ata-TOSHIBA_MG03ACA100_*)
+          - echo "y" | mkfs -t ext4 ${TMPDISK}
+          - mkdir -p /ltp-tmp
+          - mount ${TMPDISK} /ltp-tmp || lava-test-raise "mount failed job exit"
+          - df -h
+          - mount
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+
+
+
+
+    - repository: git://git.linaro.org/qa/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: io
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: i386
+        BRANCH: '4.19'
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+      name: ltp-io-tests
+      timeout:
+        minutes: 15
+
+
+
