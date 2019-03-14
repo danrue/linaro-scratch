@@ -21,7 +21,6 @@
       - naresh.kamboju@linaro.org
       - daniel.diaz@linaro.org
       - matt.hart@linaro.org
-      - rafael.tinoco@linaro.org
   from:
     all:
       - -builds@travis-ci.org
@@ -63,6 +62,13 @@
   label: +todo
   archive: true
 
+# Anything with the following subject matches
+-
+  subject:
+    all:
+      - gregkh
+  label: +todo
+  archive: true
 
 # LKML
 -
@@ -159,7 +165,6 @@
 # Label all ltp emails and send all to +todo
 -
   for_each:
-    - +todo
     - lists-ltp
   rule:
     list: ltp@lists.linux.it
@@ -252,6 +257,10 @@
 
 # kernelci bot
 -
-  from: bot@kernelci.org
-  list: kernel-build-reports@lists.linaro.org
-  archive: true
+  for_each:
+    - +todo
+    - lists-kernel-build-reports
+  rule:
+    list: kernel-build-reports@lists.linaro.org
+    label: "{item}"
+    archive: true

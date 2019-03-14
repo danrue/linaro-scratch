@@ -3,20 +3,20 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:7803833548965992924</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:4217930160719874391</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="doesNotHaveTheWord" value="is:(chats)"/>
     <apps:property name="from" value="(-bugzilla-daemon@bugs.linaro.org AND -builds@travis-ci.org AND -it-services@linaro.org AND -projects@linaro.org)"/>
     <apps:property name="label" value="+todo"/>
     <apps:property name="shouldArchive" value="true"/>
-    <apps:property name="to" value="(anders.roxell@linaro.org OR dan.rue@linaro.org OR daniel.diaz@linaro.org OR matt.hart@linaro.org OR naresh.kamboju@linaro.org OR rafael.tinoco@linaro.org)"/>
+    <apps:property name="to" value="(anders.roxell@linaro.org OR dan.rue@linaro.org OR daniel.diaz@linaro.org OR matt.hart@linaro.org OR naresh.kamboju@linaro.org)"/>
   </entry>
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1257609958112060520</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1356566088179947403</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="&quot;Olof's autobuilder&quot;"/>
     <apps:property name="label" value="junk"/>
@@ -25,8 +25,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:9138084303622201801</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2338519405284678689</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="(&quot;Dan Rue&quot; AND projects@linaro.org)"/>
     <apps:property name="label" value="junk"/>
@@ -36,8 +36,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:708350110230025854</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2663353244698826483</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="(anders.roxell@linaro.org OR chase.qi@linaro.org OR daniel.diaz@linaro.org OR milosz.wasilewski@linaro.org OR naresh.kamboju@linaro.org OR rafael.tinoco@linaro.org OR ryan.arnold@linaro.org OR torvalds@linux-foundation.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -46,8 +46,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4525220929907820140</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2267837692594870736</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="-&quot;Build bot for Mark Brown&quot;"/>
     <apps:property name="hasTheWord" value="list:(linaro-kernel@lists.linaro.org)"/>
@@ -57,18 +57,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1604150140946728821</id>
-    <updated>2019-01-15T11:56:53Z</updated>
-    <content/>
-    <apps:property name="from" value="bot@kernelci.org"/>
-    <apps:property name="hasTheWord" value="list:(kernel-build-reports@lists.linaro.org)"/>
-    <apps:property name="shouldArchive" value="true"/>
-  </entry>
-  <entry>
-    <category term="filter"/>
-    <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:5155579854036821826</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2179186093983181382</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="ci_notify@linaro.org"/>
     <apps:property name="label" value="junk"/>
@@ -78,8 +68,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4884812710269121942</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:8982196734656581740</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="it-services@linaro.org"/>
     <apps:property name="label" value="junk"/>
@@ -88,8 +78,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4429355486613629939</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2159250274796256843</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="qa-reports@linaro.org"/>
     <apps:property name="label" value="junk"/>
@@ -99,8 +89,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:8754922427553990026</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:7927466441143738194</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="qa-reports@linaro.org"/>
     <apps:property name="label" value="junk"/>
@@ -110,8 +100,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1826777356391277226</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1654762522672896691</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="from" value="review@review.linaro.org"/>
     <apps:property name="label" value="+todo"/>
@@ -120,8 +110,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:3142104755032053538</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:7894718933663077147</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(automated-testing@yoctoproject.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -130,8 +120,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:5160750118194203628</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2361340117640636454</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(automated-testing@yoctoproject.org)"/>
     <apps:property name="label" value="lists-ltp"/>
@@ -140,8 +130,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1618120289793566633</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:6720191771388838476</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(conf@lists.linaro.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -150,8 +140,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1222422914561186360</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:8400074636706497119</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(conf@lists.linaro.org)"/>
     <apps:property name="label" value="lists-linaro-conf"/>
@@ -160,8 +150,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:7394011814859073091</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1179539005084848277</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(fuego@lists.linuxfoundation.org)"/>
     <apps:property name="label" value="lists-fuego"/>
@@ -169,8 +159,28 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:5202265445380714370</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:6457803308657297656</id>
+    <updated>2019-03-14T14:22:40Z</updated>
+    <content/>
+    <apps:property name="hasTheWord" value="list:(kernel-build-reports@lists.linaro.org)"/>
+    <apps:property name="label" value="+todo"/>
+    <apps:property name="shouldArchive" value="true"/>
+  </entry>
+  <entry>
+    <category term="filter"/>
+    <title>Mail Filter</title>
+    <id>tag:mail.google.com,2008:filter:1741455240626386766</id>
+    <updated>2019-03-14T14:22:40Z</updated>
+    <content/>
+    <apps:property name="hasTheWord" value="list:(kernel-build-reports@lists.linaro.org)"/>
+    <apps:property name="label" value="lists-kernel-build-reports"/>
+    <apps:property name="shouldArchive" value="true"/>
+  </entry>
+  <entry>
+    <category term="filter"/>
+    <title>Mail Filter</title>
+    <id>tag:mail.google.com,2008:filter:6389721717780424208</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(kernelci@groups.io)"/>
     <apps:property name="label" value="+todo"/>
@@ -179,8 +189,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4021519408772204231</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:2663395912441585122</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(kernelci@groups.io)"/>
     <apps:property name="label" value="lists-kernelci"/>
@@ -189,8 +199,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:6560986130527030633</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:6592044142776435011</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(lava-devel@lists.lavasoftware.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -199,8 +209,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:5102505748147645530</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:4816700593675230453</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(lava-devel@lists.lavasoftware.org)"/>
     <apps:property name="label" value="lists-lava-devel"/>
@@ -209,8 +219,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:5098009953545315609</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:7164909692737639431</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(lava-users@lists.lavasoftware.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -219,8 +229,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4034707036747189524</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:5656061694130746630</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(lava-users@lists.lavasoftware.org)"/>
     <apps:property name="label" value="lists-lava-users"/>
@@ -229,8 +239,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:6714342532511188439</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:8768769269516040764</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(linaro-kernel@lists.linaro.org)"/>
     <apps:property name="label" value="lists-linaro-kernel"/>
@@ -239,8 +249,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:1210708218569981352</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1427201070490535330</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(linux-kernel@vger.kernel.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -250,8 +260,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:7387580437788783231</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:8483930477511425097</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(linux-kernel@vger.kernel.org)"/>
     <apps:property name="label" value="lists-lkml"/>
@@ -260,8 +270,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:171123166204759066</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:5735580895601459330</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(linux-kselftest@vger.kernel.org)"/>
     <apps:property name="label" value="lists-kselftest"/>
@@ -270,8 +280,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:9218503622522666673</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1671090988822797095</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(linux-next@vger.kernel.org)"/>
     <apps:property name="label" value="lists-next"/>
@@ -280,18 +290,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:7092183052556769208</id>
-    <updated>2019-01-15T11:56:53Z</updated>
-    <content/>
-    <apps:property name="hasTheWord" value="list:(ltp@lists.linux.it)"/>
-    <apps:property name="label" value="+todo"/>
-    <apps:property name="shouldArchive" value="true"/>
-  </entry>
-  <entry>
-    <category term="filter"/>
-    <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4761463818237077674</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:7974392143877769290</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(ltp@lists.linux.it)"/>
     <apps:property name="label" value="lists-ltp"/>
@@ -300,8 +300,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:7111426166077459603</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:1971149121790072329</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(netdev@vger.kernel.org)"/>
     <apps:property name="label" value="lists-netdev"/>
@@ -310,8 +310,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:8023670341823656171</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:5539911915999634058</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(stable@vger.kernel.org)"/>
     <apps:property name="label" value="+todo"/>
@@ -321,8 +321,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:3474292275155494811</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:6118339799108101536</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="hasTheWord" value="list:(stable@vger.kernel.org)"/>
     <apps:property name="label" value="lists-stable"/>
@@ -331,8 +331,8 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:4216322616760794354</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:4743589318815292137</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="label" value="+todo"/>
     <apps:property name="shouldArchive" value="true"/>
@@ -341,8 +341,18 @@
   <entry>
     <category term="filter"/>
     <title>Mail Filter</title>
-    <id>tag:mail.google.com,2008:filter:8930812675565347090</id>
-    <updated>2019-01-15T11:56:53Z</updated>
+    <id>tag:mail.google.com,2008:filter:5259251428455245114</id>
+    <updated>2019-03-14T14:22:40Z</updated>
+    <content/>
+    <apps:property name="label" value="+todo"/>
+    <apps:property name="shouldArchive" value="true"/>
+    <apps:property name="subject" value="(gregkh)"/>
+  </entry>
+  <entry>
+    <category term="filter"/>
+    <title>Mail Filter</title>
+    <id>tag:mail.google.com,2008:filter:9128500173128209812</id>
+    <updated>2019-03-14T14:22:40Z</updated>
     <content/>
     <apps:property name="label" value="interesting-threads"/>
     <apps:property name="shouldArchive" value="true"/>
