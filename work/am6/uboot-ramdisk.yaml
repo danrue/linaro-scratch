@@ -1,0 +1,37 @@
+device_type: am6
+job_name: am6-uboot
+timeouts:
+  job:
+    minutes: 60
+  action:
+    minutes: 15
+  connection:
+    minutes: 2
+priority: high
+visibility: public
+actions:
+- deploy:
+    namespace: ramdisktest
+    timeout:
+      minutes: 2
+    to: tftp
+    kernel:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/Image
+      type: image
+    ramdisk:
+      url: https://storage.kernelci.org/images/rootfs/buildroot/kci-2018.11/arm64/base/rootfs.cpio.gz
+      compression: gz
+    modules:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/modules.tar.xz
+      compression: xz
+    dtb:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/dtbs/ti/k3-am654-base-board.dtb
+    os: oe
+- boot:
+    namespace: ramdisktest
+    timeout:
+      minutes: 5
+    method: u-boot
+    commands: ramdisk
+    prompts:
+      - '/ #'

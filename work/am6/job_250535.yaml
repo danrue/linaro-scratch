@@ -1,0 +1,72 @@
+device_type: am6
+job_name: lab-health-am6
+timeouts:
+  job:
+    minutes: 60
+  action:
+    minutes: 15
+  connection:
+    minutes: 2
+priority: medium
+visibility: public
+metadata:
+  source: https://git.linaro.org/lava/lava-lab.git
+  path: shared/health-checks/am6.yaml
+protocols:
+  lava-lxc:
+    name: lxc-x15-test
+    template: debian
+    distribution: debian
+    release: stretch
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 5
+    to: lxc
+    packages:
+    - android-tools-adb
+    - android-tools-fastboot
+    - systemd
+    - systemd-sysv
+    os: debian
+- boot:
+    namespace: tlxc
+    prompts:
+    - 'root@(.*):/#'
+    - 'shell@am57xevm:/'
+    timeout:
+      minutes: 5
+    method: lxc
+- deploy:
+    timeout:
+      minutes: 25
+    to: fastboot
+    namespace: droid
+    connection: lxc
+    images:
+      boot:
+        url: http://images.validation.linaro.org/people.linaro.org/milosz.wasilewski/am6/boot_fit.img
+      vendor:
+        url: http://images.validation.linaro.org/people.linaro.org/milosz.wasilewski/am6/vendor.img
+      system:
+        url: http://images.validation.linaro.org/people.linaro.org/milosz.wasilewski/am6/system.img
+      userdata:
+        url: http://images.validation.linaro.org/people.linaro.org/milosz.wasilewski/am6/userdata.img
+    os: android
+- boot:
+    namespace: droid
+    prompts:
+    - 'am65xevm:'
+    timeout:
+      minutes: 15
+    method: fastboot
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - repository: https://git.linaro.org/lava-team/lava-functional-tests.git
+      from: git
+      path: lava-test-shell/android/get-adb-serial-jessie.yaml
+      name: get-am6-serial 

@@ -1,0 +1,113 @@
+timeouts:
+  job:
+    minutes: 120
+  action:
+    minutes: 10
+  connection:
+    minutes: 2
+context:
+  test_character_delay: 10
+device_type: x15
+job_name: lkft-ltp-syscalls-master-1753
+priority: 25
+visibility: public
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b
+  git describe: v5.1-rc7
+  make_kernelversion: 5.1.0-rc7
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/1753/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753
+  toolchain: arm-linaro-linux-gnueabi 7.%
+  series: lkft
+  email-notification: ''
+  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
+  ltp-syscalls-tests__version: '20190115'
+  ltp-syscalls-tests__revision: a6a5caef13632e669dda27b0461726eba546a2f3
+protocols:
+  lava-lxc:
+    name: lxc-target
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+- boot:
+    namespace: tlxc
+    prompts:
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: lxc
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      path: automated/linux/android-platform-tools/install.yaml
+      name: install-android-platform-tools-r2600
+      parameters:
+        LINK: https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+- deploy:
+    timeout:
+      minutes: 25
+    to: fastboot
+    namespace: target
+    connection: lxc
+    images:
+      userdata:
+        url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/rpb-console-image-lkft-am57xx-evm-20190429002245-1753.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+- boot:
+    namespace: target
+    auto_login:
+      login_prompt: 'am57xx-evm login:'
+      username: root
+    prompts:
+    - 'root@am57xx-evm:'
+    commands:
+    - setenv fdtfile am57xx-beagle-x15.dtb
+    - setenv console ttyS2,115200n8
+    - setenv mmcdev 1
+    - setenv bootpart 1:9
+    - run mmcboot
+    timeout:
+      minutes: 15
+    method: u-boot
+- test:
+    namespace: target
+    timeout:
+      minutes: 120
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: syscalls
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: x15
+        BRANCH: mainline
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+        LTP_TMPDIR: /scratch
+      name: ltp-syscalls-tests
+      timeout:
+        minutes: 115

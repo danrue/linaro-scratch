@@ -1,0 +1,46 @@
+device_type: am6
+job_name: am6-uboot
+timeouts:
+  job:
+    minutes: 60
+  action:
+    minutes: 15
+  connection:
+    minutes: 2
+priority: high
+visibility: public
+actions:
+- deploy:
+   namespace: nfstest
+   timeout:
+     minutes: 2
+   to: tftp
+   kernel:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/Image
+      type: zimage
+   modules:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/modules.tar.xz
+      compression: xz
+   dtb:
+      url: https://storage.kernelci.org/mainline/master/v5.1-rc7/arm64/defconfig/gcc-7/dtbs/ti/k3-am654-base-board.dtb
+   nfsrootfs:
+       url: https://storage.kernelci.org/images/rootfs/buildroot/kci-2018.11/arm64/base/rootfs.tar.xz
+       compression: xz
+   os: debian
+- boot:
+   namespace: nfstest
+   method: u-boot
+   commands: nfs
+   type: image
+   failure_retry: 3
+   prompts:
+     - 'user@'
+     - '/ #'
+   auto_login:
+      login_prompt: 'login:'
+      username: user
+      password_prompt: 'Password:'
+      password: user
+      login_commands:
+        - uname -a
+
