@@ -61,6 +61,15 @@
   list: stable@vger.kernel.org
   label: +todo
   archive: true
+# Send a text for initial stable RC announcements
+-
+  subject:
+    all:
+      - "-3.18" # exclude 3.18
+      - PATCH
+      - stable review
+      - "-re" # exclude replies
+  forward:  9522152221@msg.fi.google.com
 
 # Anything with the following subject matches
 -
