@@ -7,8 +7,8 @@ timeouts:
     minutes: 2
 context:
   test_character_delay: 10
-device_type: x15
-#device_type: am57xx-beagle-x15
+#device_type: x15
+device_type: am57xx-beagle-x15
 job_name: lkft-ltp-syscalls-master-1753-uboot-nfsrootfs
 priority: 100
 visibility: public
@@ -37,8 +37,11 @@ actions:
       url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/zImage--5.0+git0+37624b5854-r0-am57xx-evm-20190429002245-1753.bin
       type: zimage
     nfsrootfs:
-      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/rpb-console-image-lkft-am57xx-evm-20190429002245-1753.rootfs.tar.xz
-      compression: xz
+      url: http://people.linaro.org/~dan.rue/files/rootfs.tgz
+      compression: gz
+      #url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/rpb-console-image-lkft-am57xx-evm-20190429002245-1753.rootfs.tar.xz
+      #url: https://storage.kernelci.org/images/rootfs/buildroot/kci-2018.11/armel/base/rootfs.tar.xz
+      #compression: xz
     modules:
       url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/modules--5.0+git0+37624b5854-r0-am57xx-evm-20190429002245-1753.tgz
       compression: gz
@@ -58,18 +61,12 @@ actions:
     timeout:
       minutes: 120
     definitions:
-    - repository: https://github.com/Linaro/test-definitions.git
-      from: git
-      path: automated/linux/ltp/ltp.yaml
-      parameters:
-        SKIP_INSTALL: 'true'
-        TST_CMDFILES: syscalls
-        SKIPFILE: skipfile-lkft.yaml
-        BOARD: x15
-        BRANCH: mainline
-        ENVIRONMENT: production
-        TIMEOUT_MULTIPLIER: 3
-        LTP_TMPDIR: /scratch
-      name: ltp-syscalls-tests
-      timeout:
-        minutes: 115
+    - from: inline
+      name: prep-inline
+      path: inline/prep.yaml
+      repository:
+        metadata: {description: Device preparation, format: Lava-Test Test Definition
+            1.0, name: prep-tests}
+        run:
+          steps:
+            - sleep 3600 
