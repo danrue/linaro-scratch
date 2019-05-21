@@ -1,0 +1,86 @@
+timeouts:
+  job:
+    minutes: 330
+  connection:
+    minutes: 2
+context:
+  test_character_delay: 10
+device_type: x86
+job_name: lkft-ltp-syscalls-linux-4.19.y-168-ext4-repro
+priority: 100
+visibility: public
+actions:
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.19/168/bzImage--4.19+git0+e2caa03604-r0-intel-corei7-64-20190520113109-168.bin
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.19/168/rpb-console-image-lkft-intel-corei7-64-20190520113109-168.rootfs.tar.xz
+      compression: xz
+    os: oe
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+- test:
+    namespace: target
+    timeout:
+      minutes: 120
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Mount local disk for tmp space
+        run:
+          steps:
+          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job
+            exit"
+          - echo "y" | mkfs -t ext4 ${STORAGE_DEV} || lava-test-raise "mkfs -t ext4
+            ${STORAGE_DEV} failed; job exit"
+          - mkdir -p /scratch
+          - mount ${STORAGE_DEV} /scratch && echo "mounted" || lava-test-raise "mount
+            ${STORAGE_DEV} failed; job exit"
+          - df -h
+          - mount
+          #- /opt/ltp/runltp -d /scratch -s timer -f syscalls
+          #- mount
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+    - repository: http://git.linaro.org/lava-team/hacking-session.git
+      from: git
+      path: hacking-session-oe.yaml
+      params:
+        GATEWAY: 10.66.16.1
+        PUB_KEY: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDIbM0vUDnQPn7FbTwoyxws4HHEeQOdyHMWsbO5HjAdwJuh93wqhTZvK5FEWpJxnK/e+BWIGyIbWTB+AVaaNUnRTXTEetAjRhQB6ibwcmRTpPTLpMv+UrODTb+T/9+NzBnAii/+/r3gFpQ3/Di0V/Nd03en2ayHDnqHgPV1toOtcalShXucrTLxP41etqqmJkRLXj2tYMIdufLfvCoFVOpRJ6Zu60vE4qA9Tasbtcgufey2MCgEHtF8yXOA19n+BOQLVgxJIxoIcPWNtr++FWuxM8fh2YaZbOHNqgdNSEMOCDFsQvvT9KF1a9ypqujk8wU6sJtH8HaWm5twQ4bPQwnr drue@xps"
+      name: target-hacking-session-oe
+    #- repository: https://github.com/Linaro/test-definitions.git
+    #  from: git
+    #  path: automated/linux/ltp/ltp.yaml
+    #  parameters:
+    #    SKIP_INSTALL: 'true'
+    #    TST_CMDFILES: syscalls
+    #    SKIPFILE: skipfile-lkft.yaml
+    #    BOARD: x86
+    #    BRANCH: '4.19'
+    #    ENVIRONMENT: production
+    #    TIMEOUT_MULTIPLIER: 3
+    #    LTP_TMPDIR: /scratch
+    #  name: ltp-syscalls-tests

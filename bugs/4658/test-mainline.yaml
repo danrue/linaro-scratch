@@ -1,0 +1,69 @@
+timeouts:
+  job:
+    minutes: 130
+  connection:
+    minutes: 2
+context:
+  test_character_delay: 10
+device_type: x86
+job_name: lkft-ltp-syscalls-master-1828-ext4
+priority: 100
+visibility: public
+actions:
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      #url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/1828/bzImage--5.1+git0+a188339ca5-r0-intel-corei7-64-20190519231355-1828.bin
+      url: http://people.linaro.org/~dan.rue/files/4658/bzImage-v5.2-rc1-2-g30f948a369a8
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-mainline/1828/rpb-console-image-lkft-intel-corei7-64-20190519231355-1828.rootfs.tar.xz
+      compression: xz
+    os: oe
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+- test:
+    namespace: target
+    timeout:
+      minutes: 120
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Mount local disk for tmp space
+        run:
+          steps:
+          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job
+            exit"
+          - echo "y" | mkfs -t ext4 ${STORAGE_DEV} || lava-test-raise "mkfs -t ext4
+            ${STORAGE_DEV} failed; job exit"
+          - mkdir -p /scratch
+          - mount ${STORAGE_DEV} /scratch && echo "mounted" || lava-test-raise "mount
+            ${STORAGE_DEV} failed; job exit"
+          - df -h
+          - mount
+          - wget -O /opt/ltp/runtest/syscalls https://gist.githubusercontent.com/danrue/61c663e1dc50dc7c13a232f0a062bdc6/raw/27356c9f86861268dae4bb08c254a52b0693ca9d/gistfile1.txt
+          - /opt/ltp/runltp -d /scratch -f syscalls
+          - mount
+          #- mount | grep scratch | grep -q rw || lava-test-raise "ERROR: ${STORAGE_DEV} is not mounted rw"
+      name: prep-tmp-disk
+      path: inline/prep.yaml

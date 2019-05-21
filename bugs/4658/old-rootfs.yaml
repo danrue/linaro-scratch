@@ -1,0 +1,78 @@
+timeouts:
+  job:
+    minutes: 130
+  connection:
+    minutes: 2
+context:
+  test_character_delay: 10
+device_type: x86
+job_name: lkft-ltp-syscalls-linux-4.19.y-bisect
+priority: 100
+visibility: public
+actions:
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.19/168/bzImage--4.19+git0+e2caa03604-r0-intel-corei7-64-20190520113109-168.bin
+    nfsrootfs:
+      #url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.19/168/rpb-console-image-lkft-intel-corei7-64-20190520113109-168.rootfs.tar.xz
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/intel-corei7-64/lkft/linux-stable-rc-4.19/167/rpb-console-image-lkft-intel-corei7-64-20190516211147-167.rootfs.tar.xz
+      compression: xz
+    os: oe
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    method: ipxe
+    commands: nfs
+    parameters:
+      shutdown-message: 'reboot: Restarting system'
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+      login_commands:
+      - su
+    prompts:
+    - 'root@intel-core2-32:'
+    - 'root@intel-corei7-64:'
+- test:
+    namespace: target
+    timeout:
+      minutes: 120
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tmp-disk
+          description: Mount local disk for tmp space
+        run:
+          steps:
+          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job
+            exit"
+          - echo "y" | mkfs -t ext4 ${STORAGE_DEV} || lava-test-raise "mkfs -t ext4
+            ${STORAGE_DEV} failed; job exit"
+          - mkdir -p /scratch
+          - mount ${STORAGE_DEV} /scratch && echo "mounted" || lava-test-raise "mount
+            ${STORAGE_DEV} failed; job exit"
+          - df -h
+          - mount
+      name: prep-tmp-disk
+      path: inline/prep.yaml
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: syscalls
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: x86
+        BRANCH: '4.19'
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+        LTP_TMPDIR: /scratch
+      name: ltp-syscalls-tests
