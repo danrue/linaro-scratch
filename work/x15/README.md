@@ -71,6 +71,7 @@ arm64/qemu/sbin/dhclient-systemd-wrapper
 drue@lava1:~/lava.therub.org$ docker-compose exec dispatcher /opt/mrv-pdu/MRV-LX5210/mrv.py 10.100.0.40 2 reboot && docker-compose exec dispatcher curl -s http://admin:12345678@10.100.0.41/relay_en.cgi?pulse1=pulse -o /dev/null
 
 ## uboot
+```
 setenv autoload no
 setenv initrd_high 0xffffffff
 setenv fdt_high 0xffffffff
@@ -81,12 +82,14 @@ setenv initrd_size ${filesize}
 tftp 0x88000000 drue/tftp-deploy-zx65ju1t/dtb/zImage--5.0+git0+37624b5854-r0-am57xx-beagle-x15-20190429002245-1753.dtb
 setenv bootargs 'console=ttyS2,115200n8 root=/dev/nfs rw nfsroot=10.100.0.60:/var/lib/lava/dispatcher/tmp/drue/extract-nfsrootfs-embywpbk,tcp,hard,intr,vers=3  ip=dhcp'
 bootz 0x82000000 - 0x88000000
+```
 
 When booting manually, as above, the qemu root fs works.........
 WHY!?
 
 
 Tried disabling polkit ("Authorization Manager")
+```
 drue@xps:~/linaro-scratch/work/x15/arm64/qemu/lib/systemd/system$ diff polkit.service.orig polkit.service
 5,8c5,8
 < [Service]
@@ -98,6 +101,7 @@ drue@xps:~/linaro-scratch/work/x15/arm64/qemu/lib/systemd/system$ diff polkit.se
 > #Type=dbus
 > #BusName=org.freedesktop.PolicyKit1
 > #ExecStart=/usr/lib/polkit-1/polkitd --no-debug
+```
 
 https://lkft.validation.linaro.org/scheduler/job/757536
 
