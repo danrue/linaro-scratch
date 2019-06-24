@@ -1,8 +1,8 @@
 timeouts:
   job:
-    minutes: 120
+    minutes: 800
   action:
-    minutes: 10
+    minutes: 800
   connection:
     minutes: 2
 context:
@@ -12,22 +12,6 @@ device_type: am57xx-beagle-x15
 job_name: lkft-ltp-syscalls-master-1753-uboot-nfsrootfs
 priority: 100
 visibility: public
-metadata:
-  git branch: master
-  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-  git commit: 37624b58542fb9f2d9a70e6ea006ef8a5f66c30b
-  git describe: v5.1-rc7
-  make_kernelversion: 5.1.0-rc7
-  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/config
-  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/defconfig
-  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-mainline/DISTRO=lkft,MACHINE=am57xx-evm,label=docker-lkft/1753/
-  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753
-  toolchain: arm-linaro-linux-gnueabi 7.%
-  series: lkft
-  email-notification: ''
-  ltp-syscalls-tests__url: git://github.com/linux-test-project/ltp.git
-  ltp-syscalls-tests__version: '20190115'
-  ltp-syscalls-tests__revision: a6a5caef13632e669dda27b0461726eba546a2f3
 actions:
 - deploy:
     timeout:
@@ -37,8 +21,9 @@ actions:
       url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/zImage--5.0+git0+37624b5854-r0-am57xx-evm-20190429002245-1753.bin
       type: zimage
     nfsrootfs:
-      url: http://people.linaro.org/~dan.rue/files/rootfs.tgz
-      compression: gz
+      #url: http://people.linaro.org/~dan.rue/files/rootfs.tgz
+      url: http://people.linaro.org/~daniel.diaz/lkft-qemu/arm32/rpb-console-image-lkft-qemuarm-20190523202859.rootfs.tar.xz
+      compression: xz
       #url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/am57xx-evm/lkft/linux-mainline/1753/rpb-console-image-lkft-am57xx-evm-20190429002245-1753.rootfs.tar.xz
       #url: https://storage.kernelci.org/images/rootfs/buildroot/kci-2018.11/armel/base/rootfs.tar.xz
       #compression: xz
@@ -51,7 +36,7 @@ actions:
 
 - boot:
     timeout:
-      minutes: 5
+      minutes: 500
     method: u-boot
     commands: nfs
     prompts:
