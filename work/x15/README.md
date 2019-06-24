@@ -30,6 +30,7 @@ https://gist.github.com/kylemanna/27711c1fcd97d884c072a344046505ba
 
 --- re-extracted rootfs to rootfs/ ---
 
+```
 https://gist.github.com/kylemanna/27711c1fcd97d884c072a344046505ba
   - different behavior. It didn't output the dmesg ethernet stuff, but
     it still stalled after:
@@ -44,31 +45,41 @@ drue@xps:~/src/linaro-scratch/work/x15/rootfs/etc/systemd/network$ cat eth.netwo
 [DHCP]
 CriticalConnection=true
   - same as previous... still missing something
+```
 
 # Trying generic qemu rootfs
 url: http://people.linaro.org/~daniel.diaz/lkft-qemu/arm32/rpb-console-image-lkft-qemuarm-20190523202859.rootfs.tar.xz
 
 same problem, 
+```
 [[0;32m  OK  [0m] Started Serial Getty on ttyS2.
 [[0;32m  OK  [0m] Started Network Manager Script Dispatcher Service.
 [[0;32m  OK  [0m] Started DNS forwarder and DHCP server.
+```
 
 and then
-
+```
 [  205.133812] nfs: server 10.100.0.60 not responding, still trying
 [  205.137404] nfs: server 10.100.0.60 not responding, still trying
+```
 
 ## debugging 
+```
 drue@xps:~/src/linaro-scratch/work/x15/arm64$ (cd qemu && sudo tar cvzf ../rootfs.tgz .) && scp rootfs.tgz people.linaro.org:~/public_html/files/ && lavacli jobs submit --url juno.yaml
+```
 
 # Modifying following files:
+```
 arm64/qemu/etc/systemd/system.conf
 arm64/qemu/sbin/dhclient-systemd-wrapper
+```
 
 # Manual x15 munging:
 
 ## reboot
+```
 drue@lava1:~/lava.therub.org$ docker-compose exec dispatcher /opt/mrv-pdu/MRV-LX5210/mrv.py 10.100.0.40 2 reboot && docker-compose exec dispatcher curl -s http://admin:12345678@10.100.0.41/relay_en.cgi?pulse1=pulse -o /dev/null
+```
 
 ## uboot
 ```
