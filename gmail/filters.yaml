@@ -21,6 +21,7 @@
       - naresh.kamboju@linaro.org
       - daniel.diaz@linaro.org
       - matt.hart@linaro.org
+      - matthew.hart@linaro.org
   from:
     all:
       - -builds@travis-ci.org
@@ -37,12 +38,12 @@
     any:
       - torvalds@linux-foundation.org
       - milosz.wasilewski@linaro.org
-      - chase.qi@linaro.org
       - anders.roxell@linaro.org
       - naresh.kamboju@linaro.org
       - ryan.arnold@linaro.org
       - daniel.diaz@linaro.org
-      - rafael.tinoco@linaro.org
+      - matt.hart@linaro.org
+      - matthew.hart@linaro.org
   label: +todo
   archive: true
 
