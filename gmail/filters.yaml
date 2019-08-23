@@ -36,7 +36,6 @@
 -
   from:
     any:
-      - torvalds@linux-foundation.org
       - milosz.wasilewski@linaro.org
       - anders.roxell@linaro.org
       - naresh.kamboju@linaro.org
@@ -44,8 +43,21 @@
       - daniel.diaz@linaro.org
       - matt.hart@linaro.org
       - matthew.hart@linaro.org
+      - vkabatov@redhat.com
+      - major@redhat.com
+      - cki-project@redhat.com
+      - torvalds@linux-foundation.org
   label: +todo
   archive: true
+
+# Tuxbuild emails
+-
+  for_each:
+    - +todo
+    - tuxbuild
+  rule:
+    to: tuxbuild@linaro.org
+    label: "{item}"
 
 # Label all stable emails
 -
