@@ -1,0 +1,101 @@
+timeouts:
+  job:
+    minutes: 65
+  connection:
+    minutes: 2
+context:
+  bootloader_prompt: juno#
+device_type: juno-r2
+job_name: lkft-kselftests-linux-4.9.y-670
+priority: 77
+visibility: public
+metadata:
+  git branch: linux-4.9.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: 228e87c35b6c083be778d24b64c02ad05015f3d2
+  git describe: v4.9.190
+  make_kernelversion: 4.9.190
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.9/DISTRO=lkft,MACHINE=juno,label=docker-lkft/670/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670
+  toolchain: aarch64-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+  kselftest__url: https://www.kernel.org/pub/linux/kernel/v5.x/linux-5.1.tar.xz
+  kselftest__version: '5.1'
+  kselftest__revision: '5.1'
+actions:
+- deploy:
+    namespace: target
+    timeout:
+      minutes: 10
+    to: tftp
+    os: oe
+    kernel:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670/Image--4.9+git0+228e87c35b-r0-juno-20190902183032-670.bin
+      type: image
+    dtb:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670/Image--4.9+git0+228e87c35b-r0-juno-r2-20190902183032-670.dtb
+    nfsrootfs:
+      url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/juno/lkft/linux-stable-rc-4.9/670/rpb-console-image-lkft-juno-20190902183032-670.rootfs.tar.xz
+      compression: xz
+- boot:
+    namespace: target
+    timeout:
+      minutes: 10
+    connection-namespace: recovery
+    method: u-boot
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+    - root@(.*):~#
+- test:
+    namespace: target
+    timeout:
+      minutes: 55
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: prep-tests
+          description: Device preparation
+        run:
+          steps:
+          - export STORAGE_DEV=$(lava-target-storage SATA || lava-target-storage USB)
+          - test -n "${STORAGE_DEV}" || lava-test-raise "STORAGE_DEV not found; job
+            exit"
+          - echo "y" | mkfs -t ext4 ${STORAGE_DEV} || lava-test-raise "mkfs -t ext4
+            ${STORAGE_DEV} failed; job exit"
+          - mkdir -p /scratch
+          - mount ${STORAGE_DEV} /scratch && echo "mounted" || lava-test-raise "mount
+            ${STORAGE_DEV} failed; job exit"
+          - df -h
+          - mount
+      name: prep-inline
+      path: inline/prep.yaml
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: timesync-off
+          description: Disable systemd time sync services
+        run:
+          steps:
+          - systemctl stop systemd-timesyncd || true
+      name: timesync-off
+      path: inline/timesync-off.yaml
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      revision: kselftest-5.1
+      path: automated/linux/kselftest/kselftest.yaml
+      name: kselftest
+      parameters:
+        KSELFTEST_PATH: /opt/kselftests/mainline/
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: juno-r2
+        BRANCH: '4.9'
+        ENVIRONMENT: production

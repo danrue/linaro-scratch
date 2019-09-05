@@ -1,0 +1,46 @@
+https://lkft.validation.linaro.org/scheduler/job/900171
+https://lkft.validation.linaro.org/scheduler/job/900172
+https://lkft.validation.linaro.org/scheduler/job/900173
+https://lkft.validation.linaro.org/scheduler/job/900174
+https://lkft.validation.linaro.org/scheduler/job/900175
+https://lkft.validation.linaro.org/scheduler/job/900176
+https://lkft.validation.linaro.org/scheduler/job/900177
+https://lkft.validation.linaro.org/scheduler/job/900178
+https://lkft.validation.linaro.org/scheduler/job/900181
+https://lkft.validation.linaro.org/scheduler/job/900182
+
+qemu x86_64
+45 pass, 8 fail
+
+qemu i386
+50 pass, 9 fail
+
+x86_64
+44, 8
+
+i386
+49, 8
+
+x15
+34, 6
+
+qemu-arm64
+34, 6
+
+qemu-arm32
+33, 6
+
+db410c
+32, 7
+
+juno-r2
+29, 6
+
+hikey
+28, 6
+
+5.1 pass 85+89+82+84+68+66+66+66+66+66=738
+4.9 pass 45+50+44+49+34+34+33+32+29+28=378
+5.1 63+75+61+69+72+73+73+70+68+73+3+3+2+2+1+1+1+1+1=712
+4.9 8+9+8+8+6+6+6+7+6+6=70
+
