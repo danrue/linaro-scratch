@@ -1,0 +1,210 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1024" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Linux Kernel Functional Testing (LKFT) 2.0</title>
+
+  <meta name="description" content="Linaro's LKFT project status and roadmap" />
+  <meta name="author" content="Dan Rue <dan.rue@linaro.org>" />
+
+  <link href="//fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+
+  <link href="impress.css" rel="stylesheet" />
+
+  <link rel="shortcut icon" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+
+<body class="impress-not-supported">
+
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="impress">
+
+  <div id="head" class="step slide" data-x="0" data-y="0" data-scale="4">
+    <h1>Linux Kernel Functional Testing (LKFT) 2.0</h1>
+    Dan Rue
+    <p><a href="mailto:dan.rue@linaro.org">dan.rue@linaro.org</a></p>
+    <p>@mndrue</p>
+  </div>
+
+  <div id="intro" class="step" data-x="0" data-y="1000">
+    <h1>LKFT Reprise</h1>
+    <ul>
+      <li>Architectures: arm32, arm64, i386, x86_64</li>
+      <li>Hardware: X15, DragonBoard 410c, Juno, HiKey, x86_64 servers</li>
+      <li>QEMU: x86* on x86_64 servers, arm* on SynQuacer arm64 hosts</li>
+      <li>Linux Branches:</li>
+      <ul>
+        <li>LTS: 4.4, 4.9, 4.14, 4.19</li>
+        <li>Latest stable (5.2, 5.3), mainline, next</li>
+      </ul>
+      <li>Tests: LTP, libhugetlbfs, perf, v4l2, kvm-unit-tests, s-suite (i/o benchmark), kselftests</li>
+      <li>Most tests run in all environments on every push for a total of ~25,000 tests per push</li>
+    </ul>
+  </div>
+
+  <div id="run-graph" class="step" data-x="1000" data-y="1000">
+    <img src="lkft.png" />
+  </div>
+
+  <div id="android-run-graph" class="step" data-x="2000" data-y="1000">
+    <img src="lkft.png" />
+  </div>
+
+  <div id="architecture" class="step" data-x="2000" data-y="0">
+    Build - Boot - Test - Triage - Report
+  </div>
+
+  <!-- XXX Transition to tired/wired meme set -->
+  <div id="build-1" class="step" data-x="2000" data-y="-2000">
+    <code>
+    OpenEmbedded build
+      Jenkins based
+      Full OS build for every kernel/board combination
+      Fixed and shared build capacity
+      Build scripts colocated with job config
+
+    Tired
+      Builds can be slow
+      Builds can be queued
+      Ancillary kernels require a full build (e.g. KASAN), so we don’t do them
+      Builds are hard to reproduce outside of jenkins environment due to coupling
+      Changes difficult to test
+      Kernel builds use bitbake; log is enormous; config is derived
+      </code>
+  </div>
+
+  <div id="build-2" class="step" data-x="2000" data-y="-3000">
+    <code>
+    KernelCI-style builds
+      Root filesystem build independently from kernel
+      Kernel builds are independent, native, fast
+      Docker-based build environments
+      Build servers scale dynamically
+      0 builds, 0 build servers. 20 builds, 20 build servers.
+      Artifacts stored and served from cloud storage directly
+
+    Wired
+      Build times become consistent, and fast
+      Ancillary kernels possible and trivial
+      Builds are easily reproducible outside of jenkins environment
+      Staging environment provides ability to test changes to system
+      Kernel build is simple; users will not have to deal with unfamiliar tools
+    </code>
+  </div>
+
+  <!--
+    - LKFT boards/job artifacts
+      - x86: bzImage, rootfs.tar.xz
+      - i386: bzImage, rootfs.tar.xz
+      - x15: rootfs.img
+      - qemu_x86: rootfs.hdimg.xz
+      - qemu_i386: rootfs.hdimg.xz
+      - qemu_arm64: rootfs.ext4, Image
+      - qemu_arm: rootfs.ext4, zImage
+      - juno-r2: Image, dtb, rootfs.tar.xz
+      - hikey: rootfs.img.gz, uefi.img
+      - db410c: boot.img, rootfs.img.gz
+  -->
+  <div id="boot-1" class="step" data-x="1000" data-y="-1000">
+    <code>
+    Boards boot using either u-boot or fastboot
+      Fastboot boards use system images with kernel baked in
+      Juno-r2 flashes firmware every run to guarantee correctness
+      LAVA job templates colocated with jenkins config
+
+    Tired
+      Bisection difficult due to per-board and rootfs requirements
+      “fastboot flash” slow, and causes contention on dispatcher
+      Juno spends 10 minutes re-flashing firmware every run
+      LAVA job generation is not portable or reusable
+    </code>
+  </div>
+
+  <div id="boot-2" class="step" data-x="1000" data-y="-2000">
+    <code>
+    LAVA jobs all take a rootfs parameter and a kernel parameter
+      If a baked rootfs is required, it is done in the dispatcher
+      Fastboot flash is avoided where possible
+      Use u-boot rather than fastboot where possible
+      LAVA job generation abstracted to its own tool
+
+
+    Wired
+      Better fastboot provisioning options: inline image building and fastboot-nfs
+      KernelCI compatibility
+      LAVA job generation is sharable and portable
+      Bisection becomes “easy”
+    </code>
+  </div>
+
+
+  <div id="test-1" class="step" data-x="1000" data-y="-1000">
+    <code>
+    Tests generally live in Linaro/test-definitions on GitHub
+    Test binaries usually built into root filesystems
+      Handy for kselftest….
+
+    Tired
+      Space constraints in rootfs (because we only get 1!)
+    </code>
+  </div>
+
+  <div id="test-2" class="step" data-x="1000" data-y="-2000">
+    <code>
+    Kselftest built along with kernel and overlayed into rootfs via LAVA at runtime
+    Possible to have different rootfs for different tests, just as with kernels
+
+    Wired
+      TAP parsing directly in LAVA
+      Kernel log parsing in SQUAD
+    </code>
+  </div>
+
+
+  <div id="report-1" class="step" data-x="1000" data-y="-1000">
+    <code>
+    Template based reports come directly from SQUAD
+    Bugs tracked at bugs.linaro.org under product “Kernel Functional Testing”
+    Known issues managed in SQUAD to control for failing and flaky tests (see qa-reports-known-issues repo)
+    Some reports (stable) generated using SQUAD API and python
+    Most upstream reports are manually curated
+    Most bugs are manually reported
+
+    Tired
+      Generic reporting
+      Naive reports
+      Limited ability to expres
+      Valuable data gathered but stuck in giant database
+    </code>
+  </div>
+
+  <div id="report-2" class="step" data-x="1000" data-y="-2000">
+    <code>
+    Build (or find!) analytics layer
+      Perform cross branch and cross time analysis
+    Generate fine grained, custom reports
+    Support arbitrary frequency
+
+    Wired
+      Achieve very high signal:noise ratio
+      Support individual developers, and their personal preferences
+    </code>
+  </div>
+
+</div>
+
+<div id="impress-toolbar"></div>
+
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+
+</body>
+</html>
