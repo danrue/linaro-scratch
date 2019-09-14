@@ -223,6 +223,16 @@
     label: "{item}"
     archive: true
 
+# Label all workflows@ emails and send all to +todo
+-
+  for_each:
+    - +todo
+    - lists-workflows
+  rule:
+    list: workflows@vger.kernel.org
+    label: "{item}"
+    archive: true
+
 # lava-users
 -
   for_each:
