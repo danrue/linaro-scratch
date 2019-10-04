@@ -1,36 +1,28 @@
 Results from Linaro’s test farm.
-Regressions detected.
+No regressions on arm64, arm, x86_64, and i386.
 
 Summary
 ------------------------------------------------------------------------
 
-kernel: 4.19.77-rc3
+kernel: 4.19.77-rc1
 git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 git branch: linux-4.19.y
-git commit: 407d81c4efd2deaefd9907711da6aacdc77ac016
-git describe: v4.19.76-211-g407d81c4efd2
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.76-211-g407d81c4efd2
+git commit: 319532606385c7221dfbfba6f857bd03e97e20d0
+git describe: v4.19.76-212-g319532606385
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/build/v4.19.76-212-g319532606385
 
-Regressions (compared to build v4.19.76)
+
+No regressions (compared to build v4.19.76)
+
+Fixes (compared to build v4.19.76)
 ------------------------------------------------------------------------
 
-hi6220-hikey - arm64:
-  build:
-    * build_process
-
-dragonboard-410c - arm64:
-  ltp-mm-tests:
-    * max_map_count
-
 juno-r2 - arm64:
-  build:
-    * build_process
+  kvm-unit-tests:
+    * timer
 
 
-
-No fixes (compared to build v4.19.76)
-
-Ran 7536 total tests in the following environments and test suites.
+Ran 22570 total tests in the following environments and test suites.
 
 Environments
 --------------
@@ -39,6 +31,7 @@ Environments
 - i386
 - juno-r2 - arm64
 - qemu_arm
+- qemu_arm64
 - qemu_i386
 - qemu_x86_64
 - x15 - arm
@@ -78,6 +71,10 @@ Test Suites
 * ltp-fs-tests
 * ltp-open-posix-tests
 * network-basic-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
 -- 
 Linaro LKFT
