@@ -1,0 +1,204 @@
+Results from Linaro’s test farm.
+Regressions detected.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.195-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.4.y
+git commit: 9a8d8139a7e557ce81c19f467a2a873371e3deba
+git describe: v4.4.194-100-g9a8d8139a7e5
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/build/v4.4.194-100-g9a8d8139a7e5
+
+Regressions (compared to build v4.4.194)
+------------------------------------------------------------------------
+
+qemu_arm:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+i386:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+x15 - arm:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+juno-r2 - arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+qemu_i386:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+x86_64:
+  kselftest-vsyscall-mode-native:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+  kselftest-vsyscall-mode-none:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+qemu_arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+qemu_x86_64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_printf.sh
+    * net_tls
+
+
+Fixes (compared to build v4.4.194)
+------------------------------------------------------------------------
+
+x15 - arm:
+  ltp-syscalls-tests:
+    * epoll_wait02
+
+
+Ran 18728 total tests in the following environments and test suites.
+
+Environments
+--------------
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* network-basic-tests
+* perf
+* prep-tmp-disk
+* spectre-meltdown-checker-test
+* kvm-unit-tests
+* v4l2-compliance
+* install-android-platform-tools-r2600
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.4.195-rc1
+git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
+git branch: 4.4.195-rc1-hikey-20191003-572
+git commit: 3f7eeb94b05eb384e0c0cee76d6446f60aba646f
+git describe: 4.4.195-rc1-hikey-20191003-572
+Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4-oe/build/4.4.195-rc1-hikey-20191003-572
+
+
+No regressions (compared to build 4.4.195-rc1-hikey-20191001-571)
+
+
+No fixes (compared to build 4.4.195-rc1-hikey-20191001-571)
+
+Ran 1523 total tests in the following environments and test suites.
+
+Environments
+--------------
+- hi6220-hikey - arm64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org

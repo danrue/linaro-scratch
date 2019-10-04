@@ -1,0 +1,91 @@
+Results from Linaro’s test farm.
+Regressions detected.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.3.4-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-5.3.y
+git commit: c9adc631ac5f1d6ac4ead2332f2a82c4e199852d
+git describe: v5.3.2-346-gc9adc631ac5f
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/build/v5.3.2-346-gc9adc631ac5f
+
+Regressions (compared to build v5.3.1-26-g5910f7ae1729)
+------------------------------------------------------------------------
+
+i386:
+  perf:
+    * Read-backward-ring-buffer
+
+qemu_arm64:
+  perf:
+    * Object-code-reading
+
+
+Fixes (compared to build v5.3.1-26-g5910f7ae1729)
+------------------------------------------------------------------------
+
+hi6220-hikey:
+  kselftest:
+    * net_udpgso_bench.sh
+
+
+Ran 25592 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org

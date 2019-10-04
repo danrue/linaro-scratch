@@ -1,0 +1,90 @@
+Results from Linaro’s test farm.
+Regressions detected.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.147-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.14.y
+git commit: b99061374089a66c2dd55bbea3299a602a4f0891
+git describe: v4.14.146-186-gb99061374089
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/build/v4.14.146-186-gb99061374089
+
+Regressions (compared to build v4.14.146-18-gf0e4f7af6713)
+------------------------------------------------------------------------
+
+i386:
+  ltp-open-posix-tests:
+    * schedule_1-1
+
+dragonboard-410c - arm64:
+  v4l2-compliance:
+    * modprobe-vivid
+
+
+Fixes (compared to build v4.14.146-18-gf0e4f7af6713)
+------------------------------------------------------------------------
+
+qemu_arm64:
+  kselftest:
+    * timers_set-timer-lat
+
+
+Ran 22696 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org

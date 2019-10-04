@@ -1,0 +1,176 @@
+Results from Linaro’s test farm.
+Regressions detected.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.9.195-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+git branch: linux-4.9.y
+git commit: c1fc114556201dc059e2c202e99eac038af8495e
+git describe: v4.9.194-130-gc1fc11455620
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.194-130-gc1fc11455620
+
+Regressions (compared to build v4.9.194)
+------------------------------------------------------------------------
+
+hi6220-hikey - arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+dragonboard-410c - arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+  perf:
+    * Test-object-code-reading
+
+qemu_arm:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+i386:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+
+x15 - arm:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+juno-r2 - arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+x86_64:
+  kselftest-vsyscall-mode-native:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+
+  kselftest-vsyscall-mode-none:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+
+qemu_i386:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+qemu_arm64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+qemu_x86_64:
+  kselftest:
+    * bpf_test_libbpf.sh
+    * bpf_test_tunnel.sh
+    * lib_bitmap.sh
+    * lib_printf.sh
+    * net_tls
+
+
+Fixes (compared to build v4.9.194)
+------------------------------------------------------------------------
+
+qemu_arm64:
+  perf:
+    * Test-object-code-reading
+
+
+Ran 23331 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-fs-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* prep-tmp-disk
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ssuite
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
