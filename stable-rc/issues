@@ -1,0 +1,41 @@
+# Issues
+
+## 4.9
+### regression
+dragonboard-410c - arm64:
+  perf:
+    * Test-object-code-reading
+
+## 4.14
+### regression
+dragonboard-410c - arm64:
+  v4l2-compliance:
+    * modprobe-vivid
+
+## 4.19
+### regression
+dragonboard-410c - arm64:
+  ltp-mm-tests:
+    * max_map_count
+
+## 5.2
+### regression
+i386:
+  perf:
+    * Read-backward-ring-buffer
+### fix
+dragonboard-410c:
+  perf:
+    * Object-code-reading
+
+
+## 5.3
+### regression
+i386:
+  perf:
+    * Read-backward-ring-buffer
+qemu_arm64:
+  perf:
+    * Object-code-reading
+
+
