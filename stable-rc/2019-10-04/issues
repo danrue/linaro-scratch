@@ -11,12 +11,16 @@ dragonboard-410c - arm64:
 dragonboard-410c - arm64:
   v4l2-compliance:
     * modprobe-vivid
+original: https://lkft.validation.linaro.org/scheduler/job/950199
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951376
 
 ## 4.19
 ### regression
 dragonboard-410c - arm64:
   ltp-mm-tests:
     * max_map_count
+intermittent failure
+- need to add to known issues
 
 ## 5.2
 ### regression
