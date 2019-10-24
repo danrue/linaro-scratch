@@ -1,18 +1,43 @@
 # Issues
 
+## 4.4
+- sent
+
 ## 4.9
 ### regression
 dragonboard-410c - arm64:
   perf:
     * Test-object-code-reading
+- sent
 
 ## 4.14
 ### regression
 dragonboard-410c - arm64:
   v4l2-compliance:
     * modprobe-vivid
-original: https://lkft.validation.linaro.org/scheduler/job/950199
-resubmitted: https://lkft.validation.linaro.org/scheduler/job/951376
+original: https://lkft.validation.linaro.org/scheduler/job/950199 db410c-01
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951376 db410c-04
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951438 04
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951439 03
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951440 01
+resubmitted: https://lkft.validation.linaro.org/scheduler/job/951441 02
+reproducer: https://lkft.validation.linaro.org/scheduler/job/951378 db410c-01
+reproducer (loop): https://lkft.validation.linaro.org/scheduler/job/951443 (Reproduced)
+reproducer (simple loop): https://lkft.validation.linaro.org/scheduler/job/951444
+reproducer (simple loop): https://lkft.validation.linaro.org/scheduler/job/951445
+reproducer (simple loop): https://lkft.validation.linaro.org/scheduler/job/951446
+reproducer (simple loop): https://lkft.validation.linaro.org/scheduler/job/951447
+
+reproducers, simple loop, no failures:
+https://lkft.validation.linaro.org/scheduler/job/951455
+https://lkft.validation.linaro.org/scheduler/job/951456
+https://lkft.validation.linaro.org/scheduler/job/951457
+https://lkft.validation.linaro.org/scheduler/job/951458
+
+
+https://qa-reports.linaro.org/_/comparetest/?project=58&suite=v4l2-compliance&test=modprobe-vivid
+https://qa-reports.linaro.org/_/comparetest/?project=34&project=22&project=6&project=58&project=135&project=40&project=23&project=183&project=204&suite=v4l2-compliance&test=modprobe-vivid
+
 
 ## 4.19
 ### regression
@@ -21,6 +46,7 @@ dragonboard-410c - arm64:
     * max_map_count
 intermittent failure
 - need to add to known issues
+- sent
 
 ## 5.2
 ### regression

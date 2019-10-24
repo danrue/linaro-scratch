@@ -1,0 +1,113 @@
+timeouts:
+  job:
+    minutes: 35
+  connection:
+    minutes: 2
+context:
+  test_character_delay: 10
+device_type: dragonboard-410c
+job_name: lkft-v4l2-compliance-linux-4.14.y-612
+priority: 100
+visibility: public
+metadata:
+  git branch: linux-4.14.y
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+  git commit: b99061374089a66c2dd55bbea3299a602a4f0891
+  git describe: v4.14.146-186-gb99061374089
+  make_kernelversion: 4.14.147-rc1
+  kernel-config: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-stable-rc-4.14/612/config
+  kernel-defconfig: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-stable-rc-4.14/612/defconfig
+  build-url: https://ci.linaro.org/job/openembedded-lkft-linux-stable-rc-4.14/DISTRO=lkft,MACHINE=dragonboard-410c,label=docker-lkft/612/
+  build-location: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-stable-rc-4.14/612
+  toolchain: aarch64-linaro-linux 7.%
+  series: lkft
+  email-notification: ''
+protocols:
+  lava-lxc:
+    name: lxc-target
+    template: debian
+    distribution: debian
+    release: jessie
+    arch: amd64
+    mirror: http://deb.debian.org/debian
+actions:
+- deploy:
+    namespace: tlxc
+    timeout:
+      minutes: 15
+    to: lxc
+    packages:
+    - wget
+    - unzip
+    os: debian
+- boot:
+    namespace: tlxc
+    prompts:
+    - root@(.*):/#
+    timeout:
+      minutes: 5
+    method: lxc
+- test:
+    namespace: tlxc
+    timeout:
+      minutes: 10
+    definitions:
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      path: automated/linux/android-platform-tools/install.yaml
+      name: install-android-platform-tools-r2600
+      parameters:
+        LINK: https://dl.google.com/android/repository/platform-tools_r26.0.0-linux.zip
+- deploy:
+    timeout:
+      minutes: 25
+    to: fastboot
+    namespace: target
+    connection: lxc
+    images:
+      boot:
+        url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-stable-rc-4.14/612/boot--4.14+git0+b990613740-r0-dragonboard-410c-20191003162124-612-612.img
+      rootfs:
+        url: http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-stable-rc-4.14/612/rpb-console-image-lkft-dragonboard-410c-20191003162124-612.rootfs.img.gz
+        compression: gz
+        apply-overlay: true
+    os: oe
+    protocols:
+      lava-lxc:
+      - action: fastboot-deploy
+        request: pre-power-command
+        timeout:
+          minutes: 2
+- boot:
+    namespace: target
+    auto_login:
+      login_prompt: 'login:'
+      username: linaro
+      login_commands:
+        # Become super user to run tests
+      - su
+    prompts:
+    - root@(.*):/#
+    - root@dragonboard-410c:~#
+    - dragonboard-410c:/home/linaro#
+    - dragonboard-410c:~\$
+    timeout:
+      minutes: 5
+    method: fastboot
+- test:
+    namespace: target
+    timeout:
+      minutes: 25
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: reproducer
+          description: Reproduce modprobe segfault
+        run:
+          steps:
+          - systemd is-system-running
+          - for i in `seq 1 100`; do echo $i; modprobe vivid no_error_inj=1 && sleep 1 && rmmod vivid; done
+      name: timesync-off
+      path: inline/timesync-off.yaml
