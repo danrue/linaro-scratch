@@ -98,19 +98,18 @@ for line in fileinput.input():
     else:
         print("job {}: warning: uncategorized error_msg: {}".format(job_id, error_msg))
 
-print("pass rate: {}%".format(100 * pass_count / (pass_count + fail_count)))
+print("pass rate: {:.2f}%".format(100 * pass_count / (pass_count + fail_count)))
 print("pass: {}, fail: {}".format(pass_count, fail_count))
 for fail_type, count in fail_by_type.items():
     if count > 0:
         print(
-            "{}% of jobs failed for reason: {}".format(
+            "{:.2f}% of jobs failed for reason: {}".format(
                 100 * count / (pass_count + fail_count), fail_type
             )
         )
 print("durations of successful jobs:")
 print("    min: {}s".format(min(durations)))
 print("    max: {}s".format(max(durations)))
-print("    mean: {}s".format(statistics.mean(durations)))
-print("    median: {}s".format(statistics.median(durations)))
-print("    standard deviation: {}s".format(statistics.stdev(durations)))
-print(durations)
+print("    mean: {}s".format(int(statistics.mean(durations))))
+print("    median: {}s".format(int(statistics.median(durations))))
+print("    standard deviation: {}s".format(int(statistics.stdev(durations))))
