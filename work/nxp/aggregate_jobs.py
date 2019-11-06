@@ -15,6 +15,7 @@ error_msgs = []
 for line in fileinput.input():
     job_id = int(line)
 
+    print("fetching job {}".format(job_id))
     job_status = (
         subprocess.check_output(
             "lavacli -i nxp jobs show {} | grep ^state | awk '{{print $3}}'".format(
