@@ -1,0 +1,75 @@
+device_type: nxp-ls2088
+job_name: ls2088ardb lkft test3
+
+context:
+  arch: arm64
+
+timeouts:
+  job:
+    minutes: 30
+  action:
+    minutes: 25
+  connection:
+    minutes: 5
+priority: medium
+visibility: public
+
+actions:
+
+- deploy:
+    timeout:
+      minutes: 15
+    to: tftp
+    kernel:
+      url: http://storage.staging.lkft.org/mainline/master/v5.4-rc6/arm64/defconfig%2Blkft/gcc-8/Image
+      type: image
+    nfsrootfs:
+      url: http://people.linaro.org/~daniel.diaz/lkft-nxp/images/rpb-console-image-lkft-ls2088ardb-20191019001216.rootfs.tar.xz
+      compression: xz
+    dtb:
+      url: http://people.linaro.org/~daniel.diaz/lkft-nxp/images/Image--5.3+git0+4d856f72c1-r0-fsl-ls2088a-rdb-20191018230147.dtb
+    os: debian
+
+- boot:
+    timeout:
+      minutes: 20
+    method: u-boot
+    commands: nfs
+    auto_login:
+      login_prompt: 'login:'
+      username: root
+    prompts:
+      - root@(.*):~#
+
+- test:
+    timeout:
+      minutes: 10
+    definitions:
+    - repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: ls2088ardb boot test
+          description: "ls2088ardb boot test"
+          os:
+          - yocto
+          scope:
+          - functional
+        run:
+          steps:
+          - lava-test-case test-cpuinfo --shell cat /proc/cpuinfo
+      from: inline
+      name: ls2088ardb-boot-test
+      path: inline/ls2088ardb-boot-test.yaml
+    - repository: https://github.com/Linaro/test-definitions.git
+      from: git
+      path: automated/linux/ltp/ltp.yaml
+      parameters:
+        SKIP_INSTALL: 'true'
+        TST_CMDFILES: quickhit
+        SKIPFILE: skipfile-lkft.yaml
+        BOARD: juno-r2
+        BRANCH: mainline
+        ENVIRONMENT: production
+        TIMEOUT_MULTIPLIER: 3
+        LTP_TMPDIR: /scratch
+      name: ltp-quickhit-tests
