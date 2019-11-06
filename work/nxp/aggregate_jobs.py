@@ -7,15 +7,19 @@ from pprint import pprint
 
 pass_count = 0
 fail_count = 0
-fail_by_type = {
-    'dns': 0
-}
+failure_strings = [
+    'Name or service not known',
+    'bootloader-interrupt timed out',
+]
+fail_by_type = {}
+for failure_string in failure_strings:
+    fail_by_type[failure_string] = 0
 error_msgs = []
 
 for line in fileinput.input():
     job_id = int(line)
 
-    print("fetching job {}".format(job_id))
+    print("job {}: fetching".format(job_id))
     job_status = (
         subprocess.check_output(
             "lavacli -i nxp jobs show {} | grep ^state | awk '{{print $3}}'".format(
@@ -27,7 +31,7 @@ for line in fileinput.input():
         .decode("utf-8")
     )
     if job_status != "Finished":
-        print("jobs {} not finished".format(job_id))
+        print("jobs {}: not finished".format(job_id))
         continue
 
     # XXX Once https://git.lavasoftware.org/lava/lavacli/issues/15 is fixed, we can
@@ -52,12 +56,17 @@ for line in fileinput.input():
     fail_count += 1
     error_msg = job_data.get('metadata').get('error_msg')
     error_msgs.append(error_msg)
-    if 'Name or service not known' in error_msg:
-        fail_by_type['dns'] += 1
+    for failure_string in failure_strings:
+        if failure_string in error_msg:
+            fail_by_type[failure_string] += 1
+            print("job {}: failure detected: {}".format(job_id, failure_string))
+            break
     else:
-        print("warning: uncategorized error_msg: {}".format(error_msg))
+        print("job {}: warning: uncategorized error_msg: {}".format(job_id, error_msg))
 
 print("pass rate: {}%".format(100*pass_count/(pass_count+fail_count)))
 print("pass: {}, fail: {}".format(pass_count, fail_count))
+for fail_type, count in fail_by_type.items():
+    if count > 0:
+        print("{}% of jobs failed for reason: {}".format(100*count/(pass_count+fail_count), fail_type))
 pprint(fail_by_type)
-pprint(error_msgs)
