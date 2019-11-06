@@ -1,0 +1,32 @@
+4.4
+- regressions
+- fixes
+
+4.9:
+- regressions:
+  - mtest06 (known issue)
+  - kselftest/proc_read (known issue)
+- fixes:
+  - ltp-syscalls-tests/ioctl_ns05 (known issue)
+  - ltp-syscalls-tests/ioctl_ns06 (known issue)
+  - ltp-syscalls-tests/ustat02 (known issue)
+
+4.14
+- regressions
+  - ltp-open-posix/schedule_1-1
+  - ltp-syscalls/sync_file_range02
+  - mtest06 (known issue)
+  - perf/Object-code-reading
+  - ltp-syscalls/sync_file_range02
+- fixes
+  - ltp-syscalls-tests/ioctl_ns05 (known issue)
+  - ltp-syscalls-tests/ioctl_ns06 (known issue)
+  - ltp-syscalls-tests/ustat02 (known issue)
+
+4.19
+- regressions
+- fixes
+
+5.3
+- regressions
+- fixes
