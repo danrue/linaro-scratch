@@ -32,6 +32,8 @@ fail_count = 0
 failure_strings = [
     "Name or service not known",
     "bootloader-interrupt timed out",
+    "pdukci --reboot ls2088ardb failed",
+    "Unable to fetch git repository 'https://github.com",
 ]
 fail_by_type = {}
 for failure_string in failure_strings:
