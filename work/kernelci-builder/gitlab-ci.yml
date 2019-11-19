@@ -1,0 +1,136 @@
+variables:
+  KCI_CORE: /tmp/kernelci-core
+  KCI_API: https://api.kernelci.org
+  KCI_STORAGE: http://storage.kernelci.org
+  #KCI_TOKEN: secret
+  #
+  # IMPORTANT: needs to be unique per build job, so parallel builds
+  # of the same kernel on the same builder do not trash each other
+  #
+  KCI_OUTPUT: build-${arch}-${compiler}
+
+before_script:
+  - echo "global before script"
+  - git clone --depth 1 --branch staging.kernelci.org https://github.com/kernelci/kernelci-core.git $KCI_CORE
+  
+stages:
+ - build
+ - boot
+ 
+default:
+  image: kernelci/build-base
+  
+.kernel_builder:
+  stage: build
+
+  image: kernelci/build-${docker_image}
+
+  tags:
+    - docker
+    - baylibre
+
+  cache:
+    key: ${arch}-${build_env}
+    paths:
+      - $CCACHE_DIR
+      
+  variables:
+    CCACHE_DIR: $CI_PROJECT_DIR/.ccache-${arch}-${compiler}
+
+    # IMPORTANT: needs to be unique per build job, so parallel builds
+    # of the same kernel on the same builder do not trash each other
+    #KCI_OUTPUT: build-${arch}-${compiler}
+
+    # optimize repeated builds: don't remove ccache or build dir
+    #GIT_CLEAN_FLAGS: -ffdx -e .ccache* -e build-*
+
+    #TREE_NAME: $CI_PROJECT_TITLE
+    TREE_NAME: khilman
+
+  script:
+    #- env | grep -v ^CI |grep -v ^GITLAB_ |grep -v ^FF_
+    - ccache --zero-stats
+  
+    - pushd $KCI_CORE
+
+    - ./kci_build build_kernel --build-env ${build_env} --kdir $CI_PROJECT_DIR --arch ${arch} --defconfig defconfig --output $KCI_OUTPUT #--verbose
+    - ./kci_build install_kernel --kdir $CI_PROJECT_DIR  --tree-name $TREE_NAME --tree-url $CI_PROJECT_URL --branch $CI_COMMIT_REF_NAME --output $KCI_OUTPUT
+    - ./kci_build push_kernel --kdir=$CI_PROJECT_DIR --token=$KCI_TOKEN --api=$KCI_API
+    - ./kci_build publish_kernel --kdir=$CI_PROJECT_DIR --token=$KCI_TOKEN --api=$KCI_API
+
+    - ccache --show-stats --cleanup
+    - env
+
+  artifacts:
+    paths:
+      - _install_/
+      
+
+.kernel_boot:
+  stage: boot
+
+  tags:
+    - docker
+
+  variables:
+    GIT_STRATEGY: none
+    KDIR: $CI_PROJECT_DIR
+    LAVA_USER: kernel-ci
+    #LAVA_TOKEN: secret
+    LAVA_LAB: lab-baylibre
+    LAVA_PLAN: "--plan baseline"
+    LAVA_TARGET: "--target meson-sm1-sei610"
+
+  script:
+    - pushd $KCI_CORE
+
+    - ./kci_test get_lab_info --lab $LAVA_LAB --lab-json $KDIR/_install_/$LAVA_LAB.json --user $LAVA_USER --token $LAVA_TOKEN
+    - rm -rf $KDIR/_install_/jobs
+    - ./kci_test generate --token $KCI_TOKEN --storage $KCI_STORAGE --lab $LAVA_LAB --bmeta-json $KDIR/_install_/bmeta.json --dtbs-json $KDIR/_install_/dtbs.json --lab-json $KDIR/_install_/$LAVA_LAB.json --output $KDIR/_install_/jobs $LAVA_PLAN $LAVA_TARGET
+    - ./kci_test submit --user=$LAVA_USER --token=$LAVA_TOKEN --lab=$LAVA_LAB --jobs=$KDIR/_install_/jobs/*.yaml
+
+    - popd
+
+.arm-gcc-8:
+  extends:
+    - .kernel_builder
+
+  variables:
+    arch: arm
+    compiler: gcc
+    compiler_version: 8
+    build_env: ${compiler}-${compiler_version}
+    docker_image: ${compiler}-${compiler_version}_${arch}
+
+
+arm64-gcc-8:
+  extends:
+    - .kernel_builder
+
+  variables:
+    arch: arm64
+    compiler: gcc
+    compiler_version: 8
+    build_env: ${compiler}-${compiler_version}
+    docker_image: ${compiler}-${compiler_version}_${arch}
+
+
+.arm64-clang-9:
+  extends:
+    - .kernel_builder
+
+  variables:
+    arch: arm64
+    compiler: clang
+    compiler_version: 9
+    build_env: ${compiler}-${compiler_version}
+    docker_image: ${compiler}-${compiler_version}
+
+
+boot_arm64-gcc-8:
+  extends:
+    - .kernel_boot
+
+  needs:
+    - arm64-gcc-8
+
