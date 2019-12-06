@@ -20,8 +20,6 @@
       - anders.roxell@linaro.org
       - naresh.kamboju@linaro.org
       - daniel.diaz@linaro.org
-      - matt.hart@linaro.org
-      - matthew.hart@linaro.org
   from:
     all:
       - -builds@travis-ci.org
@@ -41,8 +39,6 @@
       - naresh.kamboju@linaro.org
       - ryan.arnold@linaro.org
       - daniel.diaz@linaro.org
-      - matt.hart@linaro.org
-      - matthew.hart@linaro.org
       - vkabatov@redhat.com
       - major@redhat.com
       - cki-project@redhat.com
@@ -296,16 +292,12 @@
 -
   list: fuego@lists.linuxfoundation.org
   label: lists-fuego
+  archive: true
 
 # kernelci bot
 -
   list: kernel-build-reports@lists.linaro.org
   label: lists-kernel-build-reports
-  archive: true
--
-  list: kernel-build-reports@lists.linaro.org
-  from: kernelci.org bot
-  label: +todo
   archive: true
 
 # Label all kernelci emails and send all to +todo
