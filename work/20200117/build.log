@@ -1,0 +1,26 @@
+#
+# make -sk KBUILD_BUILD_USER=KernelCI -C/linux ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc O=build defconfig
+#
+#
+# 
+set -e
+cd /linux
+export ARCH=arm64
+export HOSTCC=gcc
+export CC=gcc
+export CROSS_COMPILE=aarch64-linux-gnu-
+scripts/kconfig/merge_config.sh -O build 'build/.config' 'build/frag.config' 
+
+#
+#
+# make -sk KBUILD_BUILD_USER=KernelCI -C/linux -j16 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc O=build Image
+#
+#
+# make -sk KBUILD_BUILD_USER=KernelCI -C/linux -j16 ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc O=build modules
+#
+#
+# make -sk KBUILD_BUILD_USER=KernelCI -C/linux ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc O=build dtbs
+#
+#
+# make -sk KBUILD_BUILD_USER=KernelCI INSTALL_MOD_PATH=_modules_ INSTALL_MOD_STRIP=1 STRIP=aarch64-linux-gnu-strip -C/linux ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc O=build modules_install
+#

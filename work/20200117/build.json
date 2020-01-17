@@ -1,0 +1,12 @@
+{
+    "build_key": "o6oflA9Jlq4dSfFsYjpwgg",
+    "build_status": "pass",
+    "download_url": "http://builds.tuxbuild.com/o6oflA9Jlq4dSfFsYjpwgg/",
+    "errors_count": 0,
+    "git_describe": "v5.5-rc6-143-gab7541c3addd",
+    "git_sha": "ab7541c3addd344939e76d0636da0048ce24f2db",
+    "git_short_log": "ab7541c3addd (\"Merge tag 'fuse-fixes-5.5-rc7' of git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/fuse\")",
+    "status_message": "build completed",
+    "tuxbuild_status": "complete",
+    "warnings_count": 0
+}
