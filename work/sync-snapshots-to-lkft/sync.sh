@@ -45,4 +45,4 @@ done
 #    cd ..
 #done
 
-aws s3 sync $SCRATCH/ $DESTINATION/
+aws s3 sync --acl public-read $SCRATCH/ $DESTINATION/
