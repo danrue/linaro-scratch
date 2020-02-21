@@ -1,0 +1,12 @@
+{
+    "build_key": "f5iIDKKC564lWZqPnrUarQ",
+    "build_status": "pass",
+    "download_url": "http://builds.tuxbuild.com/f5iIDKKC564lWZqPnrUarQ/",
+    "errors_count": 0,
+    "git_describe": "v5.5.5-400-g84fa24740caa",
+    "git_sha": "84fa24740caac8ddcd3e74bcf958f1c21f7a99b1",
+    "git_short_log": "84fa24740caa (\"Linux 5.5.6-rc1\")",
+    "status_message": "build completed",
+    "tuxbuild_status": "complete",
+    "warnings_count": 0
+}
