@@ -66,7 +66,7 @@
     all:
       - "-3.18" # exclude 3.18
       - PATCH
-      - stable review
+      - " review$"
   list: stable@vger.kernel.org
   label: +todo
   archive: true
@@ -76,7 +76,7 @@
     all:
       - "-3.18" # exclude 3.18
       - PATCH
-      - stable review
+      - " review$"
       - "-re" # exclude replies
   forward:  9522152221@msg.fi.google.com
 
