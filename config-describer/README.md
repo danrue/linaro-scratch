@@ -1,6 +1,6 @@
 Provide a concise way to describe the contents of a Linux kernel config file.
 Count up the number of "Y"'s, "N"'s, and "M"'s, and calculate a short sha sum.
-Concatinate in the format `y<Y_COUNT>-m<M_COUNT>-n<N_COUNT>-s<SHA>`.
+Concatenate in the format `y<Y_COUNT>-m<M_COUNT>-n<N_COUNT>-s<SHA>`.
 
 This is intentionally similar to the format of `git describe`.
 
