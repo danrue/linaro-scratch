@@ -1,0 +1,13 @@
+sets:
+  - name: config-combos
+    builds:
+      - {target_arch: arm64,  toolchain: gcc-9,    kconfig: allnoconfig}
+      - {target_arch: arm64,  toolchain: gcc-9,    kconfig: allyesconfig}
+      - {target_arch: arm64,  toolchain: gcc-9,    kconfig: allmodconfig}
+      - {target_arch: arm64,  toolchain: gcc-9,    kconfig: tinyconfig}
+      - {target_arch: arm64,  toolchain: gcc-9,    kconfig: defconfig}
+      - {target_arch: x86_64, toolchain: gcc-9,    kconfig: allnoconfig}
+      - {target_arch: x86_64, toolchain: gcc-9,    kconfig: allyesconfig}
+      - {target_arch: x86_64, toolchain: gcc-9,    kconfig: allmodconfig}
+      - {target_arch: x86_64, toolchain: gcc-9,    kconfig: tinyconfig}
+      - {target_arch: x86_64, toolchain: gcc-9,    kconfig: defconfig}
