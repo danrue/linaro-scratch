@@ -1,0 +1,88 @@
+{
+    "Resources": {
+        "druebar": {
+            "Properties": {
+                "RepositoryName": "drue/bar",
+                "RepositoryPolicyText": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ecr:GetDownloadUrlForLayer",
+                                "ecr:BatchGetImage"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::ECR::Repository"
+        },
+        "druebaz": {
+            "Properties": {
+                "RepositoryName": "drue/baz",
+                "RepositoryPolicyText": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ecr:GetDownloadUrlForLayer",
+                                "ecr:BatchGetImage"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::ECR::Repository"
+        },
+        "druebiz": {
+            "Properties": {
+                "RepositoryName": "drue/biz",
+                "RepositoryPolicyText": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ecr:GetDownloadUrlForLayer",
+                                "ecr:BatchGetImage"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::ECR::Repository"
+        },
+        "druefoo": {
+            "Properties": {
+                "RepositoryName": "drue/foo",
+                "RepositoryPolicyText": {
+                    "Statement": [
+                        {
+                            "Action": [
+                                "ecr:GetDownloadUrlForLayer",
+                                "ecr:BatchGetImage"
+                            ],
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            }
+                        }
+                    ],
+                    "Version": "2012-10-17"
+                }
+            },
+            "Type": "AWS::ECR::Repository"
+        }
+    }
+}
