@@ -1,3 +1,8 @@
+Create a bunch of ECRs for tuxmake. Given a list of docker repos, create them
+all using a persistent cloudformation stack.
+
+Requires python and the AWS v2 cli.
+
 ```
 $ make
 python3 gen_cfn.py > ecr-stack.json
