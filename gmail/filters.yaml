@@ -29,6 +29,8 @@
       - -projects@linaro.org
       - -bugzilla-daemon@bugs.linaro.org
       - -it-services@linaro.org
+      - -qa-reports@linaro.org
+      - -lava@validation.linaro.org
   is: -chats # the to: rules picks up google chat logs; exclude them
   label: +todo
   archive: true
@@ -42,10 +44,9 @@
       - naresh.kamboju@linaro.org
       - ryan.arnold@linaro.org
       - daniel.diaz@linaro.org
-      - vkabatov@redhat.com
-      - major@redhat.com
-      - cki-project@redhat.com
-      - torvalds@linux-foundation.org
+      #- vkabatov@redhat.com
+      #- cki-project@redhat.com
+      #- torvalds@linux-foundation.org
       - justin.cook@linaro.org
   label: +todo
   archive: true
@@ -76,12 +77,12 @@
 #  forward:  9522152221@msg.fi.google.com
 
 # Anything with the following subject matches
--
-  subject:
-    all:
-      - gregkh
-  label: +todo
-  archive: true
+#-
+#  subject:
+#    all:
+#      - gregkh
+#  label: +todo
+#  archive: true
 
 # LKML
 -
@@ -113,6 +114,7 @@
       - "5.7"
       - "5.8"
       - "5.9"
+      - "5.10"
       - "5.11"
       - "5.12"
       - "5.13"
@@ -121,7 +123,7 @@
       - "5.16"
       - "5.17"
       - "5.18"
-      - "5.18"
+      - "5.19"
       - "5.20"
   label: +todo
   archive: true
@@ -170,6 +172,18 @@
   label: junk
   archive: true
 
+# Suppress all qa-reports emails
+-
+  from: qa-reports@linaro.org
+  label: junk
+  archive: true
+
+# LAVA lab reports
+-
+  from: lava@validation.linaro.org
+  label: junk
+  archive: true
+
 # Suppress lite/zephyr test reports
 -
   from: qa-reports@linaro.org
@@ -194,7 +208,7 @@
   label: junk
   archive: true
 
-# Label all ltp emails and send all to +todo
+# Label all ltp emails
 -
   for_each:
     - lists-ltp
