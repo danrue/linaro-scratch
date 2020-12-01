@@ -11,11 +11,11 @@ fail = fail with tinyconfig
 
 9 failures
 
-|               | arc | arm | arm64 | i386 | mips | parisc | powerpc | riscv | s390 | sh  | sparc | x86_64 |
-| ------------- | --- | --- | ----- | ---- | ---- | ------ | ------- | ----- | ---- | --- | ----- | ------ |
-| clang-10      |     | yes | yes   | yes  | fail |        | fail    | pass  | pass |     | fail  | yes    |
-| clang-11      |     | yes | yes   | yes  | fail |        | fail    | pass  | pass |     | fail  | yes    |
-| clang-nightly |     | yes | yes   | yes  | fail |        | fail    | pass  | pass |     | fail  | yes    |
+|               | arc | arm  | arm64 | i386 | mips | parisc | powerpc | riscv | s390 | sh  | sparc | x86_64 |
+| ------------- | --- | ---  | ----- | ---- | ---- | ------ | ------- | ----- | ---- | --- | ----- | ------ |
+| clang-10      |     | pass | pass  | pass | fail |        | fail    | pass  | pass |     | fail  | pass   |
+| clang-11      |     | pass | pass  | pass | fail |        | fail    | pass  | pass |     | fail  | pass   |
+| clang-nightly |     | pass | pass  | pass | fail |        | fail    | pass  | pass |     | fail  | pass   |
 
 
 Build log (links go to actual log of each build):
