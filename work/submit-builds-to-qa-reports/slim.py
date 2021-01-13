@@ -1,15 +1,12 @@
 import json
 import os
 import requests
+import time
 
 url = "https://staging-qa-reports.linaro.org/api/submit/lkft/linux-stable-rc-5.5-oe/v5.5/i386"
 
 metadata = {
-    "job_id": "1xxxyz",
-    "git branch": "linux-5.5.y",
-    "git repo": "https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git",
-    "git commit": "d5226fa6dbae0569ee43ecfc08bdcd6770fc4755",
-    "git describe": "v5.5",
+    "job_id": f"{time.time()}",
     "make_kernelversion": "5.5.0",
 }
 log = "make output"
@@ -20,6 +17,20 @@ headers = {
     "Auth-Token": os.environ["QA_TOKEN"],
 }
 
+result = requests.post(
+    url,
+    headers=headers,
+    json={"metadata": metadata, "log": log, "tests_file": tests_file},
+)
+
+if not result.ok:
+    print(f"Error submitting to qa-reports: {result.reason}: {result.text}")
+
+
+metadata = {
+    "job_id": f"{time.time()}",
+    "make_kernelversion": "5.5.0",
+}
 result = requests.post(
     url,
     headers=headers,
