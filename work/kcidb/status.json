@@ -1,0 +1,32 @@
+{
+    "build_key": "1myooFaScyEWNS87IO8HSMCu46d",
+    "build_name": "",
+    "build_status": "pass",
+    "client_token": "4ec2a0a0-cf05-4292-8893-0dc6863f021e",
+    "download_url": "https://builds.tuxbuild.com/1myooFaScyEWNS87IO8HSMCu46d/",
+    "environment": {},
+    "errors_count": 0,
+    "git_describe": "v5.11-rc3-32-ge609571b5ffa",
+    "git_ref": "",
+    "git_repo": "https://gitlab.com/Linaro/lkft/mirrors/torvalds/linux-mainline",
+    "git_sha": "e609571b5ffa3528bf85292de1ceaddac342bc1c",
+    "git_short_log": "e609571b5ffa (\"Merge tag 'nfs-for-5.11-2' of git://git.linux-nfs.org/projects/trondmy/linux-nfs\")",
+    "kconfig": [
+        "defconfig",
+        "https://raw.githubusercontent.com/Linaro/meta-lkft/sumo/recipes-kernel/linux/files/lkft.config",
+        "https://raw.githubusercontent.com/Linaro/meta-lkft/sumo/recipes-kernel/linux/files/lkft-crypto.config",
+        "https://raw.githubusercontent.com/Linaro/meta-lkft/sumo/recipes-kernel/linux/files/distro-overrides.config",
+        "https://raw.githubusercontent.com/Linaro/meta-lkft/sumo/recipes-kernel/linux/files/systemd.config",
+        "https://raw.githubusercontent.com/Linaro/meta-lkft/sumo/recipes-kernel/linux/files/virtio.config",
+        "CONFIG_ARM64_MODULE_PLTS=y"
+    ],
+    "kconfig_allconfig": "",
+    "kernel_version": "5.11.0-rc3",
+    "make_variables": {},
+    "status_message": "build completed",
+    "target_arch": "arm64",
+    "targets": [],
+    "toolchain": "clang-10",
+    "tuxbuild_status": "complete",
+    "warnings_count": 1
+}
