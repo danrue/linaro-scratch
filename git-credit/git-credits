@@ -8,15 +8,15 @@ import subprocess
 import time
 
 emails = [
-          #'<dan.rue@linaro.org>',
+          '<dan.rue@linaro.org>',
           '<anders.roxell@linaro.org>',
-          #'<naresh.kamboju@linaro.org>',
-          #'<daniel.diaz@linaro.org>',
+          '<naresh.kamboju@linaro.org>',
+          '<daniel.diaz@linaro.org>',
          ]
 email_regex = re.compile('({})'.format('|'.join(emails), re.IGNORECASE))
 
-start_time = datetime.datetime(2018, 10, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
-end_time = datetime.datetime(2019, 9, 30, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
+start_time = datetime.datetime(2019, 10, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
+end_time = datetime.datetime(2020, 10, 1, 00, 00, 00, tzinfo=datetime.timezone.utc).timestamp()
 
 GIT_COMMIT_FIELDS = {
     "short_hash": "%h",
